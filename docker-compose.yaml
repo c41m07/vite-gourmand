@@ -1,0 +1,43 @@
+networks:
+    backend:
+    traefik_network:
+        name: traefik_network
+        external: true
+
+services:
+    app:
+        container_name: ${PROJECT_IDENTIFIER}_app
+        build:
+            context: docker/php/dev
+        volumes:
+            - ./app:/var/www/html
+        networks:
+            - backend
+            - traefik_network
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.app.entrypoints=web"
+            - "traefik.http.routers.app.rule=Host(`${TRAEFIK_URL_APP}`)"
+            - "traefik.http.services.app.loadbalancer.server.port=80"
+            - "traefik.docker.network=traefik_network"
+        depends_on:
+            database:
+                condition: service_healthy
+
+    database:
+        image: mariadb
+        container_name: ${PROJECT_IDENTIFIER}_database
+        environment:
+            MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+        volumes:
+            - ./mariadb:/var/lib/mysql
+        networks:
+            #            - traefik_network
+            - backend
+        ports:
+            - "${DATABASE_PORT}:3306"
+        healthcheck:
+            test: [ "CMD-SHELL", "mariadb -h localhost -u root -p$${MARIADB_ROOT_PASSWORD} -e 'SELECT 1' || exit 1" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
