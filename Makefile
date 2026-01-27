@@ -1,4 +1,4 @@
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 EXEC_APP = $(DOCKER_COMPOSE) exec -it app
 CONNECT_APP = $(EXEC_APP) /bin/bash
 
@@ -75,3 +75,6 @@ stop: ## Stop containers
 	$(DOCKER_COMPOSE) stop
 
 restart: stop start cache-clear watch
+
+log:
+	$(DOCKER_COMPOSE) logs -f

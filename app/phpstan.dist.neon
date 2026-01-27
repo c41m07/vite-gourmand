@@ -1,0 +1,19 @@
+parameters:
+    level: 4
+    paths:
+        - src/
+    treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        - message: '#Symfony\\Component\\Security\\Core\\User\\UserInterface.*#'
+        - identifier: property.unusedType
+#        - identifier: varTag.variableNotFound
+#        - identifier: classConstant.unused
+        - message: '#Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface::getFlashBag\(\)#'
+#        - message: '#Symfony\\Component\\Security\\Core\\User\\UserInterface.*#'
+#        -
+#            path:  src/Service/StripeClient.php
+#            identifier: argument.type
+#        -
+#            path: src\Service\Discord\*.php
+#            identifier: property.onlyWritten
