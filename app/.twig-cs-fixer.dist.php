@@ -1,6 +1,5 @@
 <?php
 
-
 $finder = new TwigCsFixer\File\Finder()
     ->in(['templates']);
 
