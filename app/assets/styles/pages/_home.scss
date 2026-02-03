@@ -1,0 +1,43 @@
+/* assets/styles/pages/_home.scss */
+
+/* HERO */
+.home-hero {
+    min-height: 520px;
+    display: grid;
+    align-items: center;
+    color: #fff;
+
+    h1, p {
+        text-shadow: 0 2px 18px rgba(0,0,0,.55);
+    }
+}
+
+
+
+.home-hero__bg {
+    background-size: cover;
+    background-position: center;
+    filter: brightness(.58);
+}
+
+.home-hero__content {
+    min-height: 420px
+}
+
+/* Sections  */
+section {
+    scroll-margin-top: 90px;
+}
+
+/* Cartes  */
+.card {
+    border-radius: 1rem;
+    background-color: $light;
+}
+
+/* CTA  */
+.bg-primary {
+    .btn-outline-light {
+        border-width: 2px;
+    }
+}

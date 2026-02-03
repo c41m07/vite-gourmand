@@ -1,0 +1,10 @@
+.vg-navbar {
+    /* réglages navbar Bootstrap */
+    --bs-navbar-padding-y: 1rem;
+
+    /* underline “active” en secondary */
+    --bs-nav-underline-border-width: 0.14rem;
+    --bs-nav-underline-link-active-color: #{$secondary};
+
+    .nav-link { padding-inline: .85rem; }
+}
