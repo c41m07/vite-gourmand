@@ -1,12 +1,12 @@
-# Documentation technique - Vite & Gourmand
+# Documentation technique — Vite & Gourmand (plan)
 
 ## 1. Choix techniques
-- Symfony 7 + Twig + Bootstrap minimal
-- MySQL (relationnel) + MongoDB (NoSQL stats)
+- Symfony 8 + Twig + Bootstrap 5
+- MariaDB (relationnel) + MongoDB (stats)
 
 ## 2. Architecture & sécurité
 - Rôles : USER / EMPLOYEE / ADMIN
-- Accès, validation, protections, etc.
+- Auth, CSRF, validation, RBAC
 
 ## 3. Modélisation
 - MCD / diagramme de classes
