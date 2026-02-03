@@ -4,6 +4,123 @@
 {% block title %}CGV - Condition général{% endblock %}
 
 {% block body %}
-    <h1 class="h3">Condition général de vente</h1>
-    <p class="text-secondary">Page en construction (Sprint 2).</p>
+    {# HERO #}
+    <section class="pages-hero position-relative overflow-hidden">
+        <div
+            class="pages-hero__bg position-absolute top-0 start-0 w-100 h-100"
+            style="
+                background: #1f5e3b;
+                /*background-image: url('{{ asset('build/images/hero/hero-menus.jpg') }}');*/
+                background-size: cover;
+                background-position: center;
+                filter: brightness(0.6);
+                ">
+        </div>
+
+        <div class="position-relative">
+            <div class="container py-5 py-lg-6 pages-hero__content">
+                <div class="row">
+                    <div class="col-12 col-lg-8 mx-auto text-center text-light">
+                        <h1 class="display-5 fw-bold mb-3">Conditions générales de vente</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CGV CONTENT #}
+    <section class="py-5" aria-labelledby="cgv-title">
+        <div class="container">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 id="cgv-title" class="h3 fw-bold text-center mb-4">Conditions générales de vente</h2>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">1. Objet</h3>
+                        <p class="small text-muted mb-0">
+                            Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits et/ou prestations proposées
+                            sur le site par <strong>Vite &amp; Gourmand</strong>, entreprise familiale dirigée par Julie et José à Bordeaux,
+                            proposant des menus évolutifs pour événements (repas de fêtes, repas sur mesure, etc.).
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">2. Produits / Services</h3>
+                        <p class="small text-muted mb-0">
+                            Description, caractéristiques et disponibilité des produits/services sont celles présentées sur le site au moment
+                            de la commande. Les photos sont non contractuelles.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">3. Prix et taxes</h3>
+                        <p class="small text-muted mb-0">
+                            Les prix sont indiqués en euros TTC, toutes taxes comprises, hors frais éventuels de livraison. Les frais de
+                            livraison sont précisés lors de la commande. L'éditeur se réserve le droit de modifier les prix à tout moment,
+                            mais les produits seront facturés sur la base des tarifs en vigueur au moment de la validation de la commande.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">4. Paiement</h3>
+                        <p class="small text-muted mb-0">
+                            Les paiements sont réalisés en ligne par les moyens proposés on the site (carte bancaire, etc.). La commande
+                            est considérée comme acceptée après validation du paiement. Toutes les transactions sont sécurisées.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">5. Commande</h3>
+                        <p class="small text-muted mb-0">
+                            Le processus de commande comprend la sélection des produits, la saisie des informations de livraison, le paiement
+                            et la confirmation par email. Conservez l'email de confirmation comme preuve.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">6. Livraison / Retrait</h3>
+                        <p class="small text-muted mb-0">
+                            Les modalités de livraison (délais, coûts) sont indiquées lors de la commande. En cas de retrait en magasin, les
+                            conditions et délais sont précisés au moment de la commande. Les délais indiqués sont donnés à titre indicatif.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">7. Droit de rétractation</h3>
+                        <p class="small text-muted mb-0">
+                            Conformément à la législation en vigueur, le client dispose d'un délai de 14 jours pour exercer son droit de
+                            rétractation pour les biens achetés à distance, sauf exceptions (produits périssables, produits confectionnés
+                            sur mesure, produits scellés ne pouvant être renvoyés pour des raisons d'hygiène, etc.). Les modalités de
+                            retour et remboursement sont précisées dans la politique de retour.
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">8. Annulation, retour et remboursement</h3>
+                        <p class="small text-muted mb-0">
+                            Les demandes d'annulation ou de retour doivent être adressées au service client à l'adresse indiquée. Les produits
+                            retournés doivent être en parfait état. Le remboursement intervient selon les modalités détaillées (frais éventuels,
+                            délais de remboursement).
+                        </p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h3 class="h5 fw-bold text-primary mb-2">9. Garanties et service client</h3>
+                        <p class="small text-muted mb-0">
+                            Les produits bénéficient des garanties légales applicables (conformité, vices cachés). Pour toute question, contactez
+                            le service client : <a href="mailto:contact@vite-gourmand.fr">contact@vite-gourmand.fr</a> ou par téléphone au <strong>05 56 00 00 00</strong>.
+                        </p>
+                    </section>
+
+                    <section class="mb-0">
+                        <h3 class="h5 fw-bold text-primary mb-2">10. Litiges</h3>
+                        <p class="small text-muted mb-0">
+                            En cas de litige, le client est invité à contacter le service client. À défaut d'accord amiable, les parties pourront
+                            recourir à la médiation ou saisir les tribunaux compétents. Loi applicable : droit français.
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

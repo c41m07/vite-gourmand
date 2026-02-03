@@ -11,6 +11,9 @@ check: fixer phpstan # twigcs
 phpstan:
 	$(EXEC_APP) ./vendor/bin/phpstan analyse -c phpstan.dist.neon
 
+chmod:
+	$(EXEC_APP) chmod -R 777 ./*
+
 fixer:
 	$(EXEC_APP) ./vendor/bin/php-cs-fixer fix --show-progress="dots" -v
 	$(EXEC_APP) ./vendor/bin/twig-cs-fixer lint --fix --no-cache --config=.twig-cs-fixer.dist.php

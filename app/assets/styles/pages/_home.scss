@@ -12,10 +12,16 @@
     }
 }
 
+
+
 .home-hero__bg {
     background-size: cover;
     background-position: center;
     filter: brightness(.58);
+}
+
+.home-hero__content {
+    min-height: 420px
 }
 
 /* Sections  */
@@ -26,6 +32,7 @@ section {
 /* Cartes  */
 .card {
     border-radius: 1rem;
+    background-color: $light;
 }
 
 /* CTA  */

@@ -15,7 +15,9 @@
 {# Skip link RGAA #}
 <a class="visually-hidden-focusable" href="#main">Aller au contenu</a>
 
-{% include 'partials/_navbar.html.twig' %}
+<header role="banner">
+    {% include 'partials/_navbar.html.twig' %}
+</header>
 
 <main id="main" class="py-0">
     {% block body %}{% endblock %}

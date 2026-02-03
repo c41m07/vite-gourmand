@@ -1,0 +1,26 @@
+.info-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #1f5e3b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-icon .bi {
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.contact-card {
+    width: 100%;
+    max-width: 560px;
+    border: 0;
+}
+
+
+@media (min-width: 1200px) {
+    .contact-card { max-width: 560px; }
+}
