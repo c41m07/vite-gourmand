@@ -16,6 +16,20 @@ class ReviewRepository extends ServiceEntityRepository
         parent::__construct($registry, Review::class);
     }
 
+    public function findFiveRandomReviews()
+    {
+        $ids= $this->getEntityManager()->getConnection()->executeQuery('SELECT id FROM review WHERE validated = 1 ORDER BY RAND() LIMIT 3')
+            ->fetchFirstColumn();
+        if (!$ids) {return [];}
+
+        return $this->createQueryBuilder('r')
+            -> andWhere('r.id IN (:ids)')
+            -> setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Review[] Returns an array of Review objects
 //     */

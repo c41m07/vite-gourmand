@@ -24,7 +24,7 @@ class ContactMessage
     private ?string $message = null;
 
     #[ORM\Column]
-    private ?\DateTime $crcreatedAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ip = null;
@@ -70,14 +70,14 @@ class ContactMessage
         return $this;
     }
 
-    public function getCrcreatedAt(): ?\DateTime
+    public function getcreatedAt(): ?\DateTime
     {
-        return $this->crcreatedAt;
+        return $this->createdAt;
     }
 
-    public function setCrcreatedAt(\DateTime $crcreatedAt): static
+    public function setcreatedAt(\DateTime $createdAt): static
     {
-        $this->crcreatedAt = $crcreatedAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

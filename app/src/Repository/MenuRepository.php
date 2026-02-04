@@ -16,6 +16,17 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
+
+    public function findActiveMenus()
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.active = :active')
+            ->setParameter('active', true)
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 //    /**
 //     * @return Menu[] Returns an array of Menu objects
 //     */

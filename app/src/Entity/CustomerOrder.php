@@ -23,7 +23,7 @@ class CustomerOrder
     private ?\DateTime $serviceDate = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $servicetime = null;
+    private ?string $crserviceTime = null;
 
     #[ORM\Column]
     private ?int $peopleCount = null;
@@ -110,14 +110,14 @@ class CustomerOrder
         return $this;
     }
 
-    public function getServicetime(): ?string
+    public function getcrserviceTime(): ?string
     {
-        return $this->servicetime;
+        return $this->crserviceTime;
     }
 
-    public function setServicetime(string $servicetime): static
+    public function setcrserviceTime(string $crserviceTime): static
     {
-        $this->servicetime = $servicetime;
+        $this->crserviceTime = $crserviceTime;
 
         return $this;
     }
