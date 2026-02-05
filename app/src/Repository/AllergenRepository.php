@@ -16,28 +16,15 @@ class AllergenRepository extends ServiceEntityRepository
         parent::__construct($registry, Allergen::class);
     }
 
-//    /**
-//     * @return Allergen[] Returns an array of Allergen objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Allergen
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findByMenu(\App\Entity\Menu $menu):array
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.dishAllergens', 'da')
+            ->leftJoin('da.dish', 'd')
+            ->leftJoin('d.menuDishes', 'md')
+            ->where('md.menu = :menu')
+            ->setParameter('menu', $menu)
+            ->getQuery()
+            ->getResult();
+    }
 }

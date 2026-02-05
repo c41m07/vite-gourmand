@@ -40,4 +40,14 @@ class DishTypeRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findDishesByMenu(\App\Entity\Menu $menu)
+    {
+        return $this->createQueryBuilder('dt')->addSelect('dt')
+            ->leftJoin('dt.dishes', 'd')->addSelect('d')
+            ->leftJoin('d.menuDishes', 'md')->addSelect('md')
+            ->where('md.menu = :menu')
+            ->setParameter('menu', $menu)
+            ->getQuery()
+            ->getResult();
+    }
 }

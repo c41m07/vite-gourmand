@@ -18,8 +18,8 @@
                     '' }} href="{{ path('app_home') }}">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ currentRoute == 'app_menus' ? 'active' : '' }}" {{ currentRoute == 'app_menus' ? 'aria-current="page"'
-                    : '' }} href="{{ path('app_menus') }}">Tous les menus</a>
+                    <a class="nav-link {{ currentRoute == 'app_menu_index' ? 'active' : '' }}" {{ currentRoute == 'app_menu_index' ? 'aria-current="page"'
+                    : '' }} href="{{ path('app_menu_index') }}">Tous les menus</a>
                 </li>
                 <li class="nav-item">
                     {# TODO créé la route connexion et remplacer # #}
@@ -27,8 +27,8 @@
                        href="#">Connexion</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ currentRoute == 'app_contact' ? 'active' : '' }}" {{ currentRoute == 'app_contact' ?
-                    'aria-current="page"' : '' }} href="{{ path('app_contact') }}">Contact</a>
+                    <a class="nav-link {{ currentRoute == 'app_contact_index' ? 'active' : '' }}" {{ currentRoute == 'app_contact_index' ?
+                    'aria-current="page"' : '' }} href="{{ path('app_contact_index') }}">Contact</a>
                 </li>
             </ul>
         </div>

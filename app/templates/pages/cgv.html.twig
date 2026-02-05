@@ -5,28 +5,10 @@
 
 {% block body %}
     {# HERO #}
-    <section class="pages-hero position-relative overflow-hidden">
-        <div
-            class="pages-hero__bg position-absolute top-0 start-0 w-100 h-100"
-            style="
-                background: #1f5e3b;
-                /*background-image: url('{{ asset('build/images/hero/hero-menus.jpg') }}');*/
-                background-size: cover;
-                background-position: center;
-                filter: brightness(0.6);
-                ">
-        </div>
-
-        <div class="position-relative">
-            <div class="container py-5 py-lg-6 pages-hero__content">
-                <div class="row">
-                    <div class="col-12 col-lg-8 mx-auto text-center text-light">
-                        <h1 class="display-5 fw-bold mb-3">Conditions générales de vente</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    {%  include 'components/hero.html.twig' with {
+        'title': 'Conditions générales de vente',
+        'background': '#1f5e3b'
+    } %}
 
     {# CGV CONTENT #}
     <section class="py-5" aria-labelledby="cgv-title">

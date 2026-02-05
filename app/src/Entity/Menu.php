@@ -43,11 +43,6 @@ class Menu
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
 
-    /**
-     * @var Collection<int, MenuMedia>
-     */
-    #[ORM\OneToMany(targetEntity: MenuMedia::class, mappedBy: 'menu')]
-    private Collection $menuMedia;
 
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Theme $theme = null;
@@ -67,9 +62,11 @@ class Menu
     #[ORM\OneToMany(targetEntity: CustomerOrderMenu::class, mappedBy: 'menu')]
     private Collection $customerOrderMenus;
 
+    #[ORM\ManyToOne(inversedBy: 'menus')]
+    private ?Media $media = null;
+
     public function __construct()
     {
-        $this->menuMedia = new ArrayCollection();
         $this->menuDishes = new ArrayCollection();
         $this->customerOrderMenus = new ArrayCollection();
     }
@@ -187,36 +184,6 @@ class Menu
         return $this;
     }
 
-    /**
-     * @return Collection<int, MenuMedia>
-     */
-    public function getMenuMedia(): Collection
-    {
-        return $this->menuMedia;
-    }
-
-    public function addMenuMedium(MenuMedia $menuMedium): static
-    {
-        if (!$this->menuMedia->contains($menuMedium)) {
-            $this->menuMedia->add($menuMedium);
-            $menuMedium->setMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenuMedium(MenuMedia $menuMedium): static
-    {
-        if ($this->menuMedia->removeElement($menuMedium)) {
-            // set the owning side to null (unless already changed)
-            if ($menuMedium->getMenu() === $this) {
-                $menuMedium->setMenu(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getTheme(): ?Theme
     {
         return $this->theme;
@@ -297,6 +264,18 @@ class Menu
                 $customerOrderMenu->setMenu(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): static
+    {
+        $this->media = $media;
 
         return $this;
     }

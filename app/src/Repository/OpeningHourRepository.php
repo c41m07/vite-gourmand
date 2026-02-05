@@ -16,6 +16,15 @@ class OpeningHourRepository extends ServiceEntityRepository
         parent::__construct($registry, OpeningHour::class);
     }
 
+    public function openingTimerImformation()
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.isClosed = false')
+            ->orderBy('o.dayOfWeek', 'ASC')
+            ->addOrderBy('o.opensAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return OpeningHour[] Returns an array of OpeningHour objects
 //     */

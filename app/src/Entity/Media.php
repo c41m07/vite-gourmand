@@ -28,15 +28,17 @@ class Media
     private ?\DateTime $createdAt = null;
 
     /**
-     * @var Collection<int, MenuMedia>
+     * @var Collection<int, Menu>
      */
-    #[ORM\OneToMany(targetEntity: MenuMedia::class, mappedBy: 'media')]
-    private Collection $menuMedia;
+    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'media')]
+    private Collection $menus;
 
     public function __construct()
     {
-        $this->menuMedia = new ArrayCollection();
+        $this->menus = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -92,32 +94,33 @@ class Media
     }
 
     /**
-     * @return Collection<int, MenuMedia>
+     * @return Collection<int, Menu>
      */
-    public function getMenuMedia(): Collection
+    public function getMenus(): Collection
     {
-        return $this->menuMedia;
+        return $this->menus;
     }
 
-    public function addMenuMedium(MenuMedia $menuMedium): static
+    public function addMenu(Menu $menu): static
     {
-        if (!$this->menuMedia->contains($menuMedium)) {
-            $this->menuMedia->add($menuMedium);
-            $menuMedium->setMedia($this);
+        if (!$this->menus->contains($menu)) {
+            $this->menus->add($menu);
+            $menu->setMedia($this);
         }
 
         return $this;
     }
 
-    public function removeMenuMedium(MenuMedia $menuMedium): static
+    public function removeMenu(Menu $menu): static
     {
-        if ($this->menuMedia->removeElement($menuMedium)) {
+        if ($this->menus->removeElement($menu)) {
             // set the owning side to null (unless already changed)
-            if ($menuMedium->getMedia() === $this) {
-                $menuMedium->setMedia(null);
+            if ($menu->getMedia() === $this) {
+                $menu->setMedia(null);
             }
         }
 
         return $this;
     }
+
 }
