@@ -2,8 +2,9 @@
 
 ## 0. Etat actuel (fevrier 2026)
 - Pages publiques disponibles : Accueil, Menus, Contact, Mentions legales, CGV.
+- Pages d'authentification disponibles : inscription + connexion.
 - Menus : listing statique + filtres UI (donnees non connectees a la BDD).
-- Authentification, commandes, back-office, mails : en cours d'implementation.
+- Commandes, back-office, mails : en cours d'implementation.
 
 ## 1. Presentation
 Application web permettant de consulter des menus, creer un compte, commander, suivre une commande et laisser un avis.
@@ -32,9 +33,10 @@ Application web permettant de consulter des menus, creer un compte, commander, s
 - Voir le detail d'un menu (a venir).
 - Contacter l'entreprise via le formulaire.
 
-## 5. Parcours utilisateur (a venir)
-- Creer un compte (validation mot de passe fort).
-- Se connecter / mot de passe oublie (lien par mail).
+## 5. Parcours utilisateur (partiel)
+- Creer un compte (validation de base) - disponible.
+- Se connecter (page de connexion) - disponible.
+- Mot de passe oublie (lien par mail) - a venir.
 - Commander un menu (formulaire pre-rempli si clic depuis un menu).
 - Voir ses commandes / suivi.
 - Annuler/modifier une commande tant qu'elle n'est pas "acceptee".

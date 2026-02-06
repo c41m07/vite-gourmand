@@ -2,8 +2,10 @@
 
 ## Etat actuel (fevrier 2026)
 - Pages publiques integrees en Twig : Accueil, Menus, Contact, Mentions legales, CGV.
+- Authentification de base : pages login/register + security.yaml.
+- Contact : formulaire + stockage en BDD (ContactMessage).
 - UI + styles en place (Bootstrap + Sass), focus visible et skip-link.
-- BDD/entites, authentification, commandes et stats : en cours d'implementation.
+- Commandes, stats et back-office : en cours d'implementation.
 
 ## Choix techniques (et justifications)
 - Back-end : Symfony 8 (PHP 8.4) pour la structure MVC, la securite et la rapidite de mise en place.

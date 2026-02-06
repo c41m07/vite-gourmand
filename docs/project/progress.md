@@ -20,30 +20,30 @@
 
 ## Sprint 3
 - [x] Modele de donnees cible (MCD + relations)
-- [ ] Entites Doctrine : User + Role
-- [ ] Entites Doctrine : Menu + Theme + Regime
-- [ ] Entites Doctrine : Dish + MenuDish (relation)
-- [ ] Entites Doctrine : Allergen + DishAllergen (relation)
-- [ ] Entites Doctrine : Order + OrderStatusHistory
-- [ ] Entites Doctrine : Review (avis) + validation
-- [ ] Entites Doctrine : OpeningHour + ContactMessage
-- [ ] Migrations Doctrine : generate + migrate
+- [x] Entites Doctrine : User (roles JSON)
+- [x] Entites Doctrine : Menu + Theme + Regime
+- [x] Entites Doctrine : Dish + MenuDish (relation)
+- [x] Entites Doctrine : Allergen + DishAllergen (relation)
+- [x] Entites Doctrine : CustomerOrder + CustomerOrderStatusHistory
+- [x] Entites Doctrine : Review (avis) + validation
+- [x] Entites Doctrine : OpeningHour + ContactMessage
+- [x] Migrations Doctrine : generees
 - [ ] Exporter sql/schema.sql
 - [ ] Creer sql/seed.sql (donnees + comptes demo)
 
 ## Sprint 4
-- [ ] Accueil : afficher avis valides
+- [x] Accueil : afficher avis valides
 - [ ] Endpoint recherche menus (prix/theme/regime/min personnes)
 - [ ] Gestion stock menu (affichage + blocage si stock=0)
 - [ ] JS Fetch : filtres sans rechargement + rendu resultats
-- [ ] Page Detail Menu : infos completes + conditions mises en avant
+- [x] Page Detail Menu : infos completes + conditions mises en avant
 - [x] Page Menus : listing + cards Bootstrap
 
 ## Sprint 5
-- [ ] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
-- [ ] Inscription utilisateur (mdp fort + validations)
+- [x] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
+- [x] Inscription utilisateur (formulaire + validations de base)
 - [ ] Mail de bienvenue (Symfony Mailer)
-- [ ] Connexion / Deconnexion
+- [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
 - [ ] Page Profil utilisateur (affichage infos)
 
