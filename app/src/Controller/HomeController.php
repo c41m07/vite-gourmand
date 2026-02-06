@@ -42,5 +42,15 @@ final class HomeController extends AbstractController
         return $this->render('pages/cgv.html.twig');
     }
 
+    #[Route('/404', name: 'app_404')]
+    public function pageerror(): Response
+    {
+        return $this->render('partials/404.html.twig');
+    }
+    #[Route('/underconstruct', name: 'app_underconstruct')]
+    public function underconstruc(): Response
+    {
+        return $this->render('partials/underconstruct.html.twig');
+    }
 
 }

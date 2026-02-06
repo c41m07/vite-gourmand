@@ -81,3 +81,6 @@ restart: stop start cache-clear watch
 
 log:
 	$(DOCKER_COMPOSE) logs -f
+
+test:
+	$(EXEC_APP) ./vendor/bin/phpunit --testdox

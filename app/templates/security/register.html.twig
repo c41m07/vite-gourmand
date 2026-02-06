@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <section class="auth-page">
+        <div class="container">
+            <h1 class="auth-title">Créer un compte</h1>
+
+            <div class="auth-card">
+                {{ form_start(registrationForm, { attr: { class: 'auth-form' } }) }}
+                    {{ form_errors(registrationForm) }}
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="auth-field">
+                                <label for="{{ registrationForm.lastName.vars.id }}" class="form-label">
+                                    Nom <span class="text-danger fw-bold" aria-hidden="true">*</span>
+                                    <span class="visually-hidden">champ obligatoire</span>
+                                </label>
+                                {{ form_widget(registrationForm.lastName, { attr: { class: 'form-control auth-input' } }) }}
+                                {{ form_errors(registrationForm.lastName) }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="auth-field">
+                                <label for="{{ registrationForm.firstName.vars.id }}" class="form-label">
+                                    Prénom <span class="text-danger fw-bold" aria-hidden="true">*</span>
+                                    <span class="visually-hidden">champ obligatoire</span>
+                                </label>
+                                {{ form_widget(registrationForm.firstName, { attr: { class: 'form-control auth-input' } }) }}
+                                {{ form_errors(registrationForm.firstName) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="{{ registrationForm.email.vars.id }}" class="form-label">
+                            Email <span class="text-danger fw-bold" aria-hidden="true">*</span>
+                            <span class="visually-hidden">champ obligatoire</span>
+                        </label>
+                        {{ form_widget(registrationForm.email, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="{{ registrationForm.plainPassword.vars.id }}" class="form-label">
+                            Mot de passe <span class="text-danger fw-bold" aria-hidden="true">*</span>
+                            <span class="visually-hidden">champ obligatoire</span>
+                        </label>
+                        {{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="{{ registrationForm.phone.vars.id }}" class="form-label">
+                            Téléphone
+                        </label>
+                        {{ form_widget(registrationForm.phone, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_errors(registrationForm.phone) }}
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="{{ registrationForm.postalAddress.vars.id }}" class="form-label">
+                            Adresse
+                        </label>
+                        {{ form_widget(registrationForm.postalAddress, { attr: { class: 'form-control auth-input', rows: 3 } }) }}
+                        {{ form_errors(registrationForm.postalAddress) }}
+                    </div>
+
+                    <button class="auth-btn" type="submit">Créer un compte</button>
+
+                    <div class="auth-divider">ou</div>
+
+                    <div class="auth-footer">
+                        <span>Vous avez déjà un compte ?</span>
+                        <a class="auth-btn auth-btn--outline" href="{{ path('app_login') }}">Se connecter</a>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}
