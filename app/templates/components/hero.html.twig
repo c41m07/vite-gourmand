@@ -1,0 +1,33 @@
+{# templates/components/hero.html.twig #}
+<section class="pages-hero position-relative overflow-hidden">
+    <div
+        class="pages-hero__bg position-absolute top-0 start-0 w-100 h-100"
+        style="
+        {% if asset_url is defined %}
+            background-image: url('{{ asset_url }}');
+        {% elseif background is defined %}
+            background: {{ background }};
+        {% else %}
+            background: var(--primary);
+        {% endif %}
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.6);
+            ">
+    </div>
+
+
+
+    <div class="position-relative">
+        <div class="container py-5 py-lg-6 pages-hero__content">
+            <div class="row">
+                <div class="col-12 col-lg-8 mx-auto text-center text-light">
+                    <h1 class="display-5 fw-bold mb-3">{{ title }}</h1>
+                </div>
+                {% if subtitle is defined %}
+                    <h2 class="page-hero__subtitle mb-3 fw-bold text-center"> {{ subtitle }}</h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

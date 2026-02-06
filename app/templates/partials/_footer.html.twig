@@ -5,15 +5,18 @@
             <div class="col-12 col-md-4 text-start">
                 <h2 class="h6 fw-bold">Horaires</h2>
                 <ul class="list-unstyled mb-0">
-                    <li>Lundi : 11h30 – 14h30 / 18h30 – 22h30</li>
-                    <li>Mardi : 11h30 – 14h30 / 18h30 – 22h30</li>
-                    <li>Mercredi : 11h30 – 14h30 / 18h30 – 22h30</li>
-                    <li>Jeudi : 11h30 – 14h30 / 18h30 – 22h30</li>
-                    <li>Vendredi : 11h30 – 14h30 / 18h30 – 23h00</li>
-                    <li>Samedi : 11h30 – 14h30 / 18h30 – 23h00</li>
-                    <li>Dimanche : 11h30 – 14h30 / 18h30 – 22h00</li>
+{#                    {% for day, slots in openingHours %}#}
+{#                        <li>{{ day }}:#}
+{#                        {%  for slot in slots %}#}
+{#                        {{ slot.opensAt }} - {{ slot.closesAt }}#}
+{#                        {% if not loop.last %} / {% endif %}#}
+{#                        {% endfor %}#}
+{#                        </li>#}
+{#                    {% endfor %}#}
                 </ul>
             </div>
+
+
 
             <div class="col-12 col-md-4 text-center">
                 <h2 class="h6 fw-bold">Vite & Gourmand</h2>

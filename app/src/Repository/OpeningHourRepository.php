@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\OpeningHour;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<OpeningHour>
+ */
+class OpeningHourRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, OpeningHour::class);
+    }
+
+    public function openingTimerImformation()
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.isClosed = false')
+            ->orderBy('o.dayOfWeek', 'ASC')
+            ->addOrderBy('o.opensAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+//    /**
+//     * @return OpeningHour[] Returns an array of OpeningHour objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('o')
+//            ->andWhere('o.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('o.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findOneBySomeField($value): ?OpeningHour
+//    {
+//        return $this->createQueryBuilder('o')
+//            ->andWhere('o.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
+}

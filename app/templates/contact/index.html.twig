@@ -1,0 +1,132 @@
+{# templates/contact/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - Contactés nous!{% endblock %}
+
+{% block body %}
+    {# HERO #}
+    <section class="pages-hero position-relative overflow-hidden">
+        <div
+            class="pages-hero__bg position-absolute top-0 start-0 w-100 h-100"
+            style="
+                background: #1f5e3b;
+                /*background-image: url('{{ asset('build/images/hero/hero-menus.jpg') }}');*/
+                background-size: cover;
+                background-position: center;
+                filter: brightness(0.6);
+                ">
+        </div>
+
+        <div class="position-relative">
+            <div class="container py-5 py-lg-6 pages-hero__content">
+                <div class="row">
+                    <div class="col-12 col-lg-8 mx-auto text-center text-light">
+                        <h1 class="display-5 fw-bold mb-3">Contactez-nous</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# CONTACT #}
+    <section class="contact py-5 py-lg-6">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-start">
+                <!-- INFO -->
+                <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+                    <h2 class="h3 mb-4">Nos coordonnées</h2>
+
+                    <ul class="list-unstyled">
+                        <li class="d-flex mb-4">
+                            <div class="me-3 info-icon">
+                                <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <strong>Adresse</strong>
+                                <div class="text-muted small">5 rue de la rue<br>33000 Bordeaux<br>France</div>
+                            </div>
+                        </li>
+
+                        <li class="d-flex mb-4">
+                            <div class="me-3 info-icon">
+                                <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <strong>Téléphone</strong>
+                                <div class="text-muted small"><a href="tel:0500000000" class="text-decoration-none text-muted">05 00 00 00 00</a></div>
+                            </div>
+                        </li>
+
+                        <li class="d-flex mb-4">
+                            <div class="me-3 info-icon">
+                                <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <strong>Email</strong>
+                                <div class="text-muted small"><a href="mailto:contact@vite-gourmand.fr" class="text-decoration-none text-muted">contact@vite-gourmand.fr</a></div>
+                            </div>
+                        </li>
+
+                        <li class="d-flex">
+                            <div class="me-3 info-icon">
+                                <i class="bi bi-clock-fill" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <strong>Horaires</strong>
+                                <div class="text-muted small">Lundi : Fermé<br>Mardi - Dimanche :<br>12:00 - 14:00<br>18:00 - 23:00</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- FORM -->
+                <div class="col-12 col-lg-8 d-flex justify-content-lg-end">
+                    <div class="card contact-card shadow-sm rounded-3 p-4" style="border:0;">
+                        <h2 class="h3 mb-2">Envoyez-nous un message</h2>
+                        <p class="small text-muted mb-4">
+                            Les champs marqués <span class="text-danger fw-bold" aria-hidden="true">*</span>
+                            sont obligatoires.
+                        </p>
+                        {# TODO ACTION A REMPLACER A PAR ACTION BACKEND #}
+                        <form action="#" method="POST" class="contact-form__form">
+                            <div class="row g-3">
+                                <div class="col-md-6 ">
+                                    <label for="lastname" class="form-label small">Nom <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
+                                    <input id="lastname" name="lastname" type="text" class="form-control border border-dark border-1" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="firstname" class="form-label small">Prénom <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
+                                    <input id="firstname" name="firstname" type="text" class="form-control border border-dark border-1" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="email" class="form-label small">Email <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
+                                    <input id="email" name="email" type="email" class="form-control border border-dark border-1" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="subject" class="form-label small">Sujet <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
+                                    <input id="subject" name="subject" type="text" class="form-control border border-dark border-1" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="message" class="form-label small">Message <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
+                                    <textarea id="message" name="message" rows="6" class="form-control border border-dark border-1"
+                                              required></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <button type="submit" class="btn" style="background:#1f5e3b;color:#fff;width:100%;padding:12px 18px;border-radius:6px;border:0;">
+                                        Envoyer le message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

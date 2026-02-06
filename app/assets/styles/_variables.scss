@@ -18,6 +18,9 @@ $font-size-link: 14px;
 $font-size-small: 14px;
 $link-text-decoration: underline;
 
+:root {
+    --primary: #{$primary};
+}
 /* Body */
 $body-bg:    $sitBg;
 $body-color: #131a15;
