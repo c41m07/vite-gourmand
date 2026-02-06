@@ -2,6 +2,12 @@ mariadb/
 .idea/
 .env
 !app/.env
+app/vendor/
+app/var/
+app/node_modules/
+app/public/build/
+app/.env.local
+app/.env.*.local
 
 ### JetBrains ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider

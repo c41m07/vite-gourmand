@@ -18,10 +18,16 @@
     background-size: cover;
     background-position: center;
     filter: brightness(.58);
+    background-image: url('../../images/hero/hero-home.jpg');
 }
 
 .home-hero__content {
     min-height: 420px
+}
+
+.home-feature-icon {
+    width: 56px;
+    height: 56px;
 }
 
 /* Sections  */
