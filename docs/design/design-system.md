@@ -1,7 +1,7 @@
-# Charte graphique — Vite & Gourmand
+# Charte graphique - Vite & Gourmand
 
 ## 1. Objectif
-Charte graphique et règles UI pour l’application (web).
+Charte graphique et regles UI pour l'application web.
 
 ## 2. Couleurs
 - Primary : #1F5E3B (actions, boutons, liens)
@@ -15,7 +15,7 @@ Charte graphique et règles UI pour l’application (web).
 ## 3. Typographies
 - Titres : Montserrat
 - Texte : Hind Madurai
-- Hiérarchie :
+- Hierarchie :
   - H1 : 40px / 700
   - H2 : 28px / 600
   - Body : 16px
@@ -24,22 +24,25 @@ Charte graphique et règles UI pour l’application (web).
 ## 4. Composants (Bootstrap 5 minimal)
 - Boutons (primary, outline, danger)
 - Cartes menus
-- Badges (thème, régime)
+- Badges (theme, regime)
 - Formulaires (labels, erreurs)
 - Alertes
 
 ## 5. Grille & espacement
 - Container Bootstrap (12 colonnes)
-- Échelle d’espacement 8px (8/16/24/32)
-- Cartes et sections avec marges verticales régulières
+- Echelle d'espacement 8px (8/16/24/32)
+- Cartes et sections avec marges verticales regulieres
 
-## 6. Accessibilité (RGAA - points appliqués)
-- Focus visible (outline conservé)
+## 6. Accessibilite (RGAA - points appliques)
+- Focus visible (outline conserve)
 - Labels explicites (pas de placeholder seul)
 - Contrastes conformes (texte vs fond)
 - Alternatives texte pour images (alt)
 
 ## 7. Maquettes (exports)
-- Desktop x3 : Accueil / Menus + Filtres / Détail Menu
-- Mobile x3 : Accueil / Menus + Filtres / Détail Menu
-- Fichiers : `docs/maquettes/Desktop.png`, `docs/maquettes/Mobil.png`
+- Desktop x3 : Accueil / Menus + Filtres / Detail Menu
+- Mobile x3 : Accueil / Menus + Filtres / Detail Menu
+- Fichiers : `docs/design/maquettes/desktop.png`, `docs/design/maquettes/mobile.png`
+
+## 8. Sources
+- Charte graphique (image) : `docs/design/assets/charte-graphique.png`
