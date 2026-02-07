@@ -1,4 +1,4 @@
-{# templates/menu/index.html.twig #}
+﻿{# templates/menu/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Menus - Liste de nos menus{% endblock %}
@@ -9,134 +9,142 @@
     {% include 'components/hero.html.twig' with  {
         'title': 'Tous nos menus',
         'asset_url': asset('build/images/hero/hero-menus.jpg')
-    }%}
+    } %}
 
     {# MENUS LIST #}
-    {# BOUTTON FILTRE #}
-    <section class="filters-section py-5">
-        <div class="container">
-            <h2 class="visually-hidden">Filtres des menus</h2>
+    <div data-controller="menu-filter">
+        {# BOUTTON FILTRE #}
+        <section class="filters-section py-5">
+            <div class="container">
+                <h2 class="visually-hidden">Filtres des menus</h2>
 
-            <button
-                class="btn btn-success d-inline-flex align-items-center gap-2 px-4 py-3"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#filtersPanel"
-                aria-expanded="true"
-                aria-controls="filtersPanel"
-            >
-                <i class="bi bi-funnel"></i>
-                Afficher les filtres
-            </button>
+                <button
+                    class="btn btn-success d-inline-flex align-items-center gap-2 px-4 py-3"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#filtersPanel"
+                    aria-expanded="true"
+                    aria-controls="filtersPanel"
+                >
+                    <i class="bi bi-funnel"></i>
+                    Afficher les filtres
+                </button>
 
-            <div id="filtersPanel" class="collapse hiden mt-4">
-                <div class="card shadow-sm border-0 filters-card">
-                    <div class="card-body p-4">
+                <div id="filtersPanel" class="collapse hiden mt-4">
+                    <div class="card shadow-sm border-0 filters-card">
+                        <div class="card-body p-4">
 
-                        <form class="filters-form">
-                            <fieldset class="border-0 p-0 m-0 w-100 row g-4">
-                                <legend class="visually-hidden">Options de filtrage</legend>
+                            <form class="filters-form" data-menu-filter-target="form"
+                                  data-action="input->menu-filter#filter change->menu-filter#filter reset->menu-filter#reset">
+                                <fieldset class="border-0 p-0 m-0 w-100 row g-4">
+                                    <legend class="visually-hidden">Options de filtrage</legend>
 
-                            <div class="col-12 col-lg-4">
-                                <label class="form-label small" for="priceMin">
-                                    Prix minimum : <span id="priceMinValue">0€</span>
-                                </label>
-                                <input
-                                    class="form-range"
-                                    type="range"
-                                    id="priceMin"
-                                    min="0"
-                                    max="100"
-                                    step="1"
-                                    value="0"
-                                >
-                            </div>
+                                    <div class="col-12 col-lg-4">
+                                        <label class="form-label small" for="priceMin">
+                                            Prix minimum : <span id="priceMinValue" data-menu-filter-target="priceMinValue">0€</span>
+                                        </label>
+                                        <input
+                                            class="form-range"
+                                            type="range"
+                                            id="priceMin"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value="0"
+                                            name="minPrice"
+                                        >
+                                    </div>
 
-                            <div class="col-12 col-lg-4">
-                                <label class="form-label small" for="priceMax">
-                                    Prix maximum : <span id="priceMaxValue">100€</span>
-                                </label>
-                                <input
-                                    class="form-range"
-                                    type="range"
-                                    id="priceMax"
-                                    min="0"
-                                    max="100"
-                                    step="1"
-                                    value="100"
-                                >
-                            </div>
+                                    <div class="col-12 col-lg-4">
+                                        <label class="form-label small" for="priceMax">
+                                            Prix maximum : <span id="priceMaxValue" data-menu-filter-target="priceMaxValue">100€</span>
+                                        </label>
+                                        <input
+                                            class="form-range"
+                                            type="range"
+                                            id="priceMax"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value="100"
+                                            name="maxPrice"
+                                        >
+                                    </div>
 
-                            <div class="col-12 col-lg-4">
-                                <label class="form-label small" for="themeSelect">Thème</label>
-                                <select class="form-select" id="themeSelect">
-                                    {% for theme in themes  %}
-                                        <option value="{{ theme.id }}">{{ theme.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                    <div class="col-12 col-lg-4">
+                                        <label class="form-label small" for="themeSelect">Thème</label>
+                                        <select class="form-select" id="themeSelect" name="theme">
+                                            <option value="" selected>Tous</option>
+                                            {% for theme in themes %}
+                                                <option value="{{ theme.id }}">{{ theme.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                            <div class="col-12 col-lg-4">
-                                <label class="form-label small" for="dietSelect">Régime</label>
-                                <select class="form-select" id="dietSelect">
-                                    {% for diet in diets %}
-                                    <option value="{{ diet.id }}">{{diet.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                    <div class="col-12 col-lg-4">
+                                        <label class="form-label small" for="dietSelect">Régime</label>
+                                        <select class="form-select" id="dietSelect" name="diet">
+                                            <option value="" selected>Tous</option>
+                                            {% for diet in diets %}
+                                                <option value="{{ diet.id }}">{{ diet.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                            <div class="col-12 col-lg-4">
-                                <label class="form-label small" for="peopleRange">
-                                    Nombre de personnes : <span id="peopleValue">Tous</span>
-                                </label>
-                                <input
-                                    class="form-range"
-                                    type="range"
-                                    id="peopleRange"
-                                    min="0"
-                                    max="10"
-                                    step="1"
-                                    value="0"
-                                >
-                                <div class="form-text">0 = Tous</div>
-                            </div>
+                                    <div class="col-12 col-lg-4">
+                                        <label class="form-label small" for="peopleRange">
+                                            Nombre de personnes : <span id="peopleValue" data-menu-filter-target="peopleValue">Tous</span>
+                                        </label>
+                                        <input
+                                            class="form-range"
+                                            type="range"
+                                            id="peopleRange"
+                                            min="0"
+                                            max="10"
+                                            step="1"
+                                            value="0"
+                                            name="minPersons"
+                                        >
+                                        <div class="form-text">0 = Tous</div>
+                                    </div>
 
-                                <div class="col-12 col-lg-4 d-flex align-items-end">
-                                    <button type="reset" class="btn btn-outline-success w-100 py-2">
-                                        Réinitialiser
-                                    </button>
-                                </div>
+                                    <div class="col-12 col-lg-4 d-flex align-items-end">
+                                        <button type="reset" class="btn btn-outline-success w-100 py-2">
+                                            Réinitialiser
+                                        </button>
+                                    </div>
 
-                            </fieldset>
-                        </form>
+                                </fieldset>
+                            </form>
+
+                        </div>
                     </div>
                 </div>
+
+                <p class="mt-3 mb-0" data-menu-filter-target="count">{{ menus is defined ? menus|length :'n/a' }} menus trouvés</p>
+
             </div>
+        </section>
+        {# CARD MENUS #}
+        <section class="pb-5">
+            <div class="container">
+                <h2 class="visually-hidden">Liste des menus</h2>
+                <div class="row row-gap-4" id="menu-cards" data-menu-filter-target="list">
+                    {% for menu in menus %}
 
-            <p class="mt-3 mb-0">{{ menus is defined ? menus|length :'n/a' }} menus trouvés</p>
+                        {% include 'menu/components/card.html.twig' %}
 
-        </div>
-    </section>
+                    {% else %}
 
-    {# CARD MENUS #}
-    <section class="pb-5">
-        <div class="container">
-            <h2 class="visually-hidden">Liste des menus</h2>
-            <div class="row row-gap-4" id="menu-cards">
-                {% for menu in menus %}
+                        <p>
+                            Pas de menu disponible
+                        </p>
 
-                    {%  include 'menu/components/card.html.twig' %}
-
-                {%  else %}
-
-                    <p>
-                        Pas de menu disponible
-                    </p>
-
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     {#  IMFORMATION PRATIQUE #}
     <section class="py-5">
@@ -146,21 +154,21 @@
 
                 <div class="row">
                     <div class="col-md-4 text-start">
-                        <h3 class="h5 text-primary">Allergéne</h3>
-                        <p class="small">Nos plats peuvent contenir des allergènes.<br>
-                            N'hésitez pas à nous contacter pour plus d'informations.
+                        <h3 class="h5 text-primary">AllergÃ©ne</h3>
+                        <p class="small">Nos plats peuvent contenir des allergÃ¨nes.<br>
+                            N'hÃ©sitez pas Ã  nous contacter pour plus d'informations.
                         </p>
                     </div>
                     <div class="col-md-4 text-center">
-                        <h3 class="h5 text-primary">Réservation</h3>
-                        <p class="small">Nous recommandons de commander 48 à 72h à l'avance selon le menu choisi.
+                        <h3 class="h5 text-primary">RÃ©servation</h3>
+                        <p class="small">Nous recommandons de commander 48 Ã  72h Ã  l'avance selon le menu choisi.
                         </p>
                     </div>
                     <div class="col-md-4 text-start text-lg-end">
                         <h3 class="h5 text-primary">Horaires</h3>
                         <p class="small">Midi : 12:30-14:30</p>
                         <p class="small">Soir : 18:30-22:30</p>
-                        <p class="small">Fermé le lundi</p>
+                        <p class="small">FermÃ© le lundi</p>
                     </div>
 
 
@@ -171,3 +179,4 @@
     </section>
 
 {% endblock %}
+
