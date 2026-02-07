@@ -27,28 +27,49 @@ class MenuRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-//    /**
-//     * @return Menu[] Returns an array of Menu objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Menu
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function search(array $filters): array
+{
+    $qb = $this->createQueryBuilder('m')
+        ->leftJoin('m.theme', 't')->addSelect('t')
+        ->leftJoin('m.diet', 'd')->addSelect('d');
+
+    if ($filters['minPrice'] !== null && $filters['minPrice'] !== '') {
+        $qb->andWhere('m.basePrice >= :minPrice')
+            ->setParameter('minPrice', (int) $filters['minPrice']);
+    }
+
+    if ($filters['maxPrice'] !== null && $filters['maxPrice'] !== '') {
+        $qb->andWhere('m.basePrice <= :maxPrice')
+            ->setParameter('maxPrice', (int) $filters['maxPrice']);
+    }
+
+    if ($filters['theme'] !== null && $filters['theme'] !== '') {
+        $qb->andWhere('t.id = :theme')
+            ->setParameter('theme', (int) $filters['theme']);
+    }
+
+    if ($filters['diet'] !== null && $filters['diet'] !== '') {
+        $qb->andWhere('d.id = :diet')
+            ->setParameter('diet', (int) $filters['diet']);
+    }
+
+    if ($filters['minPersons'] !== null && $filters['minPersons'] !== '') {
+        $qb->andWhere('m.minPeople <= :minPersons')
+            ->setParameter('minPersons', (int) $filters['minPersons']);
+    }
+
+    if ($filters['stock'] !== null && $filters['stock'] !== '') {
+        $qb->andWhere('m.stock >= :stock')
+            ->setParameter('stock', (int) $filters['stock']);
+    }
+
+    if ($filters['isActive'] !== null && $filters['isActive'] !== '') {
+        $qb->andWhere('m.active = :active')
+            ->setParameter('active', filter_var($filters['isActive'], FILTER_VALIDATE_BOOLEAN));
+    }
+
+    return $qb->getQuery()->getResult();
+}
+
 }

@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu
@@ -14,27 +16,35 @@ class Menu
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['menu:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['menu:list'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['menu:list'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['menu:list'])]
     private ?int $minPeople = null;
 
     #[ORM\Column]
+    #[Groups(['menu:list'])]
     private ?int $basePrice = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['menu:list'])]
     private ?string $conditionInfo = null;
 
     #[ORM\Column]
+    #[Groups(['menu:list'])]
     private ?int $stock = null;
 
     #[ORM\Column]
+    #[Groups(['menu:list'])]
     private ?bool $active = null;
 
     #[ORM\Column]
@@ -189,6 +199,12 @@ class Menu
         return $this->theme;
     }
 
+    #[Groups(['menu:list'])]
+    public function getThemeName(): ?string
+    {
+        return $this->theme?->getName();
+    }
+
     public function setTheme(?Theme $theme): static
     {
         $this->theme = $theme;
@@ -201,11 +217,29 @@ class Menu
         return $this->diet;
     }
 
+    #[Groups(['menu:list'])]
+    public function getDietName(): ?string
+    {
+        return $this->diet?->getName();
+    }
+
     public function setDiet(?Diet $diet): static
     {
         $this->diet = $diet;
 
         return $this;
+    }
+
+    #[Groups(['menu:list'])]
+    public function getMediaUrl(): ?string
+    {
+        return $this->media?->getImgUrl();
+    }
+
+    #[Groups(['menu:list'])]
+    public function getMediaAltText(): ?string
+    {
+        return $this->media?->getAltText();
     }
 
     /**
