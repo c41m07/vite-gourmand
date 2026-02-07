@@ -20,7 +20,7 @@ export default class extends Controller {
         return Number.isNaN(number) ? '' : number * 100;
     };
 
-        render(items){
+    render(items){
         const formatPrice = (cents) => {
             const value = Number(cents) || 0;
             const euros = (value / 100).toFixed(2).replace('.', ',');
@@ -95,8 +95,8 @@ export default class extends Controller {
     }
 
     updateLabels() {
-        this.priceMinValueTarget.textContent = `${this.formTarget.minPrice.value}\u20ac`;
-        this.priceMaxValueTarget.textContent = `${this.formTarget.maxPrice.value}\u20ac`;
+        this.priceMinValueTarget.textContent = `${this.formTarget.minPrice.value}€`;
+        this.priceMaxValueTarget.textContent = `${this.formTarget.maxPrice.value}€`;
         const peopleValue = this.formTarget.minPersons.value;
         this.peopleValueTarget.textContent = peopleValue === '0' ? 'Tous' : peopleValue;
     }
@@ -115,5 +115,7 @@ export default class extends Controller {
             this.countTarget.textContent = `${count} menus`;
         }
     }
+
+
 
 }
