@@ -26,7 +26,7 @@ final class ContactController extends AbstractController
             $entityManager->persist($contactMessage);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_contact_index');
+            return $this->redirectToRoute('app_contact_success');
         }
 
         return $this->render('contact/index.html.twig', [
@@ -34,4 +34,11 @@ final class ContactController extends AbstractController
         ]);
     }
 
-}
+    #[Route('/success', name: '_success', methods: ['GET'])]
+
+    public function success(): Response
+    {
+        return $this->render('contact/success.html.twig');
+    }
+
+    }
