@@ -1,4 +1,4 @@
-{# templates/menu/show.html.twig #}
+﻿{# templates/menu/show.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}
@@ -31,9 +31,9 @@
             {title: 'régime',
                 value: menu.diet ? menu.diet.name : 'pas de régime enregistré'},
             {title: 'Personnes minimales',
-                value: menu.minPeople ? menu.minPeople : 'pas de personnes minimal enregistré'},
+                value: menu.minPeople is not null? menu.minPeople : 'pas de personnes minimal enregistré'},
             {title:'stock',
-                value: menu.stock ? menu.stock : 'pas de stock enregistré'},
+                value: menu.stock is not null ? menu.stock : 'pas de stock enregistré'},
         ] %}
         <div class="row g-3 menu-show__meta">
             {% for meta in metas %}
@@ -90,3 +90,4 @@
 
 
 {% endblock %}
+
