@@ -6,11 +6,8 @@ export default class extends Controller {
 
         const queryString = this.buildParams();
         const url = queryString ? `/api/menus?${queryString}` : '/api/menus';
-        // console.log(url);
         const response = await fetch(url);
         const menus = await response.json();
-        // console.log(menus);
-        // console.log(menus.length);
         this.render(menus);
         this.updateCount(menus.length);
 
@@ -27,12 +24,14 @@ export default class extends Controller {
             return `${euros}€`;
         };
 
+
+        // TODO: a revoir pour éviter injection //
         if (!items || items.length === 0) {
             this.listTarget.innerHTML = '<p>Pas de menu disponible</p>';
             return;
         }
 
-        // TODO: consider safer rendering to avoid injection.
+        // TODO: a revoir pour éviter injection //
         const html = items.map((menu) => `
           <div class="col-12 col-md-6 col-lg-4 menu-card">
             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">

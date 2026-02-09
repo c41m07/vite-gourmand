@@ -8,23 +8,25 @@
 - [x] Preparer livrables ECF (dossiers docs + plan des PDFs)
 
 ## Sprint 1
-- [x] Maquettes Desktop x3 (Accueil / Menus + filtres / Detail menu)
-- [x] Maquettes Mobile x3 (Accueil / Menus + filtres / Detail menu)
-- [x] Charte graphique PDF (couleurs, typo, composants Bootstrap, formulaires, alertes)
+- [x] Maquettes Desktop x3 (Accueil / Menus + filtres / Detail menu) - export `docs/design/maquettes/desktop.png`
+- [x] Maquettes Mobile x3 (Accueil / Menus + filtres / Detail menu) - export `docs/design/maquettes/mobile.png`
+- [x] Charte graphique + design system (couleurs, typo, composants Bootstrap, formulaires, alertes) - `docs/design/design-system.md` + `docs/design/assets/charte-graphique.png`
 
 ## Sprint 2
 - [x] Base Twig + Bootstrap + layout (navbar/footer)
 - [x] Footer : horaires + liens Mentions legales + CGV
 - [x] Pages publiques : Accueil / Menus / Contact / Mentions legales / CGV
-- [x] RGAA base : structure semantique + focus visible + labels formulaires
+- [x] RGAA base : structure semantique + skip link + focus visible + labels formulaires
 
 ## Sprint 3
 - [x] Modele de donnees cible (MCD + relations)
 - [x] Entites Doctrine : User (roles JSON)
-- [x] Entites Doctrine : Menu + Theme + Regime
-- [x] Entites Doctrine : Dish + MenuDish (relation)
+- [x] Entites Doctrine : Menu + Theme + Diet (regime) + Media
+- [x] Entites Doctrine : Dish + DishType + MenuDish (relation)
 - [x] Entites Doctrine : Allergen + DishAllergen (relation)
-- [x] Entites Doctrine : CustomerOrder + CustomerOrderStatusHistory
+- [x] Entites Doctrine : CustomerOrder + CustomerOrderMenu (relation)
+- [x] Entites Doctrine : OrderStatus + CustomerOrderStatusHistory
+- [x] Entites Doctrine : EquipmentLoan + EquipmentLoanStatus
 - [x] Entites Doctrine : Review (avis) + validation
 - [x] Entites Doctrine : OpeningHour + ContactMessage
 - [x] Migrations Doctrine : generees
@@ -33,9 +35,10 @@
 
 ## Sprint 4
 - [x] Accueil : afficher avis valides
-- [ ] Endpoint recherche menus (prix/theme/regime/min personnes)
-- [ ] Gestion stock menu (affichage + blocage si stock=0)
-- [ ] JS Fetch : filtres sans rechargement + rendu resultats
+- [x] Endpoint recherche menus (prix/theme/diet/min personnes/stock/actif)
+- [x] JS Fetch : filtres sans rechargement + rendu resultats
+- [x] Affichage stock menu (detail menu)
+- [ ] Blocage si stock=0 (listing/detail/commande)
 - [x] Page Detail Menu : infos completes + conditions mises en avant
 - [x] Page Menus : listing + cards Bootstrap
 

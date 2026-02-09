@@ -21,7 +21,7 @@ final class MenuApiController extends AbstractController
             'theme' => $request->query->get('theme'),
             'diet' => $request->query->get('diet'),
             'minPersons' => $request->query->get('minPersons'),
-            'stock' => $request->query->get('Stock'),
+            'stock' => $request->query->get('stock'),
             'isActive' => $request->query->get('isActive'),
         ];
 

@@ -2,7 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-{{ menu.title }}
+    {{ menu.title }}
 {% endblock %}
 {% block body %}
     {# HERO #}
@@ -10,7 +10,7 @@
         'title': menu.title,
         'asset_url': menu.media.imgUrl,
         'subtitle': (menu.basePrice / 100)|number_format(2, ',', ' ') ~ '€ par personne'
-    }%}
+    } %}
 
 
     <section class="menu-show py-5 container">
@@ -27,17 +27,17 @@
         </div>
         {% set metas = [
             {title: 'theme',
-            value: menu.theme ? menu.theme.name : 'pas de theme enregistré'},
+                value: menu.theme ? menu.theme.name : 'pas de theme enregistré'},
             {title: 'régime',
-            value: menu.diet ? menu.diet.name : 'pas de régime enregistré'},
+                value: menu.diet ? menu.diet.name : 'pas de régime enregistré'},
             {title: 'Personnes minimales',
-            value: menu.minPeople ? menu.minPeople : 'pas de nombre de personnes enregistré'},
+                value: menu.minPeople ? menu.minPeople : 'pas de personnes minimal enregistré'},
             {title:'stock',
-            value: menu.stock ? menu.stock : 'pas de stock enregistré'},
+                value: menu.stock ? menu.stock : 'pas de stock enregistré'},
         ] %}
         <div class="row g-3 menu-show__meta">
-            {%  for meta in metas %}
-                {% include 'menu/components/metacard.html.twig' with meta only%}
+            {% for meta in metas %}
+                {% include 'menu/components/metacard.html.twig' with meta only %}
             {% endfor %}
         </div>
 
