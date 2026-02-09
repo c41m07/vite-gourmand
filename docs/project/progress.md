@@ -1,6 +1,7 @@
 # Avancement
 
 ## Sprint 0
+
 - [x] Repo GitHub public + branches main/develop + convention feature/
 - [x] Initialisation Symfony 8 (webapp) + lancement local OK
 - [x] Structure repo : /docs + /sql + .gitignore + README
@@ -8,17 +9,21 @@
 - [x] Preparer livrables ECF (dossiers docs + plan des PDFs)
 
 ## Sprint 1
+
 - [x] Maquettes Desktop x3 (Accueil / Menus + filtres / Detail menu) - export `docs/design/maquettes/desktop.png`
 - [x] Maquettes Mobile x3 (Accueil / Menus + filtres / Detail menu) - export `docs/design/maquettes/mobile.png`
-- [x] Charte graphique + design system (couleurs, typo, composants Bootstrap, formulaires, alertes) - `docs/design/design-system.md` + `docs/design/assets/charte-graphique.png`
+- [x] Charte graphique + design system (couleurs, typo, composants Bootstrap, formulaires, alertes) - `docs/design/design-system.md` +
+  `docs/design/assets/charte-graphique.png`
 
 ## Sprint 2
+
 - [x] Base Twig + Bootstrap + layout (navbar/footer)
 - [x] Footer : horaires + liens Mentions legales + CGV
 - [x] Pages publiques : Accueil / Menus / Contact / Mentions legales / CGV
 - [x] RGAA base : structure semantique + skip link + focus visible + labels formulaires
 
 ## Sprint 3
+
 - [x] Modele de donnees cible (MCD + relations)
 - [x] Entites Doctrine : User (roles JSON)
 - [x] Entites Doctrine : Menu + Theme + Diet (regime) + Media
@@ -34,15 +39,17 @@
 - [ ] Creer sql/seed.sql (donnees + comptes demo)
 
 ## Sprint 4
+
 - [x] Accueil : afficher avis valides
 - [x] Endpoint recherche menus (prix/theme/diet/min personnes/stock/actif)
 - [x] JS Fetch : filtres sans rechargement + rendu resultats
 - [x] Affichage stock menu (detail menu)
-- [ ] Blocage si stock=0 (listing/detail/commande)
+- [x] Blocage si stock=0 (listing/detail/commande)
 - [x] Page Detail Menu : infos completes + conditions mises en avant
 - [x] Page Menus : listing + cards Bootstrap
 
 ## Sprint 5
+
 - [x] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
 - [x] Inscription utilisateur (formulaire + validations de base)
 - [ ] Mail de bienvenue (Symfony Mailer)
@@ -51,6 +58,7 @@
 - [ ] Page Profil utilisateur (affichage infos)
 
 ## Sprint 6
+
 - [ ] Formulaire commande (pre-rempli si connecte)
 - [ ] Pre-selection menu depuis detail menu
 - [ ] Calcul livraison (Bordeaux=0 sinon 5 EUR + 0,59 EUR/km)
@@ -61,6 +69,7 @@
 - [ ] Mail confirmation commande
 
 ## Sprint 7
+
 - [ ] Dashboard user : liste commandes
 - [ ] Detail commande : infos + historique statuts
 - [ ] Modifier commande si statut != accepte (menu non modifiable)
@@ -69,6 +78,7 @@
 - [ ] Formulaire avis (note 1-5 + commentaire) + statut "en attente"
 
 ## Sprint 8
+
 - [ ] Back-office employe : acces + navigation
 - [ ] CRUD Menus + stock
 - [ ] CRUD Plats + liaison menus (MenuDish)
@@ -80,6 +90,7 @@
 - [ ] Moderation avis : valider/refuser
 
 ## Sprint 9
+
 - [ ] Admin : acces + navigation
 - [ ] Admin : creer employe + mail "compte cree" sans mdp
 - [ ] Admin : desactiver employe
@@ -90,6 +101,7 @@
 - [ ] Graphique Chart.js (dashboard stats)
 
 ## Sprint 10
+
 - [ ] RGAA : audit + correctifs (labels/focus/erreurs/contraste)
 - [ ] Securite : durcissement (CSRF/validation/acces/upload)
 - [ ] Pages legales : Mentions legales + CGV + donnees personnelles
@@ -102,5 +114,6 @@
 - [ ] Doc technique finale (schemas + deploiement + justifs)
 
 ## Sans sprint
+
 - [x] Methode de travail
 - [x] Definition of Done

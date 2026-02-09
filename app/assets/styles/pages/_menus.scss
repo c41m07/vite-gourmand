@@ -8,3 +8,17 @@
 .menu-card .card-body {
     padding: 1.25rem;
 }
+
+.menu-card__alert {
+    border-radius: 14px;
+    border: 1px solid transparent;
+    box-shadow: 0 10px 24px rgba(15, 20, 17, .06);
+    font-weight: 600;
+    text-align: center;
+}
+
+.menu-card__alert--danger {
+    background: rgba(198, 78, 68, .12);
+    border-color: rgba(198, 78, 68, .35);
+    color: #b13b32;
+}
