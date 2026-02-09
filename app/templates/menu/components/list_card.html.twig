@@ -1,0 +1,11 @@
+﻿{% for menu in menus %}
+
+    {% include 'menu/components/card.html.twig' %}
+
+{% else %}
+
+    <p>
+        Pas de menu disponible
+    </p>
+
+{% endfor %}

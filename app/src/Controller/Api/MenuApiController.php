@@ -6,7 +6,6 @@ use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 
@@ -25,14 +24,12 @@ final class MenuApiController extends AbstractController
             'isActive' => $request->query->get('isActive'),
         ];
 
-        $menu = $menuRepository->search($filters);
-
+        $menus = $menuRepository->search($filters);
 
         return $this->json(
-            $menu,
-            Response::HTTP_OK, [],
-            ['groups' =>
-                'menu:list'
+            [
+                'body' => $this->renderView('menu/components/list_card.html.twig', ['menus' => $menus]),
+                'count' => count($menus),
             ]
         );
     }

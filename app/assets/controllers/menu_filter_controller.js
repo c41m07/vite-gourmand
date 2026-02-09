@@ -7,53 +7,15 @@ export default class extends Controller {
         const queryString = this.buildParams();
         const url = queryString ? `/api/menus?${queryString}` : '/api/menus';
         const response = await fetch(url);
-        const menus = await response.json();
-        this.render(menus);
-        this.updateCount(menus.length);
+        const data = await response.json();
+        this.listTarget.innerHTML = data.body;
+        this.updateCount(data.count);
 
     }
     convertToCents = (value)=>{
         const number = parseFloat( String(value).replace(',', '.'));
         return Number.isNaN(number) ? '' : number * 100;
     };
-
-    render(items){
-        const formatPrice = (cents) => {
-            const value = Number(cents) || 0;
-            const euros = (value / 100).toFixed(2).replace('.', ',');
-            return `${euros}€`;
-        };
-
-
-        // TODO: a revoir pour éviter injection //
-        if (!items || items.length === 0) {
-            this.listTarget.innerHTML = '<p>Pas de menu disponible</p>';
-            return;
-        }
-
-        // TODO: a revoir pour éviter injection //
-        const html = items.map((menu) => `
-          <div class="col-12 col-md-6 col-lg-4 menu-card">
-            <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-              ${menu.mediaUrl
-                  ? `<img src="${menu.mediaUrl}" class="card-img-top menu-card__img" alt="${menu.mediaAltText ? menu.mediaAltText : ''}">`
-                  : '<div class="menu-card__img bg-primary"></div>'}
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-start gap-3">
-                  <h3 class="card-title h5 fw-bold mb-0">${menu.title}</h3>
-                  <span class="fw-bold text-success">${formatPrice(menu.basePrice)}</span>
-                </div>
-                <p class="text-muted small mb-2">Minimum ${menu.minPeople} personnes</p>
-                ${menu.description ? `<p class="card-text text-muted mb-4">${menu.description}</p>` : ''}
-                <a href="/menu/${menu.id}" class="btn btn-outline-success mt-auto align-self-center px-4">Voir detail</a>
-              </div>
-            </div>
-          </div>
-        `).join('');
-
-        this.listTarget.innerHTML = html;
-
-    }
 
     buildParams(){
 
@@ -80,17 +42,15 @@ export default class extends Controller {
         this.updateCount();
     }
 
-    filter() {
+     async filter() {
         this.updateLabels();
         this.updateCount();
-        this.fetchMenus();
+        await this.fetchMenus();
     }
 
     reset() {
-        setTimeout(() => {
             this.updateLabels();
             this.updateCount();
-        }, 0);
     }
 
     updateLabels() {
