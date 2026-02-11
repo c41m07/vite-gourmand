@@ -34,10 +34,10 @@
                     </li>
                 {% elseif is_granted('ROLE_USER') %}
                     <li class="nav-item">
-                        <a class="nav-link {{ currentRoute == 'app_underconstruct' ? 'active' : '' }}" {{ currentRoute == 'app_underconstruct' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_underconstruct') }}">Profil</a>
+                        <a class="nav-link {{ currentRoute == 'app_user_profile' ? 'active' : '' }}" {{ currentRoute == 'app_user_profile' ?
+                        'aria-current="page"' : '' }} href="{{ path('app_user_profile') }}">Profil</a>
                     </li>
-                    {% else %}
+                {% else %}
                 {% endif %}
 
                 <li class="nav-item">
