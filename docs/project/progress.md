@@ -52,7 +52,7 @@
 
 - [x] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
 - [x] Inscription utilisateur (formulaire + validations de base)
-- [ ] Mail de bienvenue (Symfony Mailer)
+- [x] Mail de bienvenue (Symfony Mailer)
 - [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
 - [ ] Page Profil utilisateur (affichage infos)

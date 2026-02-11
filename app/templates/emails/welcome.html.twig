@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bienvenue</title>
+    <style>
+        body.email-body {
+            margin: 0;
+            padding: 0;
+            background: #fbf7f0;
+            font-family: "Hind Madurai", Arial, sans-serif;
+        }
+        .email-preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        .email-wrapper {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fbf7f0;
+        }
+        .email-wrapper-cell {
+            padding: 24px 12px;
+            text-align: center;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(15, 20, 17, 0.08);
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .email-hero {
+            background: #1f5e3b;
+            padding: 28px;
+        }
+        .email-hero-title {
+            margin: 0;
+            color: #ffffff;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .email-hero-sub {
+            margin: 8px 0 0;
+            color: #dfe9e2;
+            font-size: 14px;
+        }
+        .email-content {
+            padding: 28px;
+        }
+        .email-text {
+            margin: 0 0 12px;
+            color: #0f1411;
+            font-size: 16px;
+        }
+        .email-text--spaced {
+            margin-bottom: 16px;
+        }
+        .email-cta-table {
+            margin: 16px 0 22px;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+        .email-cta-cell {
+            background: #C9A227;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .email-cta {
+            display: inline-block;
+            padding: 12px 22px;
+            color: #0f1411;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .email-cta-secondary {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #1f5e3b;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid #1f5e3b;
+            border-radius: 10px;
+        }
+        .email-cta-secondary-cell {
+            text-align: center;
+        }
+        .email-spacer {
+            height: 10px;
+            line-height: 10px;
+            font-size: 0;
+        }
+        .email-section-title {
+            margin: 0 0 10px;
+            color: #0f1411;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .email-panel {
+            background: #fbf7f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 0 0 16px;
+        }
+        .email-list {
+            margin: 0;
+            padding: 0 0 0 16px;
+            color: #0f1411;
+            font-size: 14px;
+        }
+        .email-list-item {
+            margin: 0 0 6px;
+        }
+        .email-help {
+            margin: 0 0 8px;
+            color: #0f1411;
+            font-size: 14px;
+        }
+        .email-link {
+            color: #1f5e3b;
+            font-weight: 600;
+        }
+        .email-muted {
+            margin: 24px 0 0;
+            color: #7a8c7a;
+            font-size: 12px;
+        }
+        .email-footer {
+            background: #f4efe6;
+            padding: 14px 28px;
+            color: #7a8c7a;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="email-body">
+<span class="email-preheader">
+    Bienvenue sur {{ appName }} - ton compte est pret.
+</span>
+
+<table role="presentation" class="email-wrapper">
+    <tr>
+        <td class="email-wrapper-cell">
+            <table role="presentation" class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1 class="email-hero-title">
+                            Bienvenue sur {{ appName }}
+                        </h1>
+                        <p class="email-hero-sub">
+                            Des menus gourmands, simples et rapides a commander.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="email-content">
+                        <p class="email-text">
+                            Salut {{ firstName }},
+                        </p>
+                        <p class="email-text email-text--spaced">
+                            Merci pour ton inscription. Ton compte est pret : tu peux te connecter et commencer a commander.
+                        </p>
+
+                        <table role="presentation" class="email-cta-table">
+                            <tr>
+                                <td class="email-cta-cell">
+                                    <a class="email-cta" href="{{ url('app_login') }}">
+                                        Se connecter
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr><td class="email-spacer"></td></tr>
+                            <tr>
+                                <td class="email-cta-secondary-cell">
+                                    <a class="email-cta-secondary" href="{{ url('app_menu_index') }}">
+                                        Voir les menus
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="email-panel">
+                            <h2 class="email-section-title">Pour bien demarrer</h2>
+                            <ul class="email-list">
+                                <li class="email-list-item">Choisis un menu qui te fait envie.</li>
+                                <li class="email-list-item">Selectionne la date et le nombre de personnes.</li>
+                                <li class="email-list-item">Valide, on s&#039;occupe du reste.</li>
+                            </ul>
+                        </div>
+
+                        <div class="email-panel">
+                            <h2 class="email-section-title">Pourquoi {{ appName }} ?</h2>
+                            <ul class="email-list">
+                                <li class="email-list-item">Menus frais, gouts simples et gourmands.</li>
+                                <li class="email-list-item">Commande rapide, livraison sans prise de tete.</li>
+                            </ul>
+                        </div>
+
+                        <p class="email-help">
+                            Besoin d&rsquo;aide ? <a class="email-link" href="{{ url('app_contact_index') }}">Contacte-nous</a>, on repond vite.
+                        </p>
+
+                        <p class="email-text">
+                            Tu peux modifier tes infos de profil a tout moment.
+                        </p>
+
+                        <p class="email-muted">
+                            Si tu n&rsquo;es pas a l&rsquo;origine de cette inscription, ignore simplement ce message.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="email-footer">
+                        {{ appName }} &middot; <a class="email-link" href="{{ url('app_contact_index') }}">Contact</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
