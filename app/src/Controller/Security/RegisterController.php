@@ -49,9 +49,9 @@ class RegisterController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             $email = new TemplatedEmail()
-                ->from('no-reply@vite-gourmand.test')
+                ->from($this->getParameter('no_reply_adress'))
                 ->to($user->getEmail())
-                ->subject('Bienvenue sur le site de ' . $this->getParameter('appName'))
+                ->subject('Bienvenue sur le site de ' . $this->getParameter('app_name'))
                 ->htmlTemplate('emails/welcome.html.twig')
                 ->textTemplate('')
                 ->context([
