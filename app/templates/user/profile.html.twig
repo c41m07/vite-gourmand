@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil utilisateur{% endblock %}
+
+{% block body %}
+    <section class="auth-page">
+        <div class="container">
+            <h1 class="auth-title">Mon profil</h1>
+
+            <div class="auth-card">
+                {% if app.user %}
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Nom complet</span>
+                            <strong>{{ app.user.firstName }} {{ app.user.lastName }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Email</span>
+                            <strong>{{ app.user.email }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Telephone</span>
+                            <strong>{{ app.user.phone ?: 'Non renseigne' }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Adresse</span>
+                            <strong>{{ app.user.postalAddress ?: 'Non renseignee' }}</strong>
+                        </li>
+                    </ul>
+
+                    <p class="text-muted mb-0">
+                        Tu peux modifier tes informations quand la page de profil sera active.
+                    </p>
+                {% else %}
+                    <p class="mb-3">Connecte-toi pour acceder a ton profil.</p>
+                    <a class="auth-btn" href="{{ path('app_login') }}">Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
