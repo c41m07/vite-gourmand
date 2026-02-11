@@ -103,19 +103,12 @@ class MenuApiControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertIsArray($data);
-        self::assertCount(2, $data);
+        self::assertArrayHasKey('body', $data);
+        self::assertArrayHasKey('count', $data);
+        self::assertSame(2, $data['count']);
 
-        $titles = array_column($data, 'title');
-        self::assertContains('Menu One', $titles);
-        self::assertContains('Menu Two', $titles);
-
-        $first = $data[0];
-        self::assertArrayHasKey('id', $first);
-        self::assertArrayHasKey('basePrice', $first);
-        self::assertArrayHasKey('mediaUrl', $first);
-        self::assertArrayHasKey('mediaAltText', $first);
-        self::assertArrayHasKey('themeName', $first);
-        self::assertArrayHasKey('dietName', $first);
+        self::assertStringContainsString('Menu One', $data['body']);
+        self::assertStringContainsString('Menu Two', $data['body']);
     }
 
     public function testApiMenusFilterByMinPrice(): void
@@ -126,8 +119,11 @@ class MenuApiControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertIsArray($data);
-        self::assertCount(1, $data);
-        self::assertSame('Menu Two', $data[0]['title']);
+        self::assertArrayHasKey('body', $data);
+        self::assertArrayHasKey('count', $data);
+        self::assertSame(1, $data['count']);
+        self::assertStringContainsString('Menu Two', $data['body']);
+        self::assertStringNotContainsString('Menu One', $data['body']);
     }
 
     public function testApiMenusFilterByTheme(): void
@@ -138,7 +134,10 @@ class MenuApiControllerTest extends WebTestCase
 
         $data = json_decode($this->client->getResponse()->getContent(), true);
         self::assertIsArray($data);
-        self::assertCount(1, $data);
-        self::assertSame('Menu One', $data[0]['title']);
+        self::assertArrayHasKey('body', $data);
+        self::assertArrayHasKey('count', $data);
+        self::assertSame(1, $data['count']);
+        self::assertStringContainsString('Menu One', $data['body']);
+        self::assertStringNotContainsString('Menu Two', $data['body']);
     }
 }
