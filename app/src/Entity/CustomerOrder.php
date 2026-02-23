@@ -63,6 +63,7 @@ class CustomerOrder
      * @var Collection<int, CustomerOrderStatusHistory>
      */
     #[ORM\OneToMany(targetEntity: CustomerOrderStatusHistory::class, mappedBy: 'customerOrder')]
+    #[ORM\OrderBy(['changedAt' => 'ASC', 'id' => 'ASC'])]
     private Collection $customerOrderStatusHistories;
 
     #[ORM\OneToOne(inversedBy: 'customerOrder')]

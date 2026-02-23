@@ -55,7 +55,7 @@
 - [x] Mail de bienvenue (Symfony Mailer)
 - [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
-- [ ] Page Profil utilisateur (affichage infos)
+- [x] Page Profil utilisateur (affichage infos)
 
 ## Sprint 6
 

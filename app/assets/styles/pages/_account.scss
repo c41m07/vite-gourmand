@@ -1,0 +1,249 @@
+/* assets/styles/pages/_account.scss */
+
+.account-page {
+    padding: 3.5rem 0 5rem;
+}
+
+.account-title {
+    text-align: left;
+    margin-bottom: 1.35rem;
+}
+
+.account-tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2.25rem;
+    padding-bottom: 0.45rem;
+    margin-bottom: 2.25rem;
+    border-bottom: 1px solid rgba(15, 20, 17, 0.18);
+    flex-wrap: wrap;
+}
+
+.account-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    color: $muted;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.account-tab i {
+    font-size: 1.05rem;
+}
+
+.account-tab:hover,
+.account-tab:focus-visible {
+    color: $primary;
+}
+
+.account-tab.is-active {
+    color: $primary;
+    border-color: $primary;
+}
+
+.account-tab.is-active i {
+    color: $primary;
+}
+
+.account-content {
+    margin: 0;
+}
+
+.account-section-title {
+    font-weight: 700;
+    margin-bottom: 1.15rem;
+    font-size: 1.2rem;
+}
+
+.account-card {
+    background: $light;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(15, 20, 17, 0.08);
+    padding: 1.6rem 1.9rem;
+    border: 1px solid rgba(15, 20, 17, 0.06);
+}
+
+.account-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.account-empty {
+    text-align: center;
+    color: $muted;
+}
+
+.account-order__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.account-order__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.account-order__subtitle {
+    color: $muted;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.account-status {
+    border: 1px solid rgba(15, 20, 17, 0.22);
+    padding: 0.35rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: #f3f5f2;
+    color: #5f6d62;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.account-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+    padding-top: 1rem;
+    margin-top: 1.1rem;
+    border-top: 1px solid rgba(15, 20, 17, 0.12);
+}
+
+.account-meta__label {
+    color: $muted;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.account-meta__value {
+    font-weight: 500;
+    color: $dark;
+}
+
+.account-meta__value--total {
+    color: $primary;
+    font-weight: 700;
+}
+
+.account-address {
+    padding-top: 1rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid rgba(15, 20, 17, 0.12);
+}
+
+.account-review__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.account-review__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.account-review__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: $primary;
+}
+
+.account-review__stars {
+    display: inline-flex;
+    gap: 0.15rem;
+    color: $secondary;
+    margin-bottom: 0.5rem;
+}
+
+.account-review__text {
+    margin-bottom: 0.75rem;
+    color: $dark;
+    font-size: 0.95rem;
+}
+
+.account-review__date {
+    font-size: 0.85rem;
+    color: $muted;
+}
+
+.account-profile {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.account-profile__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.account-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.account-action:hover,
+.account-action:focus-visible {
+    text-decoration: underline;
+}
+
+.account-profile__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.account-profile__item span {
+    display: block;
+    color: $muted;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.account-profile__value {
+    font-weight: 600;
+    color: $dark;
+}
+
+.account-profile__item--full {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 576px) {
+    .account-card {
+        padding: 1.5rem;
+    }
+
+    .account-tabs {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-order__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .account-meta {
+        grid-template-columns: 1fr;
+    }
+}
