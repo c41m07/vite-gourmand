@@ -35,9 +35,6 @@ export default class extends Controller {
         if (minPrice !== '' && minPriceValue !== minDefault) params.set('minPrice', minPrice);
         if (maxPrice !== '' && maxPriceValue !== maxDefault) params.set('maxPrice', maxPrice);
 
-        if (minPrice !== '') params.set('minPrice', minPrice);
-        if (maxPrice !== '') params.set('maxPrice', maxPrice);
-
         if (minPersons && minPersons !== '0') params.set('minPersons', minPersons);
 
         if (theme) params.set('theme', theme)
