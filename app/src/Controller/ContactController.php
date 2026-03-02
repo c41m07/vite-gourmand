@@ -33,7 +33,6 @@ final class ContactController extends AbstractController
                 ->to($this->getParameter('owner_address'))
                 ->subject($contactMessage->getSubject())
                 ->htmlTemplate('emails/contact.html.twig')
-                ->textTemplate('')
                 ->context([
                     'message' => $contactMessage->getMessage(),
                 ]);

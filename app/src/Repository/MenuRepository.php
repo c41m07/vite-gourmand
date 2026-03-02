@@ -16,7 +16,6 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
-
     public function findActiveMenus()
     {
         return $this->createQueryBuilder('m')
@@ -24,52 +23,57 @@ class MenuRepository extends ServiceEntityRepository
             ->setParameter('active', true)
             ->orderBy('m.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+    }
+
+    public function searchPublic(array $filters): array
+    {
+        $filters['isActive'] = true;
+
+        return $this->search($filters);
     }
 
     public function search(array $filters): array
-{
-    $qb = $this->createQueryBuilder('m')
-        ->leftJoin('m.theme', 't')->addSelect('t')
-        ->leftJoin('m.diet', 'd')->addSelect('d');
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.theme', 't')->addSelect('t')
+            ->leftJoin('m.diet', 'd')->addSelect('d');
 
-    if ($filters['minPrice'] !== null && $filters['minPrice'] !== '') {
-        $qb->andWhere('m.basePrice >= :minPrice')
-            ->setParameter('minPrice', (int) $filters['minPrice']);
+        if (($filters['minPrice'] ?? null) !== null && $filters['minPrice'] !== '') {
+            $qb->andWhere('m.basePrice >= :minPrice')
+                ->setParameter('minPrice', (int)$filters['minPrice']);
+        }
+
+        if (($filters['maxPrice'] ?? null) !== null && $filters['maxPrice'] !== '') {
+            $qb->andWhere('m.basePrice <= :maxPrice')
+                ->setParameter('maxPrice', (int)$filters['maxPrice']);
+        }
+
+        if (($filters['theme'] ?? null) !== null && $filters['theme'] !== '') {
+            $qb->andWhere('t.id = :theme')
+                ->setParameter('theme', (int)$filters['theme']);
+        }
+
+        if (($filters['diet'] ?? null) !== null && $filters['diet'] !== '') {
+            $qb->andWhere('d.id = :diet')
+                ->setParameter('diet', (int)$filters['diet']);
+        }
+
+        if (($filters['minPersons'] ?? null) !== null && $filters['minPersons'] !== '') {
+            $qb->andWhere('m.minPeople <= :minPersons')
+                ->setParameter('minPersons', (int)$filters['minPersons']);
+        }
+
+        if (($filters['stock'] ?? null) !== null && $filters['stock'] !== '') {
+            $qb->andWhere('m.stock >= :stock')
+                ->setParameter('stock', (int)$filters['stock']);
+        }
+
+        if (($filters['isActive'] ?? null) !== null && $filters['isActive'] !== '') {
+            $qb->andWhere('m.active = :active')
+                ->setParameter('active', filter_var($filters['isActive'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        return $qb->getQuery()->getResult();
     }
-
-    if ($filters['maxPrice'] !== null && $filters['maxPrice'] !== '') {
-        $qb->andWhere('m.basePrice <= :maxPrice')
-            ->setParameter('maxPrice', (int) $filters['maxPrice']);
-    }
-
-    if ($filters['theme'] !== null && $filters['theme'] !== '') {
-        $qb->andWhere('t.id = :theme')
-            ->setParameter('theme', (int) $filters['theme']);
-    }
-
-    if ($filters['diet'] !== null && $filters['diet'] !== '') {
-        $qb->andWhere('d.id = :diet')
-            ->setParameter('diet', (int) $filters['diet']);
-    }
-
-    if ($filters['minPersons'] !== null && $filters['minPersons'] !== '') {
-        $qb->andWhere('m.minPeople <= :minPersons')
-            ->setParameter('minPersons', (int) $filters['minPersons']);
-    }
-
-    if ($filters['stock'] !== null && $filters['stock'] !== '') {
-        $qb->andWhere('m.stock >= :stock')
-            ->setParameter('stock', (int) $filters['stock']);
-    }
-
-    if ($filters['isActive'] !== null && $filters['isActive'] !== '') {
-        $qb->andWhere('m.active = :active')
-            ->setParameter('active', filter_var($filters['isActive'], FILTER_VALIDATE_BOOLEAN));
-    }
-
-    return $qb->getQuery()->getResult();
-}
-
 }

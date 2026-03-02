@@ -50,12 +50,12 @@
 
 ## Sprint 5
 
-- [x] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
+- [x] Security : firewall + acces par roles USER/WORKER/ADMIN
 - [x] Inscription utilisateur (formulaire + validations de base)
 - [x] Mail de bienvenue (Symfony Mailer)
 - [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
-- [ ] Page Profil utilisateur (affichage infos)
+- [x] Page Profil utilisateur (affichage infos de base)
 
 ## Sprint 6
 

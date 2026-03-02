@@ -1,9 +1,21 @@
-ORDER BY RAND() dans ReviewRepository est peux etre un peux gourmand a voir par quoi remplacer
+Review technique - 2026-03-02
 
-MenuController ne check pas si is active dans show
+Etat actuel:
 
-Rajouter un DTO pour le filter et review
+- make test: OK (14 tests, 88 assertions).
 
-vérifier exeption unique email
+Priorite haute:
 
-voir pour faire un constructeur pour les mails
+- Mail config: fiabiliser les adresses expediteur/destinataire (NOREPLY_ADRESS, OWNER_ADRESS) et eviter les 500 si variable vide.
+
+Priorite moyenne:
+
+- ReviewRepository::findFiveRandomReviews: le nom indique 5 mais la requete limite a 3; harmoniser.
+- ReviewRepository: remplacer ORDER BY RAND() par une strategie moins couteuse.
+- Menu filter (Stimulus): le bouton reset doit relancer le fetch pour recharger la liste complete.
+- Contact mail: utiliser une adresse interne en from + replyTo(contact) pour une meilleure delivrabilite.
+
+Dette technique:
+
+- Remplacer les tableaux de filtres bruts par un DTO valide (MenuApi) pour centraliser normalisation/validation des entrees.
+- Extraire une fabrique/service d'emails pour eviter la duplication entre RegisterController et ContactController.

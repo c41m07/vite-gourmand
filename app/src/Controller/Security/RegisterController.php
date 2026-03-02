@@ -4,10 +4,13 @@ namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use DateTime;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,7 +24,8 @@ class RegisterController extends AbstractController
         Request                     $request,
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface      $entityManager,
-        MailerInterface             $mailer
+        MailerInterface             $mailer,
+        UserRepository              $userRepository
     ): Response
     {
         if ($this->getUser()) {
@@ -34,6 +38,14 @@ class RegisterController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($userRepository->findOneBy(['email' => $user->getEmail()]) !== null) {
+                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
+
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
                 (string)$form->get('plainPassword')->getData()
@@ -47,13 +59,21 @@ class RegisterController extends AbstractController
             $user->setUpdatedAt($now);
 
             $entityManager->persist($user);
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+            } catch (UniqueConstraintViolationException) {
+                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
+
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
             $email = new TemplatedEmail()
                 ->from($this->getParameter('no_reply_adress'))
                 ->to($user->getEmail())
                 ->subject('Bienvenue sur le site de ' . $this->getParameter('app_name'))
                 ->htmlTemplate('emails/welcome.html.twig')
-                ->textTemplate('')
                 ->context([
                     'firstName' => $user->getFirstName(),
                 ]);

@@ -1,17 +1,20 @@
 # Manuel utilisateur - Vite & Gourmand
 
-## 0. Etat actuel (fevrier 2026)
-- Pages publiques disponibles : Accueil, Menus, Contact, Mentions legales, CGV.
-- Pages d'authentification disponibles : inscription + connexion.
-- Menus : listing statique + filtres UI (donnees non connectees a la BDD).
-- Commandes, back-office, mails : en cours d'implementation.
+## 0. Etat actuel (mars 2026)
+- Pages publiques disponibles: Accueil, Menus, Contact, Mentions legales, CGV.
+- Pages d'authentification disponibles: inscription (`/register`), connexion (`/login`) et profil (`/user/profile`).
+- Menus: listing dynamique + filtres connectes a la BDD (API `GET /api/menus`).
+- Detail menu: route `/menu/{id}` disponible uniquement pour les menus actifs (menu inactif => 404).
+- Contact: formulaire persiste en BDD + envoi d'email + redirection vers `/contact/success`.
+- Non disponible a ce jour: commandes, espace employe/admin, reset mot de passe, statistiques.
 
 ## 1. Presentation
-Application web permettant de consulter des menus, creer un compte, commander, suivre une commande et laisser un avis.
+Application web permettant actuellement de consulter des menus, creer un compte, se connecter, consulter son profil et contacter l'entreprise.
 
 ## 2. Acces a l'application
 - URL (prod) : a completer avec l'URL de deploiement.
 - URL (local) : via Traefik (variable `TRAEFIK_URL_APP`).
+- En local, l'environnement est pilote via `app/.env.local` (`APP_ENV=dev` ou `APP_ENV=prod`).
 
 ## 3. Comptes de demonstration
 > A fournir dans le PDF final.
@@ -28,19 +31,17 @@ Application web permettant de consulter des menus, creer un compte, commander, s
 
 ## 4. Parcours visiteur
 - Acceder a l'accueil (presentation, avis).
-- Voir la liste des menus.
-- Utiliser les filtres (prix max, fourchette, theme, regime, min personnes).
-- Voir le detail d'un menu (a venir).
-- Contacter l'entreprise via le formulaire.
+- Voir la liste des menus (`/menu/`).
+- Utiliser les filtres (prix max, fourchette, theme, regime, min personnes) via l'API `/api/menus`.
+- Voir le detail d'un menu actif (`/menu/{id}`).
+- Contacter l'entreprise via le formulaire (`/contact/`), puis etre redirige vers la page de confirmation.
 
-## 5. Parcours utilisateur (partiel)
-- Creer un compte (validation de base) - disponible.
-- Se connecter (page de connexion) - disponible.
-- Mot de passe oublie (lien par mail) - a venir.
-- Commander un menu (formulaire pre-rempli si clic depuis un menu).
-- Voir ses commandes / suivi.
-- Annuler/modifier une commande tant qu'elle n'est pas "acceptee".
-- Laisser un avis apres commande "terminee".
+## 5. Parcours utilisateur (etat reel)
+- Creer un compte (validation de base + email de bienvenue) - disponible.
+- Se connecter via la page `/login` - disponible.
+- Acceder a `/user/profile` quand on est authentifie avec `ROLE_USER` - disponible.
+- Si non connecte, l'acces a `/user/profile` est refuse et redirige vers `/login`.
+- Mot de passe oublie, commandes, suivi commandes et avis - a venir.
 
 ## 6. Parcours employe (a venir)
 - Gerer menus / plats / horaires.
