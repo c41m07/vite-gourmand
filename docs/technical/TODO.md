@@ -1,17 +1,44 @@
 Review technique - 2026-03-02
 
-Etat actuel:
+Etat des verifications:
 
-- make test: OK (14 tests, 88 assertions).
+- PHPUnit complet: OK (14 tests, 94 assertions).
+- Tests emails ciblés: OK (3 tests, 27 assertions).
+- PHPStan: KO (2 erreurs de configuration d'`ignoreErrors` non utilisees).
 
 Priorite haute:
 
-- Mail config: ajouter un garde-fou applicatif si `NO_REPLY_ADDRESS` ou `OWNER_ADDRESS` est vide (eviter les 500 en runtime).
+- [ ] Politique mot de passe non conforme au cahier des charges (10+ caracteres + complexite). Actuel: min 8 sans regex de complexite.
+  Source: `app/src/Form/RegistrationFormType.php` (plainPassword, lignes 67-75).
+- [ ] Gestion des roles non alignee avec l'exigence "admin peut faire ce qu'un employe peut faire": pas de `role_hierarchy` configure.
+  Source: `app/config/packages/security.yaml` (lignes 40-45).
+- [ ] Ajouter un garde-fou explicite sur la config mail (`NO_REPLY_ADDRESS`, `OWNER_ADDRESS`) pour eviter les 500 au runtime si variable vide/invalide.
+  Source: `app/src/Service/EmailFactory.php` (lignes 29, 44).
 
 Priorite moyenne:
 
-- ReviewRepository: remplacer ORDER BY RAND() par une strategie moins couteuse.
-- Les reviews peuvent apparaitre en doublon dans la liste.
+- [ ] En cas d'echec d'envoi mail contact, exception absorbee sans log/trace exploitable.
+  Source: `app/src/Controller/ContactController.php` (lignes 33-37).
+- [ ] `ORDER BY RAND()` couteux en base sur la selection des avis.
+  Source: `app/src/Repository/ReviewRepository.php` (ligne 21).
+- [ ] Le message de contact est limite a 255 caracteres (potentiellement trop court pour une demande client).
+  Source: `app/src/Form/ContactFormType.php` (ligne 71).
+- [ ] Nettoyer `phpstan.dist.neon` (regles ignorees obsoletes) pour retrouver un `make phpstan` vert.
+  Source: `app/phpstan.dist.neon` (lignes 7-12).
+
+Priorite basse:
+
+- [ ] Incoherence de nommage des accesseurs mutateurs DateTime (`getcreatedAt`/`setcreatedAt`).
+  Source: `app/src/Entity/ContactMessage.php` (lignes 79-85) et usage `ContactController.php` (ligne 29).
+- [ ] Nettoyer le code commente genere dans les repositories pour clarifier la lecture.
+  Source: `app/src/Repository/ReviewRepository.php` (lignes 34-57).
+
+Dette technique:
+
+- [ ] Ajouter des tests de non-regression sur les droits ROLE_WORKER/ROLE_ADMIN (acces espaces et routes protegees).
+- [ ] Ajouter des tests sur le cas d'echec d'envoi mail contact (`/contact/failed`) et strategie de persistance associee.
+- [ ] Ajouter des tests unitaires sur `EmailFactory` (headers `From/Reply-To/To`, context Twig).
+- [ ] Mettre en place une CI (tests + phpstan + lint twig/php) pour eviter les regressions.
 
 Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 
@@ -23,8 +50,7 @@ Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 - [ ] Ajouter la fonctionnalite "mot de passe oublie" (demande par mail + reinitialisation).
 - [ ] Implementer le parcours avis utilisateur (note 1-5 + commentaire) apres commande terminee.
 - [ ] Back-office employe: CRUD menus/plats/horaires et filtres commandes (statut/client).
-- [ ] Back-office employe: workflow de statuts commande (`acceptee` -> `en preparation` -> `en cours de livraison` -> `livree` ->
-  `en attente du retour de materiel` -> `terminee`) avec historique.
+- [ ] Back-office employe: workflow de statuts commande (`acceptee` -> `en preparation` -> `en cours de livraison` -> `livree` -> `en attente du retour de materiel` -> `terminee`) avec historique.
 - [ ] Back-office employe: imposer motif + mode de contact (mail/GSM) avant annulation/modification commande.
 - [ ] Envoyer le mail d'avertissement "retour materiel sous 10 jours ou 600 EUR".
 - [ ] Moderation des avis par employe/admin (valider/refuser) pour affichage accueil.
@@ -46,5 +72,4 @@ Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 - [ ] Livrable: manuel utilisateur en PDF avec presentation + identifiants de test.
 - [ ] Livrable: charte graphique en PDF (palette, typo, exports maquettes desktop/mobile).
 - [ ] Livrable: documentation de gestion de projet.
-- [ ] Livrable: documentation technique complete (choix techno, setup, MCD/diagramme de classes, diagramme d'utilisation, diagramme de sequence,
-  procedure de deploiement).
+- [ ] Livrable: documentation technique complete (choix techno, setup, MCD/diagramme de classes, diagramme d'utilisation, diagramme de sequence, procedure de deploiement).
