@@ -2,26 +2,26 @@
 
 namespace App\Controller\Api;
 
+use App\Dto\MenuApi\MenuApiFiltersDto;
 use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class MenuApiController extends AbstractController
 {
     #[Route('/api/menus', name: 'api_menus', methods: ['GET'])]
-    public function list(Request $request, MenuRepository $menuRepository): JsonResponse
+    public function list(
+        #[MapQueryString(
+            validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY,
+            serializationContext: [AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true]
+        )] MenuApiFiltersDto $filters,
+        MenuRepository       $menuRepository,
+    ): JsonResponse
     {
-        $filters = [
-            'minPrice' => $request->query->get('minPrice'),
-            'maxPrice' => $request->query->get('maxPrice'),
-            'theme' => $request->query->get('theme'),
-            'diet' => $request->query->get('diet'),
-            'minPersons' => $request->query->get('minPersons'),
-            'stock' => $request->query->get('stock'),
-        ];
-
         $menus = $menuRepository->searchPublic($filters);
 
         return $this->json([
