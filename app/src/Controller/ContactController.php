@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\ContactMessage;
 use App\Form\ContactFormType;
+use App\Service\EmailFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     #[Route('/', name: '_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, EmailFactory $emailFactory): Response
     {
         $contactMessage = new ContactMessage();
         $form = $this->createForm(ContactFormType::class, $contactMessage);
@@ -28,16 +29,12 @@ final class ContactController extends AbstractController
             $contactMessage->setcreatedAt(new DateTime());
             $entityManager->persist($contactMessage);
             $entityManager->flush();
-            $email = new TemplatedEmail()
-                ->from($contactMessage->getEmail())
-                ->to($this->getParameter('owner_address'))
-                ->subject($contactMessage->getSubject())
-                ->htmlTemplate('emails/contact.html.twig')
-                ->context([
-                    'message' => $contactMessage->getMessage(),
-                ]);
-            $mailer->send($email);
-
+            $email = $emailFactory->createContactEmail($contactMessage);
+            try {
+                $mailer->send($email);
+            } catch (Exception $e) {
+                return $this->redirectToRoute('app_contact_failed');
+            }
             return $this->redirectToRoute('app_contact_success');
         }
 
@@ -50,6 +47,12 @@ final class ContactController extends AbstractController
     public function success(): Response
     {
         return $this->render('contact/success.html.twig');
+    }
+
+    #[Route('/failed', name: '_failed', methods: ['GET'])]
+    public function failed(): Response
+    {
+        return $this->render('contact/failed.html.twig');
     }
 
 }

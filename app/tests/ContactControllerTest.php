@@ -42,6 +42,14 @@ class ContactControllerTest extends WebTestCase
         self::assertResponseRedirects('/contact/success');
         self::assertQueuedEmailCount(1);
 
+        $email = self::getMailerMessage();
+        self::assertEmailAddressContains($email, 'From', 'no-reply@vite-gourmand.test');
+        self::assertEmailAddressContains($email, 'Reply-To', 'alice@example.com');
+        self::assertEmailAddressContains($email, 'To', 'contact@vite-gourmand.test');
+        self::assertEmailSubjectContains($email, 'Demande traiteur');
+        self::assertEmailHtmlBodyContains($email, 'Alice Durand');
+        self::assertEmailHtmlBodyContains($email, 'Bonjour, je souhaite un devis pour 20 personnes.');
+
         $contactMessage = $this->entityManager->getRepository(ContactMessage::class)->findOneBy([
             'email' => 'alice@example.com',
             'subject' => 'Demande traiteur',

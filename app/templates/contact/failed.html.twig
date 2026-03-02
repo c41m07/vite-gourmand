@@ -4,9 +4,9 @@
 
 {% block body %}
     {% include 'components/hero.html.twig' with {
-        'title': 'Message envoyer',
-        'subtitle': 'avec succes',
-        'background': '#1f5e3b'
+        'title': 'Message non envoyer',
+        'subtitle': 'une erreur est survenue lors de l\'envoie de votre message, essayez a nouveau plus tard',
+        'background': '#5a2a2a'
     } %}
 
     <section class="py-5" aria-labelledby="underconstruct-title">
@@ -15,7 +15,7 @@
                 <div class="card-body p-4 p-lg-5 text-center">
                     <h2 id="underconstruct-title" class="h3 fw-bold mb-3">Merci pour votre patience</h2>
                     <p class="text-muted mb-4">
-                        Votre message a été renvoyé. Nous mettons tout en œuvre pour vous répondre dans les plus brefs délais.
+                        Votre message n'a pas été envoyé. Nous mettons tout en œuvre pour vous résoudre le probléme dans les plus brefs délais.
                     </p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
                         <a class="btn btn-primary px-4" href="{{ path('app_home') }}">Retour a l'accueil</a>

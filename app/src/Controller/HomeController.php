@@ -13,7 +13,7 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function home(ReviewRepository $reviewRepository): Response
     {
-        $reviews = $reviewRepository->findFiveRandomReviews();
+        $reviews = $reviewRepository->findRandomsReviews();
         return $this->render('pages/home.html.twig', [
             'reviews' => $reviews,
         ]);
@@ -36,6 +36,7 @@ final class HomeController extends AbstractController
     {
         return $this->render('partials/404.html.twig');
     }
+
     #[Route('/underconstruct', name: 'app_underconstruct')]
     public function underconstruc(): Response
     {

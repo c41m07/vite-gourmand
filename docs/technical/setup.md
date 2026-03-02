@@ -58,5 +58,6 @@ docker compose exec app symfony console about
 Attendu: `Environment: dev` et `Debug: true`.
 
 ## Tests: prerequis de configuration
-- En environnement `test`, definir `NOREPLY_ADRESS` (exemple: `no-reply@vite-gourmand.test`) dans `app/.env.test` ou `app/.env.test.local`.
-- Si cette variable est vide, les scenarios d'inscription peuvent echouer avec `Email \"\" does not comply with addr-spec of RFC 2822`.
+- En environnement `test`, definir `NO_REPLY_ADDRESS` (exemple: `no-reply@vite-gourmand.test`) dans `app/.env.test` ou `app/.env.test.local`.
+- En environnement `test`, definir `OWNER_ADDRESS` (exemple: `contact@vite-gourmand.test`) dans `app/.env.test` ou `app/.env.test.local`.
+- Si ces variables sont vides, les scenarios d'inscription/contact peuvent echouer avec `Email \"\" does not comply with addr-spec of RFC 2822`.
