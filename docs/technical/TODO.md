@@ -10,9 +10,7 @@ Priorite haute:
 
 Priorite moyenne:
 
-- ReviewRepository::findFiveRandomReviews: le nom indique 5 mais la requete limite a 3; harmoniser.
 - ReviewRepository: remplacer ORDER BY RAND() par une strategie moins couteuse.
-- Contact mail: utiliser une adresse interne en from + replyTo(contact) pour une meilleure delivrabilite.
 - Les reviews peuvent apparaitre en doublon dans la liste.
 
 Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
@@ -25,7 +23,8 @@ Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 - [ ] Ajouter la fonctionnalite "mot de passe oublie" (demande par mail + reinitialisation).
 - [ ] Implementer le parcours avis utilisateur (note 1-5 + commentaire) apres commande terminee.
 - [ ] Back-office employe: CRUD menus/plats/horaires et filtres commandes (statut/client).
-- [ ] Back-office employe: workflow de statuts commande (`acceptee` -> `en preparation` -> `en cours de livraison` -> `livree` -> `en attente du retour de materiel` -> `terminee`) avec historique.
+- [ ] Back-office employe: workflow de statuts commande (`acceptee` -> `en preparation` -> `en cours de livraison` -> `livree` ->
+  `en attente du retour de materiel` -> `terminee`) avec historique.
 - [ ] Back-office employe: imposer motif + mode de contact (mail/GSM) avant annulation/modification commande.
 - [ ] Envoyer le mail d'avertissement "retour materiel sous 10 jours ou 600 EUR".
 - [ ] Moderation des avis par employe/admin (valider/refuser) pour affichage accueil.
@@ -47,4 +46,5 @@ Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 - [ ] Livrable: manuel utilisateur en PDF avec presentation + identifiants de test.
 - [ ] Livrable: charte graphique en PDF (palette, typo, exports maquettes desktop/mobile).
 - [ ] Livrable: documentation de gestion de projet.
-- [ ] Livrable: documentation technique complete (choix techno, setup, MCD/diagramme de classes, diagramme d'utilisation, diagramme de sequence, procedure de deploiement).
+- [ ] Livrable: documentation technique complete (choix techno, setup, MCD/diagramme de classes, diagramme d'utilisation, diagramme de sequence,
+  procedure de deploiement).
