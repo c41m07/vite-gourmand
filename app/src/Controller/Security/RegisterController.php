@@ -5,10 +5,10 @@ namespace App\Controller\Security;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Service\EmailFactory;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,8 @@ class RegisterController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface      $entityManager,
         MailerInterface             $mailer,
-        UserRepository              $userRepository
+        UserRepository              $userRepository,
+        EmailFactory                $emailFactory,
     ): Response
     {
         if ($this->getUser()) {
@@ -69,14 +70,7 @@ class RegisterController extends AbstractController
                 ]);
             }
 
-            $email = new TemplatedEmail()
-                ->from($this->getParameter('no_reply_adress'))
-                ->to($user->getEmail())
-                ->subject('Bienvenue sur le site de ' . $this->getParameter('app_name'))
-                ->htmlTemplate('emails/welcome.html.twig')
-                ->context([
-                    'firstName' => $user->getFirstName(),
-                ]);
+            $email = $emailFactory->createWelcomeEmail($user);
             $mailer->send($email);
             return $this->redirectToRoute('app_login');
         }
