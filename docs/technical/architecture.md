@@ -27,7 +27,7 @@
 
 ## Architecture applicative - cible
 - Controllers : routing + logique de presentation.
-- Services : regles metier (prix, livraison, statuts).
+- Services : regles metier (prix, livraison, statuts) + centralisation des constructions d'emails (`App\\Service\\EmailFactory`).
 - Repositories : acces aux donnees (Doctrine).
 - Templates Twig : UI.
 - Roles : `ROLE_USER`, `ROLE_WORKER`, `ROLE_ADMIN`.
