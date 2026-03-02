@@ -126,6 +126,26 @@
             font-weight: 600;
         }
 
+        .email-action-table {
+            margin: 14px 0 0;
+            border-collapse: collapse;
+        }
+
+        .email-action-cell {
+            background: #c9a227;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .email-action-link {
+            display: inline-block;
+            padding: 12px 20px;
+            color: #0f1411;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
         .email-footer {
             background: #f4efe6;
             padding: 14px 28px;
@@ -140,7 +160,6 @@
 {% set fullName = (firstNameValue ~ ' ' ~ lastNameValue)|trim %}
 {% set subjectValue = subject is defined and subject ? subject : 'Voir le sujet de l\'email' %}
 {% set contactEmailValue = contactEmail is defined and contactEmail ? contactEmail : 'Voir le champ From de l\'email' %}
-{# {% set emailValue = email is defined and email ? email : 'Voir le champ From de l\'email' %} #}
 {% set messageValue = message is defined and message ? message : 'Aucun message fourni.' %}
 
 <span class="email-preheader">
@@ -182,8 +201,17 @@
                             <p class="email-text email-message">{{ messageValue }}</p>
                         </div>
 
+                        {% if contactEmail is defined and contactEmail %}
+                            <table role="presentation" class="email-action-table">
+                                <tr>
+                                    <td class="email-action-cell">
+                                        <a class="email-action-link" href="mailto:{{ contactEmailValue }}?subject=Re:%20{{ subjectValue|url_encode }}">Repondre</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        {% endif %}
                         <p class="email-help">
-                            Action recommandee: repondre directement a l'expediteur via le champ <strong>From</strong> de cet email.
+                            Reponse rapide: {{ contactEmailValue }}.
                         </p>
                     </td>
                 </tr>

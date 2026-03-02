@@ -7,6 +7,7 @@ use App\Form\ContactFormType;
 use App\Service\EmailFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,8 +30,11 @@ final class ContactController extends AbstractController
             $entityManager->persist($contactMessage);
             $entityManager->flush();
             $email = $emailFactory->createContactEmail($contactMessage);
-            $mailer->send($email);
-
+            try {
+                $mailer->send($email);
+            } catch (Exception $e) {
+                return $this->redirectToRoute('app_contact_failed');
+            }
             return $this->redirectToRoute('app_contact_success');
         }
 
@@ -43,6 +47,12 @@ final class ContactController extends AbstractController
     public function success(): Response
     {
         return $this->render('contact/success.html.twig');
+    }
+
+    #[Route('/failed', name: '_failed', methods: ['GET'])]
+    public function failed(): Response
+    {
+        return $this->render('contact/failed.html.twig');
     }
 
 }

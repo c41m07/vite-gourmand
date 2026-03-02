@@ -39,7 +39,8 @@ final readonly class EmailFactory
     public function createContactEmail(ContactMessage $contactMessage): TemplatedEmail
     {
         return new TemplatedEmail()
-            ->from((string)$contactMessage->getEmail())
+            ->from($this->noreplyEmail)
+            ->replyTo((string)$contactMessage->getEmail())
             ->to($this->ownerEmail)
             ->subject($contactMessage->getSubject())
             ->htmlTemplate('emails/contact.html.twig')

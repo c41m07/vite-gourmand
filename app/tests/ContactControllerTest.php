@@ -43,7 +43,8 @@ class ContactControllerTest extends WebTestCase
         self::assertQueuedEmailCount(1);
 
         $email = self::getMailerMessage();
-        self::assertEmailAddressContains($email, 'From', 'alice@example.com');
+        self::assertEmailAddressContains($email, 'From', 'no-reply@vite-gourmand.test');
+        self::assertEmailAddressContains($email, 'Reply-To', 'alice@example.com');
         self::assertEmailAddressContains($email, 'To', 'contact@vite-gourmand.test');
         self::assertEmailSubjectContains($email, 'Demande traiteur');
         self::assertEmailHtmlBodyContains($email, 'Alice Durand');
