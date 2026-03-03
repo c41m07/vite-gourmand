@@ -38,7 +38,7 @@ class RegisterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($userRepository->findOneBy(['email' => $user->getEmail()]) !== null) {
-                $form->get('email')->addError(new FormError('Un compte existe deja avec cet email.'));
+                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
 
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
@@ -61,7 +61,7 @@ class RegisterController extends AbstractController
             try {
                 $entityManager->flush();
             } catch (UniqueConstraintViolationException) {
-                $form->get('email')->addError(new FormError('Un compte existe deja avec cet email.'));
+                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
 
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),

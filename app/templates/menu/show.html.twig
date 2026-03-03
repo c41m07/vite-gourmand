@@ -26,14 +26,14 @@
             </p>
         </div>
         {% set metas = [
-            {title: 'theme',
-                value: menu.theme ? menu.theme.name : 'pas de theme enregistré'},
-            {title: 'régime',
-                value: menu.diet ? menu.diet.name : 'pas de régime enregistré'},
-            {title: 'Personnes minimales',
-                value: menu.minPeople is not null? menu.minPeople : 'pas de personnes minimal enregistré'},
-            {title:'stock',
-                value: menu.stock is not null ? menu.stock : 'pas de stock enregistré'},
+            {title: 'Thème',
+                value: menu.theme ? menu.theme.name : 'Pas de thème enregistré'},
+            {title: 'Régime',
+                value: menu.diet ? menu.diet.name : 'Pas de régime enregistré'},
+            {title: 'Nombre minimum de personnes',
+                value: menu.minPeople is not null ? menu.minPeople : 'Pas de minimum de personnes enregistré'},
+            {title: 'Stock',
+                value: menu.stock is not null ? menu.stock : 'Pas de stock enregistré'},
         ] %}
         <div class="row g-3 menu-show__meta">
             {% for meta in metas %}
@@ -51,7 +51,7 @@
         {% if allergens is defined and allergens is not empty %}
             <div class="menu-show__alert menu-show__alert--danger mt-3">
                 <div class="fw-semibold mb-1">
-                    <i class="bi bi-exclamation-circle me-2"></i>Allergenes presents
+                    <i class="bi bi-exclamation-circle me-2"></i>Allergènes présents
                 </div>
                 <p class="small mb-0"> {% for allergen in allergens %} {{ allergen.name }}, {% endfor %} </p>
             </div>
@@ -69,7 +69,7 @@
                         {% for dish in dishType.dishes %}
                             <li>{{ dish.name }}</li>
                         {% else %}
-                            <li class="text-muted">Aucun element</li>
+                            <li class="text-muted">Aucun élément</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -77,8 +77,8 @@
         </div>
 
         <div class="menu-show__cta mt-5 text-center">
-            <h3 class="h5 mb-2">Pret a commander ce menu ?</h3>
-            <p class="text-muted small mb-3">Connectez-vous ou creez un compte pour commander ce menu</p>
+            <h3 class="h5 mb-2">Prêt à commander ce menu ?</h3>
+            <p class="text-muted small mb-3">Connectez-vous ou créez un compte pour commander ce menu</p>
             {% if menu.stock is not null and menu.stock > 0 %}
                 <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
                     <a class="btn btn-primary" href="{{ path('app_underconstruct') }}">Commander</a>

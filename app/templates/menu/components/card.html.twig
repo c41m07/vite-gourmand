@@ -15,7 +15,7 @@
             <div class="d-flex justify-content-between align-items-start gap-3">
                 <h3 class="card-title h5 fw-bold mb-0">{{ menu.title }}</h3>
                 <span class="fw-bold text-success">
-                                        {{ (menu.basePrice / 100)|number_format(2, ',', ' ') }}€
+                                        {{ (menu.basePrice / 100)|number_format(2, ',', ' ') }} €
                                     </span>
             </div>
 
@@ -29,7 +29,7 @@
 
             {% if menu.stock > 0 %}
                 <a href="{{ path('app_menu_show', {'id': menu.id}) }}" class="btn btn-outline-success mt-auto align-self-center px-4">
-                    Voir détail
+                    Voir le détail
                 </a>
             {% else %}
                 <div class="menu-card__alert menu-card__alert--danger mt-auto align-self-center px-4 py-2">

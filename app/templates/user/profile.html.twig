@@ -19,12 +19,12 @@
                             <strong>{{ app.user.email }}</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Telephone</span>
-                            <strong>{{ app.user.phone ?: 'Non renseigne' }}</strong>
+                            <span>Téléphone</span>
+                            <strong>{{ app.user.phone ?: 'Non renseigné' }}</strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>Adresse</span>
-                            <strong>{{ app.user.postalAddress ?: 'Non renseignee' }}</strong>
+                            <strong>{{ app.user.postalAddress ?: 'Non renseignée' }}</strong>
                         </li>
                     </ul>
 
@@ -32,7 +32,7 @@
                         Tu peux modifier tes informations quand la page de profil sera active.
                     </p>
                 {% else %}
-                    <p class="mb-3">Connecte-toi pour acceder a ton profil.</p>
+                    <p class="mb-3">Connecte-toi pour accéder à ton profil.</p>
                     <a class="auth-btn" href="{{ path('app_login') }}">Se connecter</a>
                 {% endif %}
             </div>

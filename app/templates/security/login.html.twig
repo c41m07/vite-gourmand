@@ -8,7 +8,7 @@
             <h1 class="auth-title">Connexion</h1>
 
             <div class="auth-card">
-                <form method="post" class="auth-form">
+                <form method="post" class="auth-form" data-demo-login-form>
                     {% if error %}
                         <div class="alert alert-danger mb-0">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
@@ -82,6 +82,56 @@
                     </div>
                 </form>
             </div>
+
+            {# TODO: A SUPPRIMER EN PROD #}
+            <section class="auth-demo" data-demo-login-root aria-labelledby="auth-demo-title">
+                <h2 id="auth-demo-title" class="auth-demo__title">Comptes de démonstration</h2>
+
+                <div class="auth-demo__group">
+                    <p class="mb-1"><strong>Utilisateur</strong></p>
+                    <p class="mb-1">Email : test@test.fr</p>
+                    <p class="mb-2">Mot de passe : admin1234</p>
+                    <button
+                        type="button"
+                        class="auth-demo__fill"
+                        data-demo-login-fill
+                        data-demo-email="test@test.fr"
+                        data-demo-password="admin1234"
+                    >
+                        Remplir automatiquement
+                    </button>
+                </div>
+
+                <div class="auth-demo__group">
+                    <p class="mb-1"><strong>Employé</strong></p>
+                    <p class="mb-1">Email : worker@test.fr</p>
+                    <p class="mb-2">Mot de passe : admin1234</p>
+                    <button
+                        type="button"
+                        class="auth-demo__fill"
+                        data-demo-login-fill
+                        data-demo-email="worker@test.fr"
+                        data-demo-password="admin1234"
+                    >
+                        Remplir automatiquement
+                    </button>
+                </div>
+
+                <div class="auth-demo__group auth-demo__group--last">
+                    <p class="mb-1"><strong>Admin</strong></p>
+                    <p class="mb-1">Email : admin@test.fr</p>
+                    <p class="mb-2">Mot de passe : admin1234</p>
+                    <button
+                        type="button"
+                        class="auth-demo__fill"
+                        data-demo-login-fill
+                        data-demo-email="admin@test.fr"
+                        data-demo-password="admin1234"
+                    >
+                        Remplir automatiquement
+                    </button>
+                </div>
+            </section>
         </div>
     </section>
 {% endblock %}

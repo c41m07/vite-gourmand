@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Message envoyer{% endblock %}
+{% block title %}Message envoyé{% endblock %}
 
 {% block body %}
     {% include 'components/hero.html.twig' with {
-        'title': 'Message envoyer',
-        'subtitle': 'avec succes',
+        'title': 'Message envoyé',
+        'subtitle': 'avec succès',
         'background': '#1f5e3b'
     } %}
 
@@ -13,12 +13,12 @@
         <div class="container">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4 p-lg-5 text-center">
-                    <h2 id="underconstruct-title" class="h3 fw-bold mb-3">Merci pour votre patience</h2>
+                    <h2 id="underconstruct-title" class="h3 fw-bold mb-3">Merci pour votre message</h2>
                     <p class="text-muted mb-4">
-                        Votre message a été renvoyé. Nous mettons tout en œuvre pour vous répondre dans les plus brefs délais.
+                        Votre message a bien été envoyé. Nous mettons tout en œuvre pour vous répondre dans les plus brefs délais.
                     </p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <a class="btn btn-primary px-4" href="{{ path('app_home') }}">Retour a l'accueil</a>
+                        <a class="btn btn-primary px-4" href="{{ path('app_home') }}">Retour à l'accueil</a>
                         <a class="btn btn-outline-secondary px-4" href="{{ path('app_contact_index') }}">Nous contacter</a>
                     </div>
                 </div>
@@ -26,4 +26,3 @@
         </div>
     </section>
 {% endblock %}
-

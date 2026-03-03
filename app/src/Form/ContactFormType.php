@@ -21,7 +21,7 @@ class ContactFormType extends AbstractType
             ->add('firstName',TextType::class,[
                 'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Votre prenom',
+                    'placeholder' => 'Votre prénom',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),

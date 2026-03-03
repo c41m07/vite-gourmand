@@ -30,7 +30,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('firstName', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Votre prenom',
+                    'placeholder' => 'Votre prénom',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
