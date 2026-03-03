@@ -1,4 +1,4 @@
-<h2 class="admin-section-title">Gestion des employÃ©s ({{ employees|length }})</h2>
+<h2 class="admin-section-title">Gestion des employés ({{ employees|length }})</h2>
 
 <div class="admin-card admin-table-card">
     <table class="table admin-table">
@@ -6,8 +6,8 @@
         <tr>
             <th>Nom</th>
             <th>Email</th>
-            <th>TÃ©lÃ©phone</th>
-            <th>RÃ´le</th>
+            <th>Téléphone</th>
+            <th>Rôle</th>
             <th>Statut</th>
             <th>Actions</th>
         </tr>
@@ -22,7 +22,7 @@
                 <td>{{ employee.phone ?: '-' }}</td>
                 <td>
                         <span class="admin-badge {{ isAdmin ? 'admin-badge--admin' : 'admin-badge--employee' }}">
-                            {{ isAdmin ? 'Admin' : 'EmployÃ©' }}
+                            {{ isAdmin ? 'Admin' : 'Employé' }}
                         </span>
                 </td>
                 <td>
@@ -34,18 +34,18 @@
                 <td>
                     {% if isAdmin %}
                         <button class="btn btn-outline-secondary btn-sm" type="button" disabled>
-                            DÃ©sactiver
+                            Désactiver
                         </button>
                     {% else %}
                         <button class="btn btn-outline-danger btn-sm" type="button">
-                            DÃ©sactiver
+                            Désactiver
                         </button>
                     {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6" class="text-center text-muted">Aucun employÃ©.</td>
+                <td colspan="6" class="text-center text-muted">Aucun employé.</td>
             </tr>
         {% endfor %}
         </tbody>

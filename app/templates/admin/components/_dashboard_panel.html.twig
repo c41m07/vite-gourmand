@@ -21,9 +21,9 @@
         <div class="admin-metric__value">
             {% if revenueTotal %}
                 {% set totalDisplay = revenueTotal / 100 %}
-                {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                {{ totalDisplay|number_format(2, ',', ' ') }} €
             {% else %}
-                0 â‚¬
+                0 €
             {% endif %}
         </div>
     </article>
@@ -50,25 +50,25 @@
     </article>
 </div>
 
-<h2 class="admin-section-title mt-4">Commandes rÃ©centes</h2>
+<h2 class="admin-section-title mt-4">Commandes récentes</h2>
 <div class="admin-card admin-orders-card">
     {% if orders is empty %}
-        <p class="text-muted mb-0">Aucune commande rÃ©cente.</p>
+        <p class="text-muted mb-0">Aucune commande récente.</p>
     {% else %}
         {% for order in orders|slice(0, 4) %}
             {% set orderMenu = order.customerOrderMenus|first %}
             {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
             {% set statusHistory = order.customerOrderStatusHistories|last %}
-            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'TerminÃ©e' %}
+            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'Terminée' %}
 
             <div class="admin-order-row">
                 <div>
                     <div class="admin-order__title">{{ menuTitle }}</div>
                     <div class="admin-order__meta">
                         {% if order.user %}
-                            {{ order.user.firstName }} {{ order.user.lastName }} Â·
+                            {{ order.user.firstName }} {{ order.user.lastName }} ·
                         {% endif %}
-                        {{ order.peopleCount ?: '-' }} pers. Â·
+                        {{ order.peopleCount ?: '-' }} pers. ·
                         {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="admin-order__price">
                         {% if order.totalPrice is not null %}
                             {% set totalDisplay = order.totalPrice / 100 %}
-                            {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                            {{ totalDisplay|number_format(2, ',', ' ') }} €
                         {% else %}
                             -
                         {% endif %}

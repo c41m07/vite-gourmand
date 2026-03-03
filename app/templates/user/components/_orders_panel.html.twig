@@ -20,7 +20,7 @@
                 <div class="account-order__header">
                     <div>
                         <h3 class="account-order__title">{{ menuTitle }}</h3>
-                        <p class="account-order__subtitle">Commande nÂ° CMD-{{ order.id }}</p>
+                        <p class="account-order__subtitle">Commande n° CMD-{{ order.id }}</p>
                     </div>
                     <span class="account-status">{{ statusLabel }}</span>
                 </div>
@@ -30,7 +30,7 @@
                         <div class="account-meta__label">Date de prestation</div>
                         <div class="account-meta__value">
                             {% if order.serviceDate %}
-                                {{ order.serviceDate|date('d/m/Y') }}{% if order.serviceTime %} Ã  {{ order.serviceTime }}{% endif %}
+                                {{ order.serviceDate|date('d/m/Y') }}{% if order.serviceTime %} à {{ order.serviceTime }}{% endif %}
                             {% else %}
                                 -
                             {% endif %}
@@ -47,7 +47,7 @@
                     <div class="account-meta__value account-meta__value--total">
                     {% if order.totalPrice is not null %}
                             {% set totalDisplay = order.totalPrice / 100 %}
-                            {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                            {{ totalDisplay|number_format(2, ',', ' ') }} €
                         {% else %}
                             -
                         {% endif %}

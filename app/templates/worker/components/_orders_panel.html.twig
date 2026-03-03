@@ -5,7 +5,7 @@
 {% if orders is empty %}
     <div class="worker-card worker-empty">
         <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
-        <p class="mb-0">Aucune commande Ã  traiter pour le moment.</p>
+        <p class="mb-0">Aucune commande à traiter pour le moment.</p>
     </div>
 {% else %}
     <div class="worker-stack">
@@ -13,7 +13,7 @@
             {% set orderMenu = order.customerOrderMenus|first %}
             {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
             {% set statusHistory = order.customerOrderStatusHistories|last %}
-            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'TerminÃ©e' %}
+            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'Terminée' %}
 
             <article class="worker-card worker-order">
                 <div class="worker-order__header">
@@ -33,7 +33,7 @@
                         <label class="worker-meta__label" for="status-{{ order.id }}">Changer le statut</label>
                         <select id="status-{{ order.id }}" class="form-select worker-select">
                             {% if orderStatuses is empty %}
-                                <option selected>TerminÃ©e</option>
+                                <option selected>Terminée</option>
                             {% else %}
                                 {% for status in orderStatuses %}
                                     <option value="{{ status.id }}"
@@ -66,7 +66,7 @@
                         <div class="worker-meta__value worker-meta__value--total">
                             {% if order.totalPrice is not null %}
                                 {% set totalDisplay = order.totalPrice / 100 %}
-                                {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                                {{ totalDisplay|number_format(2, ',', ' ') }} €
                             {% else %}
                                 -
                             {% endif %}

@@ -7,7 +7,7 @@
 {% if pendingReviews is empty %}
     <div class="worker-card worker-empty">
         <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
-        <p class="mb-0">Tous les avis ont Ã©tÃ© traitÃ©s</p>
+        <p class="mb-0">Tous les avis ont été traités</p>
     </div>
 {% else %}
     <div class="worker-stack">
@@ -43,11 +43,11 @@
     </div>
 {% endif %}
 
-<div class="worker-subtitle mt-4">Avis publiÃ©s ({{ publishedReviews|length }})</div>
+<div class="worker-subtitle mt-4">Avis publiés ({{ publishedReviews|length }})</div>
 {% if publishedReviews is empty %}
     <div class="worker-card worker-empty">
         <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
-        <p class="mb-0">Aucun avis publiÃ© pour le moment.</p>
+        <p class="mb-0">Aucun avis publié pour le moment.</p>
     </div>
 {% else %}
     <div class="worker-stack">
@@ -77,7 +77,7 @@
                         <i class="bi bi-check-circle"></i>
                     </div>
                 </div>
-                <p class="worker-review__text">{{ review.description ?: 'Avis publiÃ©.' }}</p>
+                <p class="worker-review__text">{{ review.description ?: 'Avis publié.' }}</p>
             </article>
         {% endfor %}
     </div>

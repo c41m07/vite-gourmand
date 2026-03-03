@@ -3,9 +3,9 @@
 
 {% if reviewsCount == 0 %}
     <div class="account-card account-empty">
-        <p class="mb-3">Tu n'as encore laissÃ© aucun avis.</p>
+        <p class="mb-3">Tu n'as encore laissé aucun avis.</p>
         <a class="btn btn-outline-primary px-4" href="{{ path('app_menu_index') }}">
-            DÃ©couvrir les menus
+            Découvrir les menus
         </a>
     </div>
 {% else %}
@@ -20,7 +20,7 @@
                     <h3 class="account-review__title">{{ reviewMenuTitle }}</h3>
                     <span class="account-review__status">
                         <i class="bi bi-check-circle"></i>
-                        {{ review.validated ? 'PubliÃ©' : 'En attente' }}
+                        {{ review.validated ? 'Publié' : 'En attente' }}
                     </span>
                 </div>
 
@@ -35,7 +35,7 @@
                 </div>
 
                 <p class="account-review__text">
-                    {{ review.description ?: 'Avis en cours de rÃ©daction.' }}
+                    {{ review.description ?: 'Avis en cours de rédaction.' }}
                 </p>
 
                 <div class="account-review__date">
