@@ -3,9 +3,9 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use App\Form\Security\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Service\EmailFactory;
+use App\Service\Mail\EmailFactory;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
