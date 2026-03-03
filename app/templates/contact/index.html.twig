@@ -5,7 +5,7 @@
 
 {% block body %}
     {# HERO #}
-    {% include 'components/hero.html.twig' with {
+    {% include 'components/_hero.html.twig' with {
         'title': 'Contactez-nous',
         'background': '#1f5e3b'
     } %}
@@ -61,7 +61,7 @@
                     </ul>
                 </div>
 
-                {% include 'contact/components/form.html.twig' %}
+                {% include 'contact/components/_form.html.twig' %}
 
             </div>
         </div>

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
     {# HERO #}
-    {% include 'components/hero.html.twig' with  {
+    {% include 'components/_hero.html.twig' with  {
         'title': menu.title,
         'asset_url': menu.media.imgUrl,
         'subtitle': (menu.basePrice / 100)|number_format(2, ',', ' ') ~ '€ par personne'
@@ -37,7 +37,7 @@
         ] %}
         <div class="row g-3 menu-show__meta">
             {% for meta in metas %}
-                {% include 'menu/components/metacard.html.twig' with meta only %}
+                {% include 'menu/components/_meta_card.html.twig' with meta only %}
             {% endfor %}
         </div>
 
