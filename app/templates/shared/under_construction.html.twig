@@ -1,10 +1,10 @@
-{# templates/partials/underconstruct.html.twig #}
+{# templates/shared/under_construction.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Page en construction - Vite & Gourmand{% endblock %}
 
 {% block body %}
-    {% include 'components/hero.html.twig' with {
+    {% include 'components/_hero.html.twig' with {
         'title': 'Page en construction',
         'subtitle': 'Nous arrivons bientôt',
         'background': '#8a5a2b'

@@ -1,0 +1,17 @@
+<nav class="worker-tabs" aria-label="Navigation employé">
+    <a class="worker-tab {{ activeTab == 'orders' ? 'is-active' : '' }}"
+       href="{{ path('app_worker_dashboard', { tab: 'orders' }) }}">
+        <i class="bi bi-box-seam"></i>
+        Commandes
+    </a>
+    <a class="worker-tab {{ activeTab == 'menus' ? 'is-active' : '' }}"
+       href="{{ path('app_worker_dashboard', { tab: 'menus' }) }}">
+        <i class="bi bi-egg-fried"></i>
+        Menus
+    </a>
+    <a class="worker-tab {{ activeTab == 'reviews' ? 'is-active' : '' }}"
+       href="{{ path('app_worker_dashboard', { tab: 'reviews' }) }}">
+        <i class="bi bi-star"></i>
+        Avis ({{ pendingReviews|length }})
+    </a>
+</nav>

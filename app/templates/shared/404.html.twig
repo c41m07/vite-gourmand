@@ -1,10 +1,10 @@
-{# templates/partials/404.html.twig #}
+{# templates/shared/404.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Page introuvable - Vite & Gourmand{% endblock %}
 
 {% block body %}
-    {% include 'components/hero.html.twig' with {
+    {% include 'components/_hero.html.twig' with {
         'title': 'Page introuvable',
         'subtitle': 'Erreur 404',
         'background': '#5a2a2a'

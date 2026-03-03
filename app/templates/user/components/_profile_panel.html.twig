@@ -1,0 +1,36 @@
+<div class="account-profile">
+    <div class="account-profile__header">
+        <h2 class="account-section-title mb-0">Informations personnelles</h2>
+        <a class="account-action" href="{{ path('app_under_construction') }}">
+            <i class="bi bi-pencil"></i>
+            Modifier
+        </a>
+    </div>
+
+    <div class="account-card">
+        <div class="account-profile__grid">
+            <div class="account-profile__item">
+                <span>Nom</span>
+                <div class="account-profile__value">{{ app.user.lastName }}</div>
+            </div>
+            <div class="account-profile__item">
+                <span>Prénom</span>
+                <div class="account-profile__value">{{ app.user.firstName }}</div>
+            </div>
+            <div class="account-profile__item">
+                <span>Email</span>
+                <div class="account-profile__value">{{ app.user.email }}</div>
+            </div>
+            <div class="account-profile__item">
+                <span>Téléphone</span>
+                <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigné' }}</div>
+            </div>
+            <div class="account-profile__item account-profile__item--full">
+                <span>Adresse</span>
+                <div class="account-profile__value">
+                    {{ app.user.postalAddress ?: 'Non renseignée' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

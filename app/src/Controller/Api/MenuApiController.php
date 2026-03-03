@@ -25,7 +25,7 @@ final class MenuApiController extends AbstractController
         $menus = $menuRepository->searchPublic($filters);
 
         return $this->json([
-            'body' => $this->renderView('menu/components/list_card.html.twig', ['menus' => $menus]),
+            'body' => $this->renderView('menu/components/_list.html.twig', ['menus' => $menus]),
             'count' => count($menus),
         ]);
     }

@@ -1,0 +1,12 @@
+<nav class="admin-tabs" aria-label="Navigation admin">
+    <a class="admin-tab {{ activeTab == 'dashboard' ? 'is-active' : '' }}"
+       href="{{ path('app_admin_dashboard', { tab: 'dashboard' }) }}">
+        <i class="bi bi-bar-chart"></i>
+        Dashboard
+    </a>
+    <a class="admin-tab {{ activeTab == 'employees' ? 'is-active' : '' }}"
+       href="{{ path('app_admin_dashboard', { tab: 'employees' }) }}">
+        <i class="bi bi-people"></i>
+        Employés ({{ employees|length }})
+    </a>
+</nav>

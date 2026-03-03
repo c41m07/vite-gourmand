@@ -6,7 +6,7 @@
 {% block body %}
     {# HERO #}
 
-    {% include 'components/hero.html.twig' with  {
+    {% include 'components/_hero.html.twig' with  {
         'title': 'Tous nos menus',
         'asset_url': asset('build/images/hero/hero-menus.jpg')
     } %}
@@ -133,7 +133,7 @@
             <div class="container">
                 <h2 class="visually-hidden">Liste des menus</h2>
                 <div class="row row-gap-4" id="menu-cards" {{ stimulus_target('menu-filter', 'list') }}>
-                    {% include 'menu/components/list_card.html.twig' with {'menus': menus} %}
+                    {% include 'menu/components/_list.html.twig' with {'menus': menus} %}
                 </div>
             </div>
         </section>

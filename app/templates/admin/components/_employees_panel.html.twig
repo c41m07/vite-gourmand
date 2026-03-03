@@ -1,0 +1,53 @@
+<h2 class="admin-section-title">Gestion des employés ({{ employees|length }})</h2>
+
+<div class="admin-card admin-table-card">
+    <table class="table admin-table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            {% set roles = employee.roles %}
+            {% set isAdmin = 'ROLE_ADMIN' in roles %}
+            <tr>
+                <td>{{ employee.lastName }} {{ employee.firstName }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.phone ?: '-' }}</td>
+                <td>
+                        <span class="admin-badge {{ isAdmin ? 'admin-badge--admin' : 'admin-badge--employee' }}">
+                            {{ isAdmin ? 'Admin' : 'Employé' }}
+                        </span>
+                </td>
+                <td>
+                        <span class="admin-status {{ employee.active ? 'admin-status--active' : 'admin-status--inactive' }}">
+                            <i class="bi bi-person-check"></i>
+                            {{ employee.active ? 'Actif' : 'Inactif' }}
+                        </span>
+                </td>
+                <td>
+                    {% if isAdmin %}
+                        <button class="btn btn-outline-secondary btn-sm" type="button" disabled>
+                            Désactiver
+                        </button>
+                    {% else %}
+                        <button class="btn btn-outline-danger btn-sm" type="button">
+                            Désactiver
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Aucun employé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

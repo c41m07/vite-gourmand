@@ -7,164 +7,20 @@
         <div class="container">
             <h1 class="admin-title">Espace Admin</h1>
 
-            <nav class="admin-tabs" aria-label="Navigation admin">
-                <a class="admin-tab {{ activeTab == 'dashboard' ? 'is-active' : '' }}"
-                   href="{{ path('app_admin_dashboard', { tab: 'dashboard' }) }}">
-                    <i class="bi bi-bar-chart"></i>
-                    Dashboard
-                </a>
-                <a class="admin-tab {{ activeTab == 'employees' ? 'is-active' : '' }}"
-                   href="{{ path('app_admin_dashboard', { tab: 'employees' }) }}">
-                    <i class="bi bi-people"></i>
-                    Employés ({{ employees|length }})
-                </a>
-            </nav>
+            {% include 'admin/components/_tabs.html.twig' with { activeTab: activeTab, employees: employees } %}
 
             <div class="admin-content">
                 {% if activeTab == 'employees' %}
-                    <h2 class="admin-section-title">Gestion des employés ({{ employees|length }})</h2>
-
-                    <div class="admin-card admin-table-card">
-                        <table class="table admin-table">
-                            <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Rôle</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for employee in employees %}
-                                {% set roles = employee.roles %}
-                                {% set isAdmin = 'ROLE_ADMIN' in roles %}
-                                <tr>
-                                    <td>{{ employee.lastName }} {{ employee.firstName }}</td>
-                                    <td>{{ employee.email }}</td>
-                                    <td>{{ employee.phone ?: '-' }}</td>
-                                    <td>
-                                            <span class="admin-badge {{ isAdmin ? 'admin-badge--admin' : 'admin-badge--employee' }}">
-                                                {{ isAdmin ? 'Admin' : 'Employé' }}
-                                            </span>
-                                    </td>
-                                    <td>
-                                            <span class="admin-status {{ employee.active ? 'admin-status--active' : 'admin-status--inactive' }}">
-                                                <i class="bi bi-person-check"></i>
-                                                {{ employee.active ? 'Actif' : 'Inactif' }}
-                                            </span>
-                                    </td>
-                                    <td>
-                                        {% if isAdmin %}
-                                            <button class="btn btn-outline-secondary btn-sm" type="button" disabled>
-                                                Désactiver
-                                            </button>
-                                        {% else %}
-                                            <button class="btn btn-outline-danger btn-sm" type="button">
-                                                Désactiver
-                                            </button>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted">Aucun employé.</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% include 'admin/components/_employees_panel.html.twig' with { employees: employees } %}
                 {% else %}
-                    <div class="admin-metrics">
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--blue">
-                                <i class="bi bi-box-seam"></i>
-                            </div>
-                            <div class="admin-metric__label">Total des commandes</div>
-                            <div class="admin-metric__value">{{ orders|length }}</div>
-                        </article>
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--orange">
-                                <i class="bi bi-hourglass-split"></i>
-                            </div>
-                            <div class="admin-metric__label">Commandes en cours</div>
-                            <div class="admin-metric__value">{{ ordersInProgress }}</div>
-                        </article>
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--green">
-                                <i class="bi bi-currency-euro"></i>
-                            </div>
-                            <div class="admin-metric__label">Chiffre d'affaires</div>
-                            <div class="admin-metric__value">
-                                {% if revenueTotal %}
-                                    {% set totalDisplay = revenueTotal / 100 %}
-                                    {{ totalDisplay|number_format(2, ',', ' ') }} €
-                                {% else %}
-                                    0 €
-                                {% endif %}
-                            </div>
-                        </article>
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--gold">
-                                <i class="bi bi-star"></i>
-                            </div>
-                            <div class="admin-metric__label">Moyenne des avis</div>
-                            <div class="admin-metric__value">{{ avgRating|number_format(1, ',', ' ') }}/5</div>
-                        </article>
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--purple">
-                                <i class="bi bi-people"></i>
-                            </div>
-                            <div class="admin-metric__label">Clients</div>
-                            <div class="admin-metric__value">{{ clientsCount }}</div>
-                        </article>
-                        <article class="admin-card admin-metric">
-                            <div class="admin-metric__icon admin-metric__icon--teal">
-                                <i class="bi bi-egg-fried"></i>
-                            </div>
-                            <div class="admin-metric__label">Menus actifs</div>
-                            <div class="admin-metric__value">{{ activeMenus }}</div>
-                        </article>
-                    </div>
-
-                    <h2 class="admin-section-title mt-4">Commandes récentes</h2>
-                    <div class="admin-card admin-orders-card">
-                        {% if orders is empty %}
-                            <p class="text-muted mb-0">Aucune commande récente.</p>
-                        {% else %}
-                            {% for order in orders|slice(0, 4) %}
-                                {% set orderMenu = order.customerOrderMenus|first %}
-                                {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
-                                {% set statusHistory = order.customerOrderStatusHistories|last %}
-                                {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'Terminée' %}
-
-                                <div class="admin-order-row">
-                                    <div>
-                                        <div class="admin-order__title">{{ menuTitle }}</div>
-                                        <div class="admin-order__meta">
-                                            {% if order.user %}
-                                                {{ order.user.firstName }} {{ order.user.lastName }} ·
-                                            {% endif %}
-                                            {{ order.peopleCount ?: '-' }} pers. ·
-                                            {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
-                                        </div>
-                                    </div>
-                                    <div class="admin-order__actions">
-                                        <div class="admin-order__price">
-                                            {% if order.totalPrice is not null %}
-                                                {% set totalDisplay = order.totalPrice / 100 %}
-                                                {{ totalDisplay|number_format(2, ',', ' ') }} €
-                                            {% else %}
-                                                -
-                                            {% endif %}
-                                        </div>
-                                        <span class="admin-status admin-status--pill">{{ statusLabel }}</span>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
+                    {% include 'admin/components/_dashboard_panel.html.twig' with {
+                        orders: orders,
+                        ordersInProgress: ordersInProgress,
+                        revenueTotal: revenueTotal,
+                        avgRating: avgRating,
+                        clientsCount: clientsCount,
+                        activeMenus: activeMenus
+                    } %}
                 {% endif %}
             </div>
         </div>
