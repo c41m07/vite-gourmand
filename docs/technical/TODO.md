@@ -39,6 +39,19 @@ Dette technique:
 - [ ] Ajouter des tests unitaires sur `EmailFactory` (headers `From/Reply-To/To`, context Twig).
 - [ ] Mettre en place une CI (tests + phpstan + lint twig/php) pour eviter les regressions.
 
+Pages a creer (actuellement liees a `app_underconstruct`):
+
+- [ ] Page "Mot de passe oublie" (demande de reinitialisation + envoi mail).
+  Source: `app/templates/security/login.html.twig` (lien "Mot de passe oublie ?").
+- [ ] Page "Commander un menu" (parcours commande depuis la fiche menu).
+  Source: `app/templates/menu/show.html.twig` (bouton "Commander").
+- [ ] Page "Modifier mon profil" (edition des informations utilisateur).
+  Source: `app/templates/user/account.html.twig` (action "Modifier").
+- [ ] Page "Worker - Creer un nouveau menu".
+  Source: `app/templates/worker/dashboard.html.twig` (bouton "Nouveau menu").
+- [ ] Page "Worker - Modifier un menu".
+  Source: `app/templates/worker/dashboard.html.twig` (bouton "Modifier").
+
 Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 
 - [ ] Implementer le parcours complet de commande (formulaire, pre-remplissage depuis le menu detail, validation du min personnes, recap prix).

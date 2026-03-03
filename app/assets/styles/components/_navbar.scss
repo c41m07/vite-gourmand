@@ -1,10 +1,30 @@
 .vg-navbar {
-    /* réglages navbar Bootstrap */
+    /* Bootstrap navbar adjustments */
     --bs-navbar-padding-y: 1rem;
-
-    /* underline “active” en secondary */
     --bs-nav-underline-border-width: 0.14rem;
     --bs-nav-underline-link-active-color: #{$secondary};
 
-    .nav-link { padding-inline: .85rem; }
+    .nav-link {
+        display: inline-flex;
+        align-items: center;
+        padding-inline: 0.85rem;
+    }
+
+    .nav-link__icon {
+        width: 0;
+        margin-right: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateX(-0.2rem);
+        transition: opacity 0.16s ease, transform 0.16s ease, width 0.16s ease, margin-right 0.16s ease;
+    }
+
+    .nav-link:hover .nav-link__icon,
+    .nav-link:focus-visible .nav-link__icon,
+    .nav-link.active .nav-link__icon {
+        width: 1rem;
+        margin-right: 0.35rem;
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

@@ -1,10 +1,12 @@
 {# templates/partials/_navbar.html.twig #}
 {% set currentRoute = app.request.attributes.get('_route') %}
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom shadow-sm vg-navbar " aria-label="Navigation principale">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">Vite & Gourmand</a>
+        <a class="navbar-brand fw-bold d-inline-flex align-items-center gap-2" href="{{ path('app_home') }}">
+            <img src="{{ asset('build/images/icones/faviconW.svg') }}" alt="" style="width: 1.35em; height: 1.35em;" aria-hidden="true">
+            <span>Vite & Gourmand</span>
+        </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
                 aria-controls="mainNavbar" aria-expanded="false" aria-label="Ouvrir le menu">
@@ -15,44 +17,68 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 nav-underline">
                 <li class="nav-item">
                     <a class="nav-link {{ currentRoute == 'app_home' ? 'active' : '' }}" {{ currentRoute == 'app_home' ? 'aria-current="page"' :
-                    '' }} href="{{ path('app_home') }}">Accueil</a>
+                    '' }} href="{{ path('app_home') }}">
+                        <i class="bi bi-house-door nav-link__icon" aria-hidden="true"></i>
+                        Accueil
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ currentRoute == 'app_menu_index' ? 'active' : '' }}" {{ currentRoute == 'app_menu_index' ? 'aria-current="page"'
-                    : '' }} href="{{ path('app_menu_index') }}">Tous les menus</a>
+                    : '' }} href="{{ path('app_menu_index') }}">
+                        <i class="bi bi-book nav-link__icon" aria-hidden="true"></i>
+                        Tous les menus
+                    </a>
                 </li>
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_admin_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_admin_dashboard' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_admin_dashboard') }}">Admin</a>
+                        'aria-current="page"' : '' }} href="{{ path('app_admin_dashboard') }}">
+                            <i class="bi bi-shield-lock nav-link__icon" aria-hidden="true"></i>
+                            Admin
+                        </a>
                     </li>
                 {% endif %}
 
                 {% if is_granted('ROLE_WORKER') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_worker_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_worker_dashboard' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_worker_dashboard') }}">Employé</a>
+                        'aria-current="page"' : '' }} href="{{ path('app_worker_dashboard') }}">
+                            <i class="bi bi-briefcase nav-link__icon" aria-hidden="true"></i>
+                            Employé
+                        </a>
                     </li>
                 {% endif %}
 
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_user_profile' ? 'active' : '' }}" {{ currentRoute == 'app_user_profile' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_user_profile') }}">Profil</a>
+                        'aria-current="page"' : '' }} href="{{ path('app_user_profile') }}">
+                            <i class="bi bi-person-circle nav-link__icon" aria-hidden="true"></i>
+                            Profil
+                        </a>
                     </li>
                 {% endif %}
 
                 <li class="nav-item">
                     <a class="nav-link {{ currentRoute == 'app_contact_index' ? 'active' : '' }}" {{ currentRoute == 'app_contact_index' ?
-                    'aria-current="page"' : '' }} href="{{ path('app_contact_index') }}">Contact</a>
+                    'aria-current="page"' : '' }} href="{{ path('app_contact_index') }}">
+                        <i class="bi bi-envelope nav-link__icon" aria-hidden="true"></i>
+                        Contact
+                    </a>
                 </li>
                 <li class="nav-item">
                     {% if is_granted('IS_AUTHENTICATED') %}
-                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                        <a class="nav-link" href="{{ path('app_logout') }}">
+                            <i class="bi bi-box-arrow-right nav-link__icon" aria-hidden="true"></i>
+                            Déconnexion
+                        </a>
                     {% else %}
                         <a class="nav-link {{ currentRoute == 'app_login' ? 'active' : '' }}" {{ currentRoute == 'app_login' ? 'aria-current="page"' : '' }}
-                           href="{{ path('app_login') }}">Connexion</a>
+                           href="{{ path('app_login') }}">
+                            <i class="bi bi-box-arrow-in-right nav-link__icon" aria-hidden="true"></i>
+                            Connexion
+                        </a>
                     {% endif %}
                 </li>
             </ul>
