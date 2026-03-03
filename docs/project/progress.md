@@ -57,7 +57,7 @@
 - [x] Email contact : template HTML complet et lisible (resume + message)
 - [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
-- [x] Page Profil utilisateur (affichage infos de base)
+- [x] Page Profil utilisateur (affichage infos)
 
 ## Sprint 6
 

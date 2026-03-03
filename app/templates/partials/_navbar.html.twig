@@ -24,13 +24,13 @@
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link {{ currentRoute == 'app_underconstruct' ? 'active' : '' }}" {{ currentRoute == 'app_underconstruct' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_underconstruct') }}">Admin</a>
+                        <a class="nav-link {{ currentRoute == 'app_admin_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_admin_dashboard' ?
+                        'aria-current="page"' : '' }} href="{{ path('app_admin_dashboard') }}">Admin</a>
                     </li>
                 {% elseif is_granted('ROLE_WORKER') %}
                     <li class="nav-item">
-                        <a class="nav-link {{ currentRoute == 'app_underconstruct' ? 'active' : '' }}" {{ currentRoute == 'app_underconstruct' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_underconstruct') }}">Employé(e)</a>
+                        <a class="nav-link {{ currentRoute == 'app_worker_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_worker_dashboard' ?
+                        'aria-current="page"' : '' }} href="{{ path('app_worker_dashboard') }}">Employé</a>
                     </li>
                 {% elseif is_granted('ROLE_USER') %}
                     <li class="nav-item">
