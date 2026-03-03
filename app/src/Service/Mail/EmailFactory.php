@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Mail;
 
 use App\Entity\ContactMessage;
 use App\Entity\User;

@@ -39,7 +39,7 @@ Dette technique:
 - [ ] Ajouter des tests unitaires sur `EmailFactory` (headers `From/Reply-To/To`, context Twig).
 - [ ] Mettre en place une CI (tests + phpstan + lint twig/php) pour eviter les regressions.
 
-Pages a creer (actuellement liees a `app_underconstruct`):
+Pages a creer (actuellement liees a `app_under_construction`):
 
 - [ ] Page "Mot de passe oublie" (demande de reinitialisation + envoi mail).
   Source: `app/templates/security/login.html.twig` (lien "Mot de passe oublie ?").

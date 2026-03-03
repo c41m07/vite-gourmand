@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ContactMessage;
-use App\Form\ContactFormType;
-use App\Service\EmailFactory;
+use App\Form\Contact\ContactFormType;
+use App\Service\Mail\EmailFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
