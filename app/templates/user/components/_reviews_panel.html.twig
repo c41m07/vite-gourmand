@@ -1,0 +1,47 @@
+{% set reviewsCount = reviews|length %}
+<h2 class="account-section-title">Mes avis ({{ reviewsCount }})</h2>
+
+{% if reviewsCount == 0 %}
+    <div class="account-card account-empty">
+        <p class="mb-3">Tu n'as encore laissÃ© aucun avis.</p>
+        <a class="btn btn-outline-primary px-4" href="{{ path('app_menu_index') }}">
+            DÃ©couvrir les menus
+        </a>
+    </div>
+{% else %}
+    <div class="account-stack">
+        {% for review in reviews %}
+            {% set reviewMenu = review.customerOrderMenus|first %}
+            {% set reviewMenuTitle = reviewMenu and reviewMenu.menu ? reviewMenu.menu.title : 'Menu' %}
+            {% set rating = review.rating > 5 ? 5 : review.rating %}
+
+            <article class="account-card account-review">
+                <div class="account-review__header">
+                    <h3 class="account-review__title">{{ reviewMenuTitle }}</h3>
+                    <span class="account-review__status">
+                        <i class="bi bi-check-circle"></i>
+                        {{ review.validated ? 'PubliÃ©' : 'En attente' }}
+                    </span>
+                </div>
+
+                <div class="account-review__stars">
+                    {% for i in 1..5 %}
+                        {% if i <= rating %}
+                            <i class="bi bi-star-fill"></i>
+                        {% else %}
+                            <i class="bi bi-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <p class="account-review__text">
+                    {{ review.description ?: 'Avis en cours de rÃ©daction.' }}
+                </p>
+
+                <div class="account-review__date">
+                    {{ review.createdAt ? review.createdAt|date('d/m/Y') : '-' }}
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}

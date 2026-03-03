@@ -1,0 +1,17 @@
+<nav class="account-tabs" aria-label="Navigation du compte">
+    <a class="account-tab {{ activeTab == 'orders' ? 'is-active' : '' }}"
+       href="{{ path('app_user_profile', { tab: 'orders' }) }}">
+        <i class="bi bi-box-seam"></i>
+        Mes commandes
+    </a>
+    <a class="account-tab {{ activeTab == 'profile' ? 'is-active' : '' }}"
+       href="{{ path('app_user_profile', { tab: 'profile' }) }}">
+        <i class="bi bi-person"></i>
+        Mon profil
+    </a>
+    <a class="account-tab {{ activeTab == 'reviews' ? 'is-active' : '' }}"
+       href="{{ path('app_user_profile', { tab: 'reviews' }) }}">
+        <i class="bi bi-star"></i>
+        Mes avis
+    </a>
+</nav>

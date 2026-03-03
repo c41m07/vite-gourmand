@@ -1,0 +1,89 @@
+<div class="admin-metrics">
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--blue">
+            <i class="bi bi-box-seam"></i>
+        </div>
+        <div class="admin-metric__label">Total des commandes</div>
+        <div class="admin-metric__value">{{ orders|length }}</div>
+    </article>
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--orange">
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div class="admin-metric__label">Commandes en cours</div>
+        <div class="admin-metric__value">{{ ordersInProgress }}</div>
+    </article>
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--green">
+            <i class="bi bi-currency-euro"></i>
+        </div>
+        <div class="admin-metric__label">Chiffre d'affaires</div>
+        <div class="admin-metric__value">
+            {% if revenueTotal %}
+                {% set totalDisplay = revenueTotal / 100 %}
+                {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+            {% else %}
+                0 â‚¬
+            {% endif %}
+        </div>
+    </article>
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--gold">
+            <i class="bi bi-star"></i>
+        </div>
+        <div class="admin-metric__label">Moyenne des avis</div>
+        <div class="admin-metric__value">{{ avgRating|number_format(1, ',', ' ') }}/5</div>
+    </article>
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--purple">
+            <i class="bi bi-people"></i>
+        </div>
+        <div class="admin-metric__label">Clients</div>
+        <div class="admin-metric__value">{{ clientsCount }}</div>
+    </article>
+    <article class="admin-card admin-metric">
+        <div class="admin-metric__icon admin-metric__icon--teal">
+            <i class="bi bi-egg-fried"></i>
+        </div>
+        <div class="admin-metric__label">Menus actifs</div>
+        <div class="admin-metric__value">{{ activeMenus }}</div>
+    </article>
+</div>
+
+<h2 class="admin-section-title mt-4">Commandes rÃ©centes</h2>
+<div class="admin-card admin-orders-card">
+    {% if orders is empty %}
+        <p class="text-muted mb-0">Aucune commande rÃ©cente.</p>
+    {% else %}
+        {% for order in orders|slice(0, 4) %}
+            {% set orderMenu = order.customerOrderMenus|first %}
+            {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
+            {% set statusHistory = order.customerOrderStatusHistories|last %}
+            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'TerminÃ©e' %}
+
+            <div class="admin-order-row">
+                <div>
+                    <div class="admin-order__title">{{ menuTitle }}</div>
+                    <div class="admin-order__meta">
+                        {% if order.user %}
+                            {{ order.user.firstName }} {{ order.user.lastName }} Â·
+                        {% endif %}
+                        {{ order.peopleCount ?: '-' }} pers. Â·
+                        {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
+                    </div>
+                </div>
+                <div class="admin-order__actions">
+                    <div class="admin-order__price">
+                        {% if order.totalPrice is not null %}
+                            {% set totalDisplay = order.totalPrice / 100 %}
+                            {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    <span class="admin-status admin-status--pill">{{ statusLabel }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

@@ -1,0 +1,93 @@
+<div class="worker-section-header">
+    <h2 class="worker-section-title">Gestion des commandes ({{ orders|length }})</h2>
+</div>
+
+{% if orders is empty %}
+    <div class="worker-card worker-empty">
+        <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
+        <p class="mb-0">Aucune commande Ã  traiter pour le moment.</p>
+    </div>
+{% else %}
+    <div class="worker-stack">
+        {% for order in orders %}
+            {% set orderMenu = order.customerOrderMenus|first %}
+            {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
+            {% set statusHistory = order.customerOrderStatusHistories|last %}
+            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'TerminÃ©e' %}
+
+            <article class="worker-card worker-order">
+                <div class="worker-order__header">
+                    <div class="worker-order__main">
+                        <div class="worker-order__title-row">
+                            <h3 class="worker-order__title">{{ menuTitle }}</h3>
+                            <span class="worker-status">{{ statusLabel }}</span>
+                        </div>
+                        <p class="worker-order__subtitle">
+                            {% if order.user %}
+                                Client : {{ order.user.firstName }} {{ order.user.lastName }}
+                                ({{ order.user.email }})
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="worker-order__select">
+                        <label class="worker-meta__label" for="status-{{ order.id }}">Changer le statut</label>
+                        <select id="status-{{ order.id }}" class="form-select worker-select">
+                            {% if orderStatuses is empty %}
+                                <option selected>TerminÃ©e</option>
+                            {% else %}
+                                {% for status in orderStatuses %}
+                                    <option value="{{ status.id }}"
+                                        {{ statusHistory and statusHistory.orderStatus and statusHistory.orderStatus.id == status.id ? 'selected' : '' }}>
+                                        {{ status.label }}
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="worker-order__meta">
+                    <div class="worker-meta">
+                        <div class="worker-meta__label">Date</div>
+                        <div class="worker-meta__value">
+                            {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
+                        </div>
+                    </div>
+                    <div class="worker-meta">
+                        <div class="worker-meta__label">Heure</div>
+                        <div class="worker-meta__value">{{ order.serviceTime ?: '-' }}</div>
+                    </div>
+                    <div class="worker-meta">
+                        <div class="worker-meta__label">Personnes</div>
+                        <div class="worker-meta__value">{{ order.peopleCount ?: '-' }}</div>
+                    </div>
+                    <div class="worker-meta">
+                        <div class="worker-meta__label">Total</div>
+                        <div class="worker-meta__value worker-meta__value--total">
+                            {% if order.totalPrice is not null %}
+                                {% set totalDisplay = order.totalPrice / 100 %}
+                                {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="worker-order__address">
+                    <div class="worker-meta__label">Adresse de livraison</div>
+                    <div class="worker-meta__value">
+                        {% if order.deliveryAddress %}
+                            {{ order.deliveryAddress }},
+                            {{ order.deliveryPostalCode }}
+                            {{ order.deliveryCity }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}

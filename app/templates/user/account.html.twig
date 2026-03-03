@@ -7,192 +7,20 @@
         <div class="container">
             <h1 class="account-title">Mon compte</h1>
 
-            <nav class="account-tabs" aria-label="Navigation du compte">
-                <a class="account-tab {{ activeTab == 'orders' ? 'is-active' : '' }}"
-                   href="{{ path('app_user_profile', { tab: 'orders' }) }}">
-                    <i class="bi bi-box-seam"></i>
-                    Mes commandes
-                </a>
-                <a class="account-tab {{ activeTab == 'profile' ? 'is-active' : '' }}"
-                   href="{{ path('app_user_profile', { tab: 'profile' }) }}">
-                    <i class="bi bi-person"></i>
-                    Mon profil
-                </a>
-                <a class="account-tab {{ activeTab == 'reviews' ? 'is-active' : '' }}"
-                   href="{{ path('app_user_profile', { tab: 'reviews' }) }}">
-                    <i class="bi bi-star"></i>
-                    Mes avis
-                </a>
-            </nav>
+            {% include 'user/components/_tabs.html.twig' with { activeTab: activeTab } %}
 
             <div class="account-content">
                 {% if not app.user %}
                     <div class="account-card account-empty">
-                        <p class="mb-3">Connecte-toi pour accéder à ton compte.</p>
+                        <p class="mb-3">Connecte-toi pour accÃ©der Ã  ton compte.</p>
                         <a class="btn btn-primary px-4" href="{{ path('app_login') }}">Se connecter</a>
                     </div>
+                {% elseif activeTab == 'orders' %}
+                    {% include 'user/components/_orders_panel.html.twig' with { orders: orders } %}
+                {% elseif activeTab == 'reviews' %}
+                    {% include 'user/components/_reviews_panel.html.twig' with { reviews: reviews } %}
                 {% else %}
-                    {% set ordersCount = orders|length %}
-                    {% set reviewsCount = reviews|length %}
-
-                    {% if activeTab == 'orders' %}
-                        <h2 class="account-section-title">Mes commandes ({{ ordersCount }})</h2>
-
-                        {% if ordersCount == 0 %}
-                            <div class="account-card account-empty">
-                                <p class="mb-3">Aucune commande pour le moment.</p>
-                                <a class="btn btn-outline-primary px-4" href="{{ path('app_menu_index') }}">
-                                    Voir les menus
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="account-stack">
-                                {% for order in orders %}
-                                    {% set orderMenu = order.customerOrderMenus|first %}
-                                    {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
-                                    {% set statusHistory = order.customerOrderStatusHistories|last %}
-                                    {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'En cours' %}
-
-                                    <article class="account-card account-order">
-                                        <div class="account-order__header">
-                                            <div>
-                                                <h3 class="account-order__title">{{ menuTitle }}</h3>
-                                                <p class="account-order__subtitle">Commande n° CMD-{{ order.id }}</p>
-                                            </div>
-                                            <span class="account-status">{{ statusLabel }}</span>
-                                        </div>
-
-                                        <div class="account-meta">
-                                            <div class="account-meta__item">
-                                                <div class="account-meta__label">Date de prestation</div>
-                                                <div class="account-meta__value">
-                                                    {% if order.serviceDate %}
-                                                        {{ order.serviceDate|date('d/m/Y') }}{% if order.serviceTime %} à {{ order.serviceTime }}{% endif %}
-                                                    {% else %}
-                                                        -
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="account-meta__item">
-                                                <div class="account-meta__label">Nombre de personnes</div>
-                                                <div class="account-meta__value">
-                                                    {{ order.peopleCount ?: '-' }}
-                                                </div>
-                                            </div>
-                                            <div class="account-meta__item">
-                                                <div class="account-meta__label">Total</div>
-                                            <div class="account-meta__value account-meta__value--total">
-                                            {% if order.totalPrice is not null %}
-                                                    {% set totalDisplay = order.totalPrice / 100 %}
-                                                    {{ totalDisplay|number_format(2, ',', ' ') }} €
-                                                {% else %}
-                                                    -
-                                                {% endif %}
-                                            </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="account-address">
-                                            <div class="account-meta__label">Adresse de livraison</div>
-                                            <div class="account-meta__value">
-                                                {% if order.deliveryAddress %}
-                                                    {{ order.deliveryAddress }},
-                                                    {{ order.deliveryPostalCode }}
-                                                    {{ order.deliveryCity }}
-                                                {% else %}
-                                                    -
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% elseif activeTab == 'reviews' %}
-                        <h2 class="account-section-title">Mes avis ({{ reviewsCount }})</h2>
-
-                        {% if reviewsCount == 0 %}
-                            <div class="account-card account-empty">
-                                <p class="mb-3">Tu n'as encore laissé aucun avis.</p>
-                                <a class="btn btn-outline-primary px-4" href="{{ path('app_menu_index') }}">
-                                    Découvrir les menus
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="account-stack">
-                                {% for review in reviews %}
-                                    {% set reviewMenu = review.customerOrderMenus|first %}
-                                    {% set reviewMenuTitle = reviewMenu and reviewMenu.menu ? reviewMenu.menu.title : 'Menu' %}
-                                    {% set rating = review.rating > 5 ? 5 : review.rating %}
-
-                                    <article class="account-card account-review">
-                                        <div class="account-review__header">
-                                            <h3 class="account-review__title">{{ reviewMenuTitle }}</h3>
-                                            <span class="account-review__status">
-                                                <i class="bi bi-check-circle"></i>
-                                                {{ review.validated ? 'Publié' : 'En attente' }}
-                                            </span>
-                                        </div>
-
-                                        <div class="account-review__stars">
-                                            {% for i in 1..5 %}
-                                                {% if i <= rating %}
-                                                    <i class="bi bi-star-fill"></i>
-                                                {% else %}
-                                                    <i class="bi bi-star"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-
-                                        <p class="account-review__text">
-                                            {{ review.description ?: 'Avis en cours de rédaction.' }}
-                                        </p>
-
-                                        <div class="account-review__date">
-                                            {{ review.createdAt ? review.createdAt|date('d/m/Y') : '-' }}
-                                        </div>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="account-profile">
-                            <div class="account-profile__header">
-                                <h2 class="account-section-title mb-0">Informations personnelles</h2>
-                                <a class="account-action" href="{{ path('app_under_construction') }}">
-                                    <i class="bi bi-pencil"></i>
-                                    Modifier
-                                </a>
-                            </div>
-
-                            <div class="account-card">
-                                <div class="account-profile__grid">
-                                    <div class="account-profile__item">
-                                        <span>Nom</span>
-                                        <div class="account-profile__value">{{ app.user.lastName }}</div>
-                                    </div>
-                                    <div class="account-profile__item">
-                                        <span>Prénom</span>
-                                        <div class="account-profile__value">{{ app.user.firstName }}</div>
-                                    </div>
-                                    <div class="account-profile__item">
-                                        <span>Email</span>
-                                        <div class="account-profile__value">{{ app.user.email }}</div>
-                                    </div>
-                                    <div class="account-profile__item">
-                                        <span>Téléphone</span>
-                                        <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigné' }}</div>
-                                    </div>
-                                    <div class="account-profile__item account-profile__item--full">
-                                        <span>Adresse</span>
-                                        <div class="account-profile__value">
-                                            {{ app.user.postalAddress ?: 'Non renseignée' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                    {% include 'user/components/_profile_panel.html.twig' %}
                 {% endif %}
             </div>
         </div>

@@ -1,0 +1,84 @@
+<div class="worker-section-header">
+    <h2 class="worker-section-title">Validation des avis</h2>
+</div>
+
+<div class="worker-subtitle">En attente de validation ({{ pendingReviews|length }})</div>
+
+{% if pendingReviews is empty %}
+    <div class="worker-card worker-empty">
+        <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
+        <p class="mb-0">Tous les avis ont Ã©tÃ© traitÃ©s</p>
+    </div>
+{% else %}
+    <div class="worker-stack">
+        {% for review in pendingReviews %}
+            {% set pendingMenu = review.customerOrderMenus|first %}
+            {% set pendingMenuTitle = pendingMenu and pendingMenu.menu ? pendingMenu.menu.title : 'Menu' %}
+            {% set rating = review.rating > 5 ? 5 : review.rating %}
+            <article class="worker-card worker-review">
+                <div class="worker-review__header">
+                    <div>
+                        <h3 class="worker-review__title">{{ pendingMenuTitle }}</h3>
+                        <p class="worker-review__subtitle">
+                            Par {{ review.user ? review.user.firstName ~ ' ' ~ review.user.lastName : 'Client' }}
+                        </p>
+                    </div>
+                    <div class="worker-review__actions">
+                        <button class="btn btn-outline-success btn-sm" type="button">Valider</button>
+                        <button class="btn btn-outline-danger btn-sm" type="button">Refuser</button>
+                    </div>
+                </div>
+                <div class="worker-review__stars">
+                    {% for i in 1..5 %}
+                        {% if i <= rating %}
+                            <i class="bi bi-star-fill"></i>
+                        {% else %}
+                            <i class="bi bi-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="worker-review__text">{{ review.description ?: 'Avis en attente.' }}</p>
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="worker-subtitle mt-4">Avis publiÃ©s ({{ publishedReviews|length }})</div>
+{% if publishedReviews is empty %}
+    <div class="worker-card worker-empty">
+        <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
+        <p class="mb-0">Aucun avis publiÃ© pour le moment.</p>
+    </div>
+{% else %}
+    <div class="worker-stack">
+        {% for review in publishedReviews %}
+            {% set publishedMenu = review.customerOrderMenus|first %}
+            {% set publishedMenuTitle = publishedMenu and publishedMenu.menu ? publishedMenu.menu.title : 'Menu' %}
+            {% set rating = review.rating > 5 ? 5 : review.rating %}
+
+            <article class="worker-card worker-review">
+                <div class="worker-review__header">
+                    <div>
+                        <h3 class="worker-review__title">{{ publishedMenuTitle }}</h3>
+                        <p class="worker-review__subtitle">
+                            Par {{ review.user ? review.user.firstName ~ ' ' ~ review.user.lastName : 'Client' }}
+                        </p>
+                    </div>
+                    <div class="worker-review__status">
+                        <div class="worker-review__stars worker-review__stars--inline">
+                            {% for i in 1..5 %}
+                                {% if i <= rating %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                </div>
+                <p class="worker-review__text">{{ review.description ?: 'Avis publiÃ©.' }}</p>
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}

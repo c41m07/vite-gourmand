@@ -1,0 +1,73 @@
+{% set ordersCount = orders|length %}
+<h2 class="account-section-title">Mes commandes ({{ ordersCount }})</h2>
+
+{% if ordersCount == 0 %}
+    <div class="account-card account-empty">
+        <p class="mb-3">Aucune commande pour le moment.</p>
+        <a class="btn btn-outline-primary px-4" href="{{ path('app_menu_index') }}">
+            Voir les menus
+        </a>
+    </div>
+{% else %}
+    <div class="account-stack">
+        {% for order in orders %}
+            {% set orderMenu = order.customerOrderMenus|first %}
+            {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
+            {% set statusHistory = order.customerOrderStatusHistories|last %}
+            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'En cours' %}
+
+            <article class="account-card account-order">
+                <div class="account-order__header">
+                    <div>
+                        <h3 class="account-order__title">{{ menuTitle }}</h3>
+                        <p class="account-order__subtitle">Commande nÂ° CMD-{{ order.id }}</p>
+                    </div>
+                    <span class="account-status">{{ statusLabel }}</span>
+                </div>
+
+                <div class="account-meta">
+                    <div class="account-meta__item">
+                        <div class="account-meta__label">Date de prestation</div>
+                        <div class="account-meta__value">
+                            {% if order.serviceDate %}
+                                {{ order.serviceDate|date('d/m/Y') }}{% if order.serviceTime %} Ã  {{ order.serviceTime }}{% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="account-meta__item">
+                        <div class="account-meta__label">Nombre de personnes</div>
+                        <div class="account-meta__value">
+                            {{ order.peopleCount ?: '-' }}
+                        </div>
+                    </div>
+                    <div class="account-meta__item">
+                        <div class="account-meta__label">Total</div>
+                    <div class="account-meta__value account-meta__value--total">
+                    {% if order.totalPrice is not null %}
+                            {% set totalDisplay = order.totalPrice / 100 %}
+                            {{ totalDisplay|number_format(2, ',', ' ') }} â‚¬
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    </div>
+                </div>
+
+                <div class="account-address">
+                    <div class="account-meta__label">Adresse de livraison</div>
+                    <div class="account-meta__value">
+                        {% if order.deliveryAddress %}
+                            {{ order.deliveryAddress }},
+                            {{ order.deliveryPostalCode }}
+                            {{ order.deliveryCity }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}
