@@ -31,14 +31,14 @@ final class HomeController extends AbstractController
         return $this->render('pages/cgv.html.twig');
     }
 
-    #[Route('/404', name: 'app_404')]
-    public function pageerror(): Response
+    #[Route('/not-found', name: 'app_not_found')]
+    public function pageError(): Response
     {
         return $this->render('partials/404.html.twig');
     }
 
-    #[Route('/underconstruct', name: 'app_underconstruct')]
-    public function underconstruc(): Response
+    #[Route('/under-construction', name: 'app_under_construction')]
+    public function underConstruction(): Response
     {
         return $this->render('partials/underconstruct.html.twig');
     }

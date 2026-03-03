@@ -1,46 +1,24 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Security;
 
-use App\Entity\ContactMessage;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-class ContactFormType extends AbstractType
+class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
-            ->add('firstName',TextType::class,[
-                'label' => 'Prénom',
-                'attr' => [
-                    'placeholder' => 'Votre prénom',
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(max: 255),
-                ],
-            ])
-            ->add('lastName',TextType::class,[
-                'label' => 'Nom',
-                'attr' => [
-                    'placeholder' => 'Votre nom',
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(max: 255),
-                ]
-            ])
-
-            ->add('email',EmailType::class,[
-                'label' => 'Email',
+            ->add('email', EmailType::class, [
                 'attr' => [
                     'placeholder' => 'votre.email@example.com',
                 ],
@@ -50,27 +28,51 @@ class ContactFormType extends AbstractType
                     new Assert\Length(max: 180),
                 ],
             ])
-            ->add('subject', TextType::class,[
-                'label' => 'Objet',
+            ->add('firstName', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Objet de votre message',
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(max: 180),
-                    new Assert\Length(min: 5),
-                ]
-            ])
-            ->add('message',TextareaType::class,[
-                'label' => 'Message',
-                'attr' => [
-                    'placeholder' => 'Votre message',
+                    'placeholder' => 'Votre prénom',
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length(max: 255),
-                    new Assert\Length(min: 10),
-                ]
+                ],
+            ])
+            ->add('lastName', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Votre nom',
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(max: 255),
+                ],
+            ])
+            ->add('phone', TelType::class, [
+                'attr' => [
+                    'placeholder' => '06 00 00 00 00',
+                ],
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length(max: 255),
+                ],
+            ])
+            ->add('postalAddress', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Votre adresse postale',
+                ],
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length(max: 255),
+                ],
+            ])
+            ->add('plainPassword', PasswordType::class, [
+                'attr' => [
+                    'placeholder' => '********',
+                ],
+                'mapped' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(min: 8, max: 4096),
+                ],
             ])
         ;
     }
@@ -78,7 +80,7 @@ class ContactFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ContactMessage::class,
+            'data_class' => User::class,
         ]);
     }
 }
