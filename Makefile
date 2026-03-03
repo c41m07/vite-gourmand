@@ -84,3 +84,10 @@ log:
 
 test:
 	$(EXEC_APP) ./vendor/bin/phpunit --testdox
+
+##################
+# UI Command #
+##################
+
+gource:
+	gource --seconds-per-day 0.5

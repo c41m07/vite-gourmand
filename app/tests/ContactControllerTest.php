@@ -18,7 +18,7 @@ class ContactControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $this->entityManager->getConnection()->executeStatement('DELETE FROM contact_message');
     }
 
@@ -59,3 +59,4 @@ class ContactControllerTest extends WebTestCase
         self::assertSame('Bonjour, je souhaite un devis pour 20 personnes.', $contactMessage->getMessage());
     }
 }
+

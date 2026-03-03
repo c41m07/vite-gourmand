@@ -18,7 +18,7 @@ class MenuControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         foreach ($this->entityManager->getRepository(Menu::class)->findAll() as $menu) {
             $this->entityManager->remove($menu);
@@ -101,3 +101,4 @@ class MenuControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 }
+

@@ -21,14 +21,13 @@ class RegisterController extends AbstractController
 {
     #[Route(path: '/register', name: 'app_register')]
     public function register(
-        Request                     $request,
+        Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface      $entityManager,
-        MailerInterface             $mailer,
-        UserRepository              $userRepository,
-        EmailFactory                $emailFactory,
-    ): Response
-    {
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        UserRepository $userRepository,
+        EmailFactory $emailFactory,
+    ): Response {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
@@ -37,10 +36,9 @@ class RegisterController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
             if ($userRepository->findOneBy(['email' => $user->getEmail()]) !== null) {
-                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
+                $form->get('email')->addError(new FormError('Un compte existe deja avec cet email.'));
 
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
@@ -49,7 +47,7 @@ class RegisterController extends AbstractController
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
-                (string)$form->get('plainPassword')->getData()
+                (string) $form->get('plainPassword')->getData()
             );
 
             $user->setPassword($hashedPassword);
@@ -63,7 +61,7 @@ class RegisterController extends AbstractController
             try {
                 $entityManager->flush();
             } catch (UniqueConstraintViolationException) {
-                $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
+                $form->get('email')->addError(new FormError('Un compte existe deja avec cet email.'));
 
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
@@ -72,6 +70,7 @@ class RegisterController extends AbstractController
 
             $email = $emailFactory->createWelcomeEmail($user);
             $mailer->send($email);
+
             return $this->redirectToRoute('app_login');
         }
 
@@ -79,5 +78,4 @@ class RegisterController extends AbstractController
             'registrationForm' => $form->createView(),
         ]);
     }
-
 }

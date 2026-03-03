@@ -2,7 +2,7 @@
 namespace App\Tests;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -15,7 +15,8 @@ class LoginControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $container = static::getContainer();
-        $em = $container->get('doctrine.orm.entity_manager');
+        /** @var EntityManagerInterface $em */
+        $em = $container->get(EntityManagerInterface::class);
         $userRepository = $em->getRepository(User::class);
 
         // Remove any existing users from the test database
@@ -58,7 +59,7 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         // Ensure we do not reveal if the user exists or not.
-        self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
+        self::assertSelectorTextContains('.alert-danger', 'Identifiants invalides.');
 
         // Denied - Can't login with invalid password.
         $this->client->request('GET', '/login');
@@ -73,7 +74,7 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         // Ensure we do not reveal the user exists but the password is wrong.
-        self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
+        self::assertSelectorTextContains('.alert-danger', 'Identifiants invalides.');
 
         // Success - Login with valid credentials is allowed.
         $this->client->submitForm('Se connecter', [
@@ -87,3 +88,4 @@ class LoginControllerTest extends WebTestCase
         self::assertSelectorNotExists('.alert-danger');
     }
 }
+

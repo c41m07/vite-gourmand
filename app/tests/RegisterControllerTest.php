@@ -37,7 +37,7 @@ class RegisterControllerTest extends WebTestCase
         }
 
         /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $userRepository = $entityManager->getRepository(User::class);
 
         foreach ($userRepository->findAll() as $user) {
@@ -73,7 +73,7 @@ class RegisterControllerTest extends WebTestCase
         self::assertEmailHtmlBodyContains($email, 'Alice');
 
         /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $userRepository = $entityManager->getRepository(User::class);
 
         self::assertNotNull($userRepository->findOneBy(['email' => 'new.user@example.com']));
@@ -82,7 +82,7 @@ class RegisterControllerTest extends WebTestCase
     public function testRegisterWithExistingEmailShowsError(): void
     {
         /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = static::getContainer()->get('security.user_password_hasher');
 
@@ -113,7 +113,7 @@ class RegisterControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertStringContainsString(
-            'Un compte existe déjà avec cet email.',
+            'Un compte existe deja avec cet email.',
             (string) $this->client->getResponse()->getContent()
         );
 
@@ -121,3 +121,4 @@ class RegisterControllerTest extends WebTestCase
         self::assertCount(1, $userRepository->findBy(['email' => 'existing.user@example.com']));
     }
 }
+

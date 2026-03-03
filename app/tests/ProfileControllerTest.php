@@ -16,7 +16,7 @@ class ProfileControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
             $this->entityManager->remove($user);
@@ -50,10 +50,15 @@ class ProfileControllerTest extends WebTestCase
         $this->entityManager->flush();
 
         $this->client->loginUser($user);
-        $this->client->request('GET', '/user/profile');
+        $this->client->request('GET', '/user/profile?tab=profile');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Mon profil');
-        self::assertSelectorTextContains('.list-group-item:nth-child(2)', 'profile.user@example.com');
+        self::assertSelectorTextContains('h1', 'Mon compte');
+        self::assertSelectorTextContains('.account-section-title', 'Informations personnelles');
+        self::assertStringContainsString(
+            'profile.user@example.com',
+            (string) $this->client->getResponse()->getContent()
+        );
     }
 }
+

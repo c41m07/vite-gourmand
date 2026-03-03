@@ -27,17 +27,20 @@
                         <a class="nav-link {{ currentRoute == 'app_admin_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_admin_dashboard' ?
                         'aria-current="page"' : '' }} href="{{ path('app_admin_dashboard') }}">Admin</a>
                     </li>
-                {% elseif is_granted('ROLE_WORKER') %}
+                {% endif %}
+
+                {% if is_granted('ROLE_WORKER') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_worker_dashboard' ? 'active' : '' }}" {{ currentRoute == 'app_worker_dashboard' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_worker_dashboard') }}">Employé</a>
+                        'aria-current="page"' : '' }} href="{{ path('app_worker_dashboard') }}">Employe(e)</a>
                     </li>
-                {% elseif is_granted('ROLE_USER') %}
+                {% endif %}
+
+                {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_user_profile' ? 'active' : '' }}" {{ currentRoute == 'app_user_profile' ?
                         'aria-current="page"' : '' }} href="{{ path('app_user_profile') }}">Profil</a>
                     </li>
-                {% else %}
                 {% endif %}
 
                 <li class="nav-item">
