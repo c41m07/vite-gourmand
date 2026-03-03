@@ -125,7 +125,6 @@
                     <div class="col-12 col-md-4 ">
                         <div class="card h-100 border-0 shadow-sm rounded-4">
                             <div class="card-body p-4">
-
                                 <div class="mb-2 text-warning">
                                     {% set rating = review.rating>5?5:review.rating %}
                                     {% for i in 1..5 %}
@@ -141,7 +140,7 @@
                                     “{{ review.description }}”
                                 </p>
                                 <div class="small text-muted">
-                                    <div class="fw-semibold">{{ review.user.firstName }} <span>&#8226;</span> {{ review.createdAt|date('d/m/Y') }}
+                                    <div class="fw-semibold">{{ review.user.firstname }}<i class="bi bi-dot"></i>{{ review.createdAt|date('d/m/Y') }}
                                     </div>
                                 </div>
                             </div>

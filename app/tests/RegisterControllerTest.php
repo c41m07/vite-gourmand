@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterControllerTest extends WebTestCase
 {
@@ -76,5 +77,47 @@ class RegisterControllerTest extends WebTestCase
         $userRepository = $entityManager->getRepository(User::class);
 
         self::assertNotNull($userRepository->findOneBy(['email' => 'new.user@example.com']));
+    }
+
+    public function testRegisterWithExistingEmailShowsError(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager');
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = static::getContainer()->get('security.user_password_hasher');
+
+        $existingUser = (new User())
+            ->setEmail('existing.user@example.com')
+            ->setFirstName('Existing')
+            ->setLastName('User')
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
+            ->setActive(true)
+            ->setRoles(['ROLE_USER']);
+        $existingUser->setPassword($passwordHasher->hashPassword($existingUser, 'password123'));
+
+        $entityManager->persist($existingUser);
+        $entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/register');
+        self::assertResponseIsSuccessful();
+
+        $form = $crawler->filter('form.auth-form')->form([
+            'registration_form[email]' => 'existing.user@example.com',
+            'registration_form[firstName]' => 'Alice',
+            'registration_form[lastName]' => 'Durand',
+            'registration_form[plainPassword]' => 'password123',
+        ]);
+
+        $this->client->submit($form);
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString(
+            'Un compte existe déjà avec cet email.',
+            (string) $this->client->getResponse()->getContent()
+        );
+
+        $userRepository = $entityManager->getRepository(User::class);
+        self::assertCount(1, $userRepository->findBy(['email' => 'existing.user@example.com']));
     }
 }

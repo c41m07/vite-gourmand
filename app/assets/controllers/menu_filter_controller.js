@@ -2,6 +2,7 @@
 
 export default class extends Controller {
     static targets = ['form', 'list', 'count', 'priceMinValue', 'priceMaxValue', 'peopleValue'];
+    isResetting = false;
     async fetchMenus(){
 
         const queryString = this.buildParams();
@@ -19,6 +20,8 @@ export default class extends Controller {
 
     buildParams(){
 
+        const minDefault = this.formTarget.minPrice.defaultValue;
+        const maxDefault = this.formTarget.maxPrice.defaultValue;
         const data= new FormData(this.formTarget);
         const params = new URLSearchParams();
         const minPrice = this.convertToCents(data.get('minPrice'));
@@ -26,11 +29,16 @@ export default class extends Controller {
         const minPersons = data.get('minPersons');
         const theme = data.get('theme');
         const diet = data.get('diet');
+        const minPriceValue = String(data.get('minPrice') ?? '');
+        const maxPriceValue = String(data.get('maxPrice') ?? '');
 
-        if (minPrice !== '') params.set('minPrice', minPrice);
-        if (maxPrice !== '') params.set('maxPrice', maxPrice);
+        if (minPrice !== '' && minPriceValue !== minDefault) params.set('minPrice', minPrice);
+        if (maxPrice !== '' && maxPriceValue !== maxDefault) params.set('maxPrice', maxPrice);
+
         if (minPersons && minPersons !== '0') params.set('minPersons', minPersons);
+
         if (theme) params.set('theme', theme)
+
         if (diet) params.set ('diet',diet)
 
         return params.toString();
@@ -48,9 +56,12 @@ export default class extends Controller {
         await this.fetchMenus();
     }
 
-    reset() {
-            this.updateLabels();
-            this.updateCount();
+    async reset() {
+        this.isResetting = true;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        this.updateLabels();
+        await this.fetchMenus();
+        this.isResetting = false;
     }
 
     updateLabels() {

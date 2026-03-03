@@ -13,6 +13,7 @@ class MenuControllerTest extends WebTestCase
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;
     private int $menuId;
+    private int $inactiveMenuId;
 
     protected function setUp(): void
     {
@@ -34,6 +35,12 @@ class MenuControllerTest extends WebTestCase
             ->setHash('test-hash')
             ->setCreatedAt($now);
 
+        $inactiveMedia = (new Media())
+            ->setImgUrl('/build/images/test-menu-inactive.jpg')
+            ->setAltText('Menu test inactive')
+            ->setHash('test-hash-inactive')
+            ->setCreatedAt($now);
+
         $menu = (new Menu())
             ->setTitle('Menu Test')
             ->setDescription('Test menu description')
@@ -46,11 +53,26 @@ class MenuControllerTest extends WebTestCase
             ->setUpdatedAt($now)
             ->setMedia($media);
 
+        $inactiveMenu = (new Menu())
+            ->setTitle('Menu Inactif')
+            ->setDescription('Inactive menu description')
+            ->setMinPeople(2)
+            ->setBasePrice(3900)
+            ->setConditionInfo('Inactive conditions')
+            ->setStock(3)
+            ->setActive(false)
+            ->setCreatedAt($now)
+            ->setUpdatedAt($now)
+            ->setMedia($inactiveMedia);
+
         $this->entityManager->persist($media);
+        $this->entityManager->persist($inactiveMedia);
         $this->entityManager->persist($menu);
+        $this->entityManager->persist($inactiveMenu);
         $this->entityManager->flush();
 
         $this->menuId = (int) $menu->getId();
+        $this->inactiveMenuId = (int) $inactiveMenu->getId();
     }
 
     public function testMenuIndexLoads(): void
@@ -70,5 +92,12 @@ class MenuControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Menu Test');
         self::assertSelectorTextContains('.menu-show__intro h2', 'Description');
+    }
+
+    public function testMenuShowInactiveIsNotAccessible(): void
+    {
+        $this->client->request('GET', '/menu/' . $this->inactiveMenuId);
+
+        self::assertResponseStatusCodeSame(404);
     }
 }

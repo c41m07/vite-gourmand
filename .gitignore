@@ -8,6 +8,7 @@ app/node_modules/
 app/public/build/
 app/.env.local
 app/.env.*.local
+app/.env.local.php
 
 ### JetBrains ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -19,6 +20,7 @@ app/.env.*.local
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
 
 # AWS User-specific
 .idea/**/aws.xml

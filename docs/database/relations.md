@@ -15,8 +15,7 @@
 - order_status 1..N customer_order_status_history (order_status_id, NOT NULL)
 - customer_order 0..1 equipment_loan (equipment_loan_id, NULL, one-to-one)
 - equipment_loan_status 1..N equipment_loan (status_id, NOT NULL)
-- menu 1..N menu_media (menu_id, NOT NULL)
-- media 1..N menu_media (media_id, NOT NULL)
+- media 0..N menu (menu.media_id, NULL)
 - menu 1..N menu_dish (menu_id, NOT NULL)
 - dish 1..N menu_dish (dish_id, NOT NULL)
 - dish_type 0..N dish (dish_type_id, NULL)
@@ -83,24 +82,16 @@
 - FKs sortantes :
   - theme_id -> theme.id (NULL)
   - diet_id -> diet.id (NULL)
+  - media_id -> media.id (NULL)
 - FKs entrantes :
-  - menu_media.menu_id
   - menu_dish.menu_id
   - customer_order_menu.menu_id
-
-### menu_media
-- PK : id
-- FKs sortantes :
-  - menu_id -> menu.id (NOT NULL)
-  - media_id -> media.id (NOT NULL)
-- FKs entrantes : aucune
-- Role : medias d'un menu avec position et is_cover.
 
 ### media
 - PK : id
 - FKs sortantes : aucune
 - FKs entrantes :
-  - menu_media.media_id
+  - menu.media_id
 
 ### menu_dish
 - PK : id
@@ -178,4 +169,4 @@
 
 ## 4. Notes d'integrite
 - La relation one-to-one `customer_order` <-> `equipment_loan` implique une contrainte UNIQUE sur `customer_order.equipment_loan_id`.
-- Les tables de liaison (menu_dish, dish_allergen, menu_media, customer_order_menu) peuvent avoir un index/unique composite selon les besoins fonctionnels.
+- Les tables de liaison (menu_dish, dish_allergen, customer_order_menu) peuvent avoir un index/unique composite selon les besoins fonctionnels.

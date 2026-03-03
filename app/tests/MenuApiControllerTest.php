@@ -54,6 +54,12 @@ class MenuApiControllerTest extends WebTestCase
             ->setHash('hash-2')
             ->setCreatedAt($now);
 
+        $media3 = (new Media())
+            ->setImgUrl('/build/images/test-menu-3.jpg')
+            ->setAltText('Menu 3')
+            ->setHash('hash-3')
+            ->setCreatedAt($now);
+
         $menu1 = (new Menu())
             ->setTitle('Menu One')
             ->setDescription('Menu one description')
@@ -82,14 +88,30 @@ class MenuApiControllerTest extends WebTestCase
             ->setDiet($diet2)
             ->setMedia($media2);
 
+        $menu3 = (new Menu())
+            ->setTitle('Menu Inactive')
+            ->setDescription('Menu inactive description')
+            ->setMinPeople(4)
+            ->setBasePrice(4500)
+            ->setConditionInfo('Menu inactive conditions')
+            ->setStock(20)
+            ->setActive(false)
+            ->setCreatedAt($now)
+            ->setUpdatedAt($now)
+            ->setTheme($theme1)
+            ->setDiet($diet1)
+            ->setMedia($media3);
+
         $this->entityManager->persist($theme1);
         $this->entityManager->persist($theme2);
         $this->entityManager->persist($diet1);
         $this->entityManager->persist($diet2);
         $this->entityManager->persist($media1);
         $this->entityManager->persist($media2);
+        $this->entityManager->persist($media3);
         $this->entityManager->persist($menu1);
         $this->entityManager->persist($menu2);
+        $this->entityManager->persist($menu3);
         $this->entityManager->flush();
 
         $this->themeId1 = (int) $theme1->getId();
@@ -109,6 +131,7 @@ class MenuApiControllerTest extends WebTestCase
 
         self::assertStringContainsString('Menu One', $data['body']);
         self::assertStringContainsString('Menu Two', $data['body']);
+        self::assertStringNotContainsString('Menu Inactive', $data['body']);
     }
 
     public function testApiMenusFilterByMinPrice(): void
@@ -124,6 +147,7 @@ class MenuApiControllerTest extends WebTestCase
         self::assertSame(1, $data['count']);
         self::assertStringContainsString('Menu Two', $data['body']);
         self::assertStringNotContainsString('Menu One', $data['body']);
+        self::assertStringNotContainsString('Menu Inactive', $data['body']);
     }
 
     public function testApiMenusFilterByTheme(): void
@@ -139,5 +163,23 @@ class MenuApiControllerTest extends WebTestCase
         self::assertSame(1, $data['count']);
         self::assertStringContainsString('Menu One', $data['body']);
         self::assertStringNotContainsString('Menu Two', $data['body']);
+        self::assertStringNotContainsString('Menu Inactive', $data['body']);
+    }
+
+    public function testApiMenusIgnoresIsActiveQueryParam(): void
+    {
+        $this->client->request('GET', '/api/menus?isActive=false');
+
+        self::assertResponseIsSuccessful();
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        self::assertIsArray($data);
+        self::assertArrayHasKey('body', $data);
+        self::assertArrayHasKey('count', $data);
+        self::assertSame(2, $data['count']);
+
+        self::assertStringContainsString('Menu One', $data['body']);
+        self::assertStringContainsString('Menu Two', $data['body']);
+        self::assertStringNotContainsString('Menu Inactive', $data['body']);
     }
 }

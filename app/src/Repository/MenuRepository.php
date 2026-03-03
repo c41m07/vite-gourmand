@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Dto\MenuApi\MenuApiFiltersDto;
 use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,7 +18,6 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
-
     public function findActiveMenus()
     {
         return $this->createQueryBuilder('m')
@@ -24,52 +25,63 @@ class MenuRepository extends ServiceEntityRepository
             ->setParameter('active', true)
             ->orderBy('m.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-    public function search(array $filters): array
-{
-    $qb = $this->createQueryBuilder('m')
-        ->leftJoin('m.theme', 't')->addSelect('t')
-        ->leftJoin('m.diet', 'd')->addSelect('d');
+    public function searchPublic(MenuApiFiltersDto $filters): array
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.theme', 't')->addSelect('t')
+            ->leftJoin('m.diet', 'd')->addSelect('d');
 
-    if ($filters['minPrice'] !== null && $filters['minPrice'] !== '') {
-        $qb->andWhere('m.basePrice >= :minPrice')
-            ->setParameter('minPrice', (int) $filters['minPrice']);
-    }
-
-    if ($filters['maxPrice'] !== null && $filters['maxPrice'] !== '') {
-        $qb->andWhere('m.basePrice <= :maxPrice')
-            ->setParameter('maxPrice', (int) $filters['maxPrice']);
-    }
-
-    if ($filters['theme'] !== null && $filters['theme'] !== '') {
-        $qb->andWhere('t.id = :theme')
-            ->setParameter('theme', (int) $filters['theme']);
-    }
-
-    if ($filters['diet'] !== null && $filters['diet'] !== '') {
-        $qb->andWhere('d.id = :diet')
-            ->setParameter('diet', (int) $filters['diet']);
-    }
-
-    if ($filters['minPersons'] !== null && $filters['minPersons'] !== '') {
-        $qb->andWhere('m.minPeople <= :minPersons')
-            ->setParameter('minPersons', (int) $filters['minPersons']);
-    }
-
-    if ($filters['stock'] !== null && $filters['stock'] !== '') {
-        $qb->andWhere('m.stock >= :stock')
-            ->setParameter('stock', (int) $filters['stock']);
-    }
-
-    if ($filters['isActive'] !== null && $filters['isActive'] !== '') {
+        $this->applyFilters($qb, $filters);
         $qb->andWhere('m.active = :active')
-            ->setParameter('active', filter_var($filters['isActive'], FILTER_VALIDATE_BOOLEAN));
+            ->setParameter('active', true);
+
+        return $qb->getQuery()->getResult();
     }
 
-    return $qb->getQuery()->getResult();
-}
+    public function search(MenuApiFiltersDto $filters): array
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.theme', 't')->addSelect('t')
+            ->leftJoin('m.diet', 'd')->addSelect('d');
 
+        $this->applyFilters($qb, $filters);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function applyFilters(QueryBuilder $qb, MenuApiFiltersDto $filters): void
+    {
+        if (null !== $filters->minPrice) {
+            $qb->andWhere('m.basePrice >= :minPrice')
+                ->setParameter('minPrice', $filters->minPrice);
+        }
+
+        if (null !== $filters->maxPrice) {
+            $qb->andWhere('m.basePrice <= :maxPrice')
+                ->setParameter('maxPrice', $filters->maxPrice);
+        }
+
+        if (null !== $filters->theme) {
+            $qb->andWhere('t.id = :theme')
+                ->setParameter('theme', $filters->theme);
+        }
+
+        if (null !== $filters->diet) {
+            $qb->andWhere('d.id = :diet')
+                ->setParameter('diet', $filters->diet);
+        }
+
+        if (null !== $filters->minPersons) {
+            $qb->andWhere('m.minPeople <= :minPersons')
+                ->setParameter('minPersons', $filters->minPersons);
+        }
+
+        if (null !== $filters->stock) {
+            $qb->andWhere('m.stock >= :stock')
+                ->setParameter('stock', $filters->stock);
+        }
+    }
 }

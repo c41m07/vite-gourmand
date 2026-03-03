@@ -33,6 +33,10 @@ final class MenuController extends AbstractController
     #[Route('/{id}', name: '_show')]
     public function show(Menu $menu, AllergenRepository $allergenRepository, DishTypeRepository $dishTypeRepository): Response
     {
+        if (!$menu->isActive()) {
+            throw $this->createNotFoundException();
+        }
+
         $dishesByType = $dishTypeRepository->findDishesByMenu($menu);
         $allergens=$allergenRepository->findByMenu($menu);
         return $this->render('menu/show.html.twig', [

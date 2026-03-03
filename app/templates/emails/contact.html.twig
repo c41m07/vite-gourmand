@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Nouveau message de contact</title>
+    <style>
+        body.email-body {
+            margin: 0;
+            padding: 0;
+            background: #fbf7f0;
+            font-family: "Hind Madurai", Arial, sans-serif;
+        }
+
+        .email-preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fbf7f0;
+        }
+
+        .email-wrapper-cell {
+            padding: 24px 12px;
+            text-align: center;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(15, 20, 17, 0.08);
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .email-hero {
+            background: #1f5e3b;
+            padding: 24px 28px;
+        }
+
+        .email-hero-title {
+            margin: 0;
+            color: #ffffff;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .email-hero-sub {
+            margin: 8px 0 0;
+            color: #dfe9e2;
+            font-size: 14px;
+        }
+
+        .email-content {
+            padding: 28px;
+        }
+
+        .email-section-title {
+            margin: 0 0 10px;
+            color: #0f1411;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .email-panel {
+            background: #fbf7f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 0 0 16px;
+        }
+
+        .email-text {
+            margin: 0 0 12px;
+            color: #0f1411;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .email-meta {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        .email-meta-row td {
+            padding: 8px 0;
+            border-bottom: 1px solid #e8e3d7;
+            vertical-align: top;
+            font-size: 14px;
+            color: #0f1411;
+        }
+
+        .email-meta-row td:first-child {
+            width: 140px;
+            font-weight: 700;
+            color: #1f5e3b;
+            padding-right: 8px;
+        }
+
+        .email-message {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .email-help {
+            margin: 14px 0 0;
+            color: #0f1411;
+            font-size: 13px;
+        }
+
+        .email-link {
+            color: #1f5e3b;
+            font-weight: 600;
+        }
+
+        .email-action-table {
+            margin: 14px 0 0;
+            border-collapse: collapse;
+        }
+
+        .email-action-cell {
+            background: #c9a227;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .email-action-link {
+            display: inline-block;
+            padding: 12px 20px;
+            color: #0f1411;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .email-footer {
+            background: #f4efe6;
+            padding: 14px 28px;
+            color: #7a8c7a;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="email-body">
+{% set firstNameValue = firstName is defined and firstName ? firstName : '' %}
+{% set lastNameValue = lastName is defined and lastName ? lastName : '' %}
+{% set fullName = (firstNameValue ~ ' ' ~ lastNameValue)|trim %}
+{% set subjectValue = subject is defined and subject ? subject : 'Voir le sujet de l\'email' %}
+{% set contactEmailValue = contactEmail is defined and contactEmail ? contactEmail : 'Voir le champ From de l\'email' %}
+{% set messageValue = message is defined and message ? message : 'Aucun message fourni.' %}
+
+<span class="email-preheader">
+    Nouveau message de contact : {{ messageValue|striptags|slice(0, 90) }}
+</span>
+
+<table role="presentation" class="email-wrapper">
+    <tr>
+        <td class="email-wrapper-cell">
+            <table role="presentation" class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1 class="email-hero-title">Nouveau message de contact</h1>
+                        <p class="email-hero-sub">Message recu depuis le formulaire du site {{ appName|default('Vite Gourmand') }}.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <div class="email-panel">
+                            <h2 class="email-section-title">Resume</h2>
+                            <table role="presentation" class="email-meta">
+                                <tr class="email-meta-row">
+                                    <td>Nom</td>
+                                    <td>{{ fullName ?: 'Non renseigne' }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Email</td>
+                                    <td>{{ contactEmailValue }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Objet</td>
+                                    <td>{{ subjectValue }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="email-panel">
+                            <h2 class="email-section-title">Message</h2>
+                            <p class="email-text email-message">{{ messageValue }}</p>
+                        </div>
+
+                        {% if contactEmail is defined and contactEmail %}
+                            <table role="presentation" class="email-action-table">
+                                <tr>
+                                    <td class="email-action-cell">
+                                        <a class="email-action-link" href="mailto:{{ contactEmailValue }}?subject=Re:%20{{ subjectValue|url_encode }}">Repondre</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        {% endif %}
+                        <p class="email-help">
+                            Reponse rapide: {{ contactEmailValue }}.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        {{ appName|default('Vite Gourmand') }} &middot;
+                        <a class="email-link" href="{{ url('app_contact_index') }}">Formulaire de contact</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,10 +1,11 @@
 # Documentation technique - Vite & Gourmand
 
-## Etat actuel (fevrier 2026)
+## Etat actuel (mars 2026)
 - Pages publiques integrees en Twig : Accueil, Menus, Contact, Mentions legales, CGV.
-- Authentification de base : pages login/register + security.yaml.
-- Contact : formulaire + stockage en BDD (ContactMessage).
+- Authentification de base : login/register + page profil utilisateur.
+- Contact : formulaire + stockage en BDD (ContactMessage) + envoi de mail.
 - UI + styles en place (Bootstrap + Sass), focus visible et skip-link.
+- Page 404 personnalisee activee via TwigBundle (`error404.html.twig`).
 - Commandes, stats et back-office : en cours d'implementation.
 
 ## Choix techniques (et justifications)
@@ -17,7 +18,7 @@
 ## Environnement de travail
 - Prerequis : Docker + Docker Compose.
 - Demarrage : voir `docs/technical/setup.md`.
-- Variables d'environnement : `.env` (racine) et `app/.env` (sans secrets).
+- Variables d'environnement : `app/.env` (base versionnee) + overrides locaux `app/.env.local` et `app/.env.*.local` (non versionnes).
 
 ## Modelisation (relationnel) - cible
 - MCD : `docs/database/mcd.md`.
@@ -26,10 +27,10 @@
 
 ## Architecture applicative - cible
 - Controllers : routing + logique de presentation.
-- Services : regles metier (prix, livraison, statuts).
+- Services : regles metier (prix, livraison, statuts) + centralisation des constructions d'emails (`App\\Service\\EmailFactory`).
 - Repositories : acces aux donnees (Doctrine).
 - Templates Twig : UI.
-- Roles : `ROLE_USER`, `ROLE_EMPLOYEE`, `ROLE_ADMIN`.
+- Roles : `ROLE_USER`, `ROLE_WORKER`, `ROLE_ADMIN`.
 
 ## Regles metier (issues du cahier des charges)
 - Filtres menus dynamiques (prix, theme, regime, min personnes).
@@ -42,7 +43,7 @@
 - Mots de passe hashes (Symfony Security + bcrypt/argon2id).
 - CSRF sur formulaires sensibles.
 - Validation des champs (constraints Symfony).
-- Controle d'acces RBAC (separation USER/EMPLOYEE/ADMIN).
+- Controle d'acces RBAC (separation USER/WORKER/ADMIN).
 - RGPD : minimisation, finalites claires (compte, commande, contact).
 
 ## Accessibilite (RGAA)

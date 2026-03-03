@@ -50,9 +50,11 @@
 
 ## Sprint 5
 
-- [x] Security : firewall + acces par roles USER/EMPLOYEE/ADMIN
+- [x] Security : firewall + acces par roles USER/WORKER/ADMIN
 - [x] Inscription utilisateur (formulaire + validations de base)
 - [x] Mail de bienvenue (Symfony Mailer)
+- [x] Refactor envoi email : extraction `EmailFactory` pour Register + Contact
+- [x] Email contact : template HTML complet et lisible (resume + message)
 - [x] Connexion / Deconnexion
 - [ ] Mot de passe oublie (ResetPasswordBundle)
 - [x] Page Profil utilisateur (affichage infos)

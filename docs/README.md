@@ -1,6 +1,7 @@
 # Documentation - Vite & Gourmand
 
 ## Acces rapide
+- Guide contributeurs : `../AGENTS.md` (racine du repo)
 - Gestion de projet : `docs/project/project-management.md`
 - Avancement : `docs/project/progress.md`
 - Environnement (Docker) : `docs/technical/setup.md`
