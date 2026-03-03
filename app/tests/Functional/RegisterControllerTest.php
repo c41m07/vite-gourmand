@@ -113,7 +113,7 @@ class RegisterControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertStringContainsString(
-            'Un compte existe deja avec cet email.',
+            'Un compte existe déjà avec cet email.',
             (string) $this->client->getResponse()->getContent()
         );
 
