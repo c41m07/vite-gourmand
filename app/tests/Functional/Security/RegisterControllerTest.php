@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
+use App\Tests\Support\GeneratesTestPasswords;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -13,42 +16,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class RegisterControllerTest extends WebTestCase
 {
     use MailerAssertionsTrait;
+    use GeneratesTestPasswords;
 
     private KernelBrowser $client;
 
-    protected function setUp(): void
-    {
-        $this->client = static::createClient();
-        $this->client->disableReboot();
-
-        if (static::$kernel !== null) {
-            $kernelContainer = static::$kernel->getContainer();
-            $parameterBag = $kernelContainer->getParameterBag();
-
-            if (!$parameterBag->has('appName')) {
-                $parameters = $parameterBag->all();
-                $parameters['appName'] = $_ENV['APP_NAME'] ?? 'Vite Gourmand';
-
-                $newBag = new ParameterBag($parameters);
-                $reflection = new \ReflectionProperty($kernelContainer, 'parameterBag');
-                $reflection->setAccessible(true);
-                $reflection->setValue($kernelContainer, $newBag);
-            }
-        }
-
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $userRepository = $entityManager->getRepository(User::class);
-
-        foreach ($userRepository->findAll() as $user) {
-            $entityManager->remove($user);
-        }
-
-        $entityManager->flush();
-    }
-
     public function testRegisterSendsWelcomeEmail(): void
     {
+        $plainPassword = self::generateTestPassword();
+
         $crawler = $this->client->request('GET', '/register');
 
         self::assertResponseIsSuccessful();
@@ -58,7 +33,7 @@ class RegisterControllerTest extends WebTestCase
             'registration_form[email]' => 'new.user@example.com',
             'registration_form[firstName]' => 'Alice',
             'registration_form[lastName]' => 'Durand',
-            'registration_form[plainPassword]' => 'password123',
+            'registration_form[plainPassword]' => $plainPassword,
         ]);
 
         $this->client->submit($form);
@@ -81,6 +56,9 @@ class RegisterControllerTest extends WebTestCase
 
     public function testRegisterWithExistingEmailShowsError(): void
     {
+        $existingUserPassword = self::generateTestPassword();
+        $submittedPassword = self::generateTestPassword();
+
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         /** @var UserPasswordHasherInterface $passwordHasher */
@@ -90,11 +68,11 @@ class RegisterControllerTest extends WebTestCase
             ->setEmail('existing.user@example.com')
             ->setFirstName('Existing')
             ->setLastName('User')
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime())
+            ->setCreatedAt(new DateTime())
+            ->setUpdatedAt(new DateTime())
             ->setActive(true)
             ->setRoles(['ROLE_USER']);
-        $existingUser->setPassword($passwordHasher->hashPassword($existingUser, 'password123'));
+        $existingUser->setPassword($passwordHasher->hashPassword($existingUser, $existingUserPassword));
 
         $entityManager->persist($existingUser);
         $entityManager->flush();
@@ -106,7 +84,7 @@ class RegisterControllerTest extends WebTestCase
             'registration_form[email]' => 'existing.user@example.com',
             'registration_form[firstName]' => 'Alice',
             'registration_form[lastName]' => 'Durand',
-            'registration_form[plainPassword]' => 'password123',
+            'registration_form[plainPassword]' => $submittedPassword,
         ]);
 
         $this->client->submit($form);
@@ -114,11 +92,44 @@ class RegisterControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertStringContainsString(
             'Un compte existe déjà avec cet email.',
-            (string) $this->client->getResponse()->getContent()
+            (string)$this->client->getResponse()->getContent()
         );
 
         $userRepository = $entityManager->getRepository(User::class);
         self::assertCount(1, $userRepository->findBy(['email' => 'existing.user@example.com']));
+    }
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $this->client->disableReboot();
+
+        if (static::$kernel !== null) {
+            $kernelContainer = static::$kernel->getContainer();
+            $parameterBag = $kernelContainer->getParameterBag();
+
+            if (!$parameterBag->has('appName')) {
+                $parameters = $parameterBag->all();
+                $parameters['appName'] = $_ENV['APP_NAME'] ?? 'Vite Gourmand';
+
+                $newBag = new ParameterBag($parameters);
+                $reflection = new ReflectionProperty($kernelContainer, 'parameterBag');
+                $reflection->setAccessible(true);
+                $reflection->setValue($kernelContainer, $newBag);
+            }
+        }
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $userRepository = $entityManager->getRepository(User::class);
+
+        $entityManager->getConnection()->executeStatement('DELETE FROM reset_password_request');
+
+        foreach ($userRepository->findAll() as $user) {
+            $entityManager->remove($user);
+        }
+
+        $entityManager->flush();
     }
 }
 

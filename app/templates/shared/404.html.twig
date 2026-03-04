@@ -4,26 +4,24 @@
 {% block title %}Page introuvable - Vite & Gourmand{% endblock %}
 
 {% block body %}
-    {% include 'components/_hero.html.twig' with {
-        'title': 'Page introuvable',
-        'subtitle': 'Erreur 404',
-        'background': '#5a2a2a'
-    } %}
-
-    <section class="py-5" aria-labelledby="error-404-title">
+    <section class="status-page status-page--center" aria-labelledby="error-404-title">
         <div class="container">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4 p-lg-5 text-center">
-                    <h2 id="error-404-title" class="h3 fw-bold mb-3">Cette page est introuvable</h2>
-                    <p class="text-muted mb-4">
-                        Le lien que vous avez suivi est peut-être cassé, ou la page a été déplacée.
-                    </p>
-                    <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <a class="btn btn-primary px-4" href="{{ path('app_home') }}">Retour à l'accueil</a>
-                        <a class="btn btn-outline-secondary px-4" href="{{ path('app_menu_index') }}">Voir nos menus</a>
-                    </div>
+            <article class="status-card status-card--compact status-card--danger">
+                <div class="status-icon status-icon--danger" aria-hidden="true">
+                    <i class="bi bi-signpost-split-fill"></i>
                 </div>
-            </div>
+
+                <h1 id="error-404-title" class="status-title">Page introuvable</h1>
+
+                <p class="status-text status-text--muted">
+                    Le lien que vous avez suivi est peut-être cassé, ou la page a été déplacée.
+                </p>
+
+                <div class="status-actions">
+                    <a class="auth-btn auth-btn--danger" href="{{ path('app_home') }}">Retour à l'accueil</a>
+                    <a class="status-link" href="{{ path('app_menu_index') }}">Voir les menus</a>
+                </div>
+            </article>
         </div>
     </section>
 {% endblock %}

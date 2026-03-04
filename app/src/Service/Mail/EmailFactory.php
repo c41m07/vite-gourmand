@@ -6,6 +6,7 @@ use App\Entity\ContactMessage;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 
 
 final readonly class EmailFactory
@@ -52,5 +53,17 @@ final readonly class EmailFactory
                 'lastName' => (string)$contactMessage->getLastName(),
             ]);
 
+    }
+
+    public function createResetPasswordEmail(User $user, ResetPasswordToken $resetToken): TemplatedEmail
+    {
+        return new TemplatedEmail()
+            ->from($this->noreplyEmail)
+            ->to((string)$user->getEmail())
+            ->subject('Your password reset request')
+            ->htmlTemplate('security/reset_password/email.html.twig')
+            ->context([
+                'resetToken' => $resetToken,
+            ]);
     }
 }

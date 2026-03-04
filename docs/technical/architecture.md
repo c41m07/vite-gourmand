@@ -20,6 +20,65 @@
 - Demarrage : voir `docs/technical/setup.md`.
 - Variables d'environnement : `app/.env` (base versionnee) + overrides locaux `app/.env.local` et `app/.env.*.local` (non versionnes).
 
+## Arborescence actuelle (mars 2026)
+```text
+vite-gourmand/
+|-- app/
+|   |-- assets/
+|   |   |-- controllers/
+|   |   |-- images/
+|   |   |-- styles/
+|   |-- config/
+|   |   |-- packages/
+|   |   `-- routes/
+|   |-- migrations/
+|   |-- public/
+|   |-- src/
+|   |   |-- Controller/
+|   |   |   |-- Admin/
+|   |   |   |-- Api/
+|   |   |   |-- Security/
+|   |   |   |-- User/
+|   |   |   `-- Worker/
+|   |   |-- Dto/
+|   |   |-- Entity/
+|   |   |-- Form/
+|   |   |   |-- Contact/
+|   |   |   `-- Security/
+|   |   |-- Repository/
+|   |   `-- Service/
+|   |       `-- Mail/
+|   |-- templates/
+|   |   |-- admin/
+|   |   |-- contact/
+|   |   |-- emails/
+|   |   |-- menu/
+|   |   |-- pages/
+|   |   |-- partials/
+|   |   |-- security/
+|   |   |   `-- reset_password/
+|   |   |-- shared/
+|   |   |-- user/
+|   |   `-- worker/
+|   |-- tests/
+|   |   |-- Functional/
+|   |   |-- Integration/
+|   |   `-- Unit/
+|   `-- var/
+|-- docker/
+|-- docs/
+|   |-- database/
+|   |-- design/
+|   |-- project/
+|   |-- references/
+|   |-- technical/
+|   `-- user/
+|-- sql/
+|-- docker-compose.yaml
+|-- Makefile
+`-- AGENTS.md
+```
+
 ## Modelisation (relationnel) - cible
 - MCD : `docs/database/mcd.md`.
 - Relations et conventions : `docs/database/relations.md`.

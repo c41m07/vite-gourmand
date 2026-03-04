@@ -1,7 +1,8 @@
 <?php
-namespace App\Tests;
+namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
+use App\Tests\Support\GeneratesTestPasswords;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -9,7 +10,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoginControllerTest extends WebTestCase
 {
+    use GeneratesTestPasswords;
+
     private KernelBrowser $client;
+    private string $validPassword;
 
     protected function setUp(): void
     {
@@ -18,6 +22,8 @@ class LoginControllerTest extends WebTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
         $userRepository = $em->getRepository(User::class);
+
+        $em->getConnection()->executeStatement('DELETE FROM reset_password_request');
 
         // Remove any existing users from the test database
         foreach ($userRepository->findAll() as $user) {
@@ -38,7 +44,8 @@ class LoginControllerTest extends WebTestCase
             ->setUpdatedAt(new \DateTime())
             ->setActive(true)
             ->setRoles(['ROLE_USER']);
-        $user->setPassword($passwordHasher->hashPassword($user, 'password'));
+        $this->validPassword = self::generateTestPassword();
+        $user->setPassword($passwordHasher->hashPassword($user, $this->validPassword));
 
         $em->persist($user);
         $em->flush();
@@ -46,13 +53,18 @@ class LoginControllerTest extends WebTestCase
 
     public function testLogin(): void
     {
+        $invalidPassword = self::generateTestPassword();
+        while ($invalidPassword === $this->validPassword) {
+            $invalidPassword = self::generateTestPassword();
+        }
+
         // Denied - Can't login with invalid email address.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Se connecter', [
             '_username' => 'doesNotExist@example.com',
-            '_password' => 'password',
+            '_password' => $this->validPassword,
         ]);
 
         self::assertResponseRedirects('/login');
@@ -67,7 +79,7 @@ class LoginControllerTest extends WebTestCase
 
         $this->client->submitForm('Se connecter', [
             '_username' => 'email@example.com',
-            '_password' => 'bad-password',
+            '_password' => $invalidPassword,
         ]);
 
         self::assertResponseRedirects('/login');
@@ -79,7 +91,7 @@ class LoginControllerTest extends WebTestCase
         // Success - Login with valid credentials is allowed.
         $this->client->submitForm('Se connecter', [
             '_username' => 'email@example.com',
-            '_password' => 'password',
+            '_password' => $this->validPassword,
         ]);
 
         self::assertResponseRedirects('/');

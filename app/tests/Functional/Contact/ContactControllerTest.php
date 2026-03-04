@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional\Contact;
 
 use App\Entity\ContactMessage;
 use Doctrine\ORM\EntityManagerInterface;

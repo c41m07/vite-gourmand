@@ -2,15 +2,13 @@ Review technique - 2026-03-03
 
 Etat des verifications:
 
-- PHPUnit complet: OK (22 tests, 108 assertions).
+- PHPUnit complet: OK (23 tests, 128 assertions).
 - Tests emails cibles: OK (3 tests, 27 assertions).
 - Test cible role_hierarchy: OK (1 test, 3 assertions).
 - PHPStan: KO (2 erreurs de configuration d'`ignoreErrors` non utilisees).
 
 Priorite haute:
 
-- [ ] Politique mot de passe non conforme au cahier des charges (10+ caracteres + complexite). Actuel: min 8 sans regex de complexite.
-  Source: `app/src/Form/RegistrationFormType.php` (plainPassword, lignes 67-75).
 - [ ] Ajouter un garde-fou explicite sur la config mail (`NO_REPLY_ADDRESS`, `OWNER_ADDRESS`) pour eviter les 500 au runtime si variable
   vide/invalide.
   Source: `app/src/Service/EmailFactory.php` (lignes 29, 44).
@@ -41,8 +39,6 @@ Dette technique:
 
 Pages a creer (actuellement liees a `app_under_construction`):
 
-- [ ] Page "Mot de passe oublie" (demande de reinitialisation + envoi mail).
-  Source: `app/templates/security/login.html.twig` (lien "Mot de passe oublie ?").
 - [ ] Page "Commander un menu" (parcours commande depuis la fiche menu).
   Source: `app/templates/menu/show.html.twig` (bouton "Commander").
 - [ ] Page "Modifier mon profil" (edition des informations utilisateur).
@@ -59,7 +55,6 @@ Reste a faire (finalisation ECF - base `docs/references/ecf-studi.md`):
 - [ ] Implementer la reduction -10% pour `min_personnes + 5`.
 - [ ] Envoyer un mail de confirmation apres creation de commande.
 - [ ] Terminer l'espace utilisateur (liste/detail commandes, suivi des statuts date/heure, modification/annulation selon regles).
-- [ ] Ajouter la fonctionnalite "mot de passe oublie" (demande par mail + reinitialisation).
 - [ ] Implementer le parcours avis utilisateur (note 1-5 + commentaire) apres commande terminee.
 - [ ] Back-office employe: CRUD menus/plats/horaires et filtres commandes (statut/client).
 - [ ] Back-office employe: workflow de statuts commande (`acceptee` -> `en preparation` -> `en cours de livraison` -> `livree` ->

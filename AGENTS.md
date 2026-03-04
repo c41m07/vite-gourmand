@@ -204,6 +204,12 @@ Toute proposition de changement/PR doit suivre:
 
 Cette check-list est a executer a la fin de chaque intervention, avant livraison:
 
+0. Coherence structurelle (arborescence):
+   - Verifier que les nouveaux fichiers sont ranges dans les bons dossiers metier (ex: `Security`, `Form/Security`, `templates/security/*`).
+   - Eviter les fichiers "orphelins" a la racine d'un dossier quand une sous-structure existe deja.
+   - La creation de dossiers est autorisee si necessaire pour conserver une arborescence propre, lisible et coherente.
+   - Si un deplacement/tri est fait, mettre a jour les namespaces/imports/routes/templates/tests associes pour garder un projet lisible, coherent et maintenable.
+
 1. Tests:
    - Se placer a la racine du repo avant test.
    - Lancer `make test`.
