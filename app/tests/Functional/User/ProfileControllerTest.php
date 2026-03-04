@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional\User;
 
 use App\Entity\User;
+use App\Tests\Support\GeneratesTestPasswords;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -10,6 +11,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfileControllerTest extends WebTestCase
 {
+    use GeneratesTestPasswords;
+
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;
 
@@ -17,6 +20,8 @@ class ProfileControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        $this->entityManager->getConnection()->executeStatement('DELETE FROM reset_password_request');
 
         foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
             $this->entityManager->remove($user);
@@ -33,6 +38,8 @@ class ProfileControllerTest extends WebTestCase
 
     public function testProfileAccessIsAllowedForRoleUser(): void
     {
+        $userPassword = self::generateTestPassword();
+
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = static::getContainer()->get('security.user_password_hasher');
 
@@ -44,7 +51,7 @@ class ProfileControllerTest extends WebTestCase
             ->setUpdatedAt(new \DateTime())
             ->setActive(true)
             ->setRoles(['ROLE_USER']);
-        $user->setPassword($passwordHasher->hashPassword($user, 'password123'));
+        $user->setPassword($passwordHasher->hashPassword($user, $userPassword));
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

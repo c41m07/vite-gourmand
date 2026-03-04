@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional\Menu;
 
 use App\Entity\Media;
 use App\Entity\Menu;

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
+use App\Tests\Support\GeneratesTestPasswords;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -11,6 +12,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class BackOfficeAccessControlTest extends WebTestCase
 {
+    use GeneratesTestPasswords;
+
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;
     private UserPasswordHasherInterface $passwordHasher;
@@ -20,6 +23,8 @@ final class BackOfficeAccessControlTest extends WebTestCase
         $this->client = static::createClient();
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $this->passwordHasher = static::getContainer()->get('security.user_password_hasher');
+
+        $this->entityManager->getConnection()->executeStatement('DELETE FROM reset_password_request');
 
         foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
             $this->entityManager->remove($user);
@@ -74,7 +79,7 @@ final class BackOfficeAccessControlTest extends WebTestCase
             ->setActive(true)
             ->setRoles($roles);
 
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'password123'));
+        $user->setPassword($this->passwordHasher->hashPassword($user, self::generateTestPassword()));
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

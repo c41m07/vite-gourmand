@@ -6,6 +6,7 @@
 - Avancement : `docs/project/progress.md`
 - Environnement (Docker) : `docs/technical/setup.md`
 - Documentation technique : `docs/technical/architecture.md`
+- Arborescence projet (a jour) : `docs/technical/architecture.md` section "Arborescence actuelle"
 - MCD (BDD) : `docs/database/mcd.md`
 - Relations (BDD) : `docs/database/relations.md`
 - Charte graphique : `docs/design/design-system.md`

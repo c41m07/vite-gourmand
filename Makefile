@@ -90,4 +90,4 @@ test:
 ##################
 
 gource:
-	gource --seconds-per-day 1
+	gource -1920x1080 -f --seconds-per-day 1 --camera-mode overview --disable-auto-rotate --dir-name-depth 3 --highlight-dirs --key --font-size 18 --padding 1.2 --hide filenames,progress,mouse

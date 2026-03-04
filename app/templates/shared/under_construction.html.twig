@@ -4,26 +4,24 @@
 {% block title %}Page en construction - Vite & Gourmand{% endblock %}
 
 {% block body %}
-    {% include 'components/_hero.html.twig' with {
-        'title': 'Page en construction',
-        'subtitle': 'Nous arrivons bientôt',
-        'background': '#8a5a2b'
-    } %}
-
-    <section class="py-5" aria-labelledby="underconstruct-title">
+    <section class="status-page status-page--center" aria-labelledby="underconstruct-title">
         <div class="container">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4 p-lg-5 text-center">
-                    <h2 id="underconstruct-title" class="h3 fw-bold mb-3">Merci pour votre patience</h2>
-                    <p class="text-muted mb-4">
-                        Cette page est en préparation. Revenez nous voir très vite, nous finalisons les derniers détails.
-                    </p>
-                    <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <a class="btn btn-primary px-4" href="{{ path('app_home') }}">Retour à l'accueil</a>
-                        <a class="btn btn-outline-secondary px-4" href="{{ path('app_contact_index') }}">Nous contacter</a>
-                    </div>
+            <article class="status-card status-card--compact status-card--warning">
+                <div class="status-icon status-icon--warning" aria-hidden="true">
+                    <i class="bi bi-tools"></i>
                 </div>
-            </div>
+
+                <h1 id="underconstruct-title" class="status-title">Page en construction</h1>
+
+                <p class="status-text status-text--muted">
+                    Cette page est en préparation. Nous finalisons les derniers détails.
+                </p>
+
+                <div class="status-actions">
+                    <a class="auth-btn auth-btn--warning" href="{{ path('app_home') }}">Retour à l'accueil</a>
+                    <a class="status-link" href="{{ path('app_contact_index') }}">Nous contacter</a>
+                </div>
+            </article>
         </div>
     </section>
 {% endblock %}
