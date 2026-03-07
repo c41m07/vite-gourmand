@@ -53,7 +53,7 @@
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
                         <a class="nav-link {{ currentRoute == 'app_user_profile' ? 'active' : '' }}" {{ currentRoute == 'app_user_profile' ?
-                        'aria-current="page"' : '' }} href="{{ path('app_user_profile') }}">
+                        'aria-current="page"' : '' }} href="{{ path('app_user_profile',{'tab' : 'profile'}) }}">
                             <i class="bi bi-person-circle nav-link__icon" aria-hidden="true"></i>
                             Profil
                         </a>

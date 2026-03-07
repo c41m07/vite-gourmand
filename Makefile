@@ -51,6 +51,12 @@ migrate:
 migration:
 	$(EXEC_APP) symfony console make:migration
 
+fixtures-reset:
+	$(EXEC_APP) symfony console d:d:d --force --if-exists
+	$(EXEC_APP) symfony console d:d:c --if-not-exists
+	$(EXEC_APP) symfony console d:m:m --no-interaction
+	$(EXEC_APP) symfony console doctrine:fixtures:load --no-interaction
+
 check-security:
 	$(EXEC_APP) symfony check:security
 

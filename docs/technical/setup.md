@@ -19,6 +19,7 @@ Cette commande lance `docker compose up -d`, installe les dependances (`composer
 - Qualite (fixer + phpstan): `make check`
 - Watch assets: `make watch`
 - Migrations: `make migration` puis `make migrate`
+- Reset BDD + fixtures de demo: `make fixtures-reset`
 
 ## Mode production (local)
 Ne pas modifier `app/.env` pour basculer d'environnement. Utiliser uniquement des overrides locaux non versionnes.
