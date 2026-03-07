@@ -43,16 +43,13 @@ class ProfileControllerTest extends WebTestCase
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = static::getContainer()->get('security.user_password_hasher');
 
-        $user = (new User())
-            ->setEmail('profile.user@example.com')
-            ->setFirstName('Profile')
-            ->setLastName('User')
-            ->setCreatedAt(new \DateTime())
-            ->setUpdatedAt(new \DateTime())
-            ->setActive(true)
-            ->setRoles(['ROLE_USER']);
-        $user->setPassword($passwordHasher->hashPassword($user, $userPassword));
-
+        $user = $this->createUser(
+            'profile.user@example.com',
+            'Profile',
+            'User',
+            $userPassword,
+            $passwordHasher
+        );
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -62,10 +59,61 @@ class ProfileControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Mon compte');
         self::assertSelectorTextContains('.account-section-title', 'Informations personnelles');
-        self::assertStringContainsString(
+        self::assertStringContainsString('profile.user@example.com', (string) $this->client->getResponse()->getContent());
+    }
+
+    public function testEditProfileAccessIsDeniedForAnonymous(): void
+    {
+        $this->client->request('GET', '/user/profile/edit');
+
+        self::assertResponseRedirects('/login');
+    }
+
+    public function testEditProfileAccessIsAllowedForRoleUser(): void
+    {
+        $userPassword = self::generateTestPassword();
+
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = static::getContainer()->get('security.user_password_hasher');
+
+        $user = $this->createUser(
             'profile.user@example.com',
-            (string) $this->client->getResponse()->getContent()
+            'Profile',
+            'User',
+            $userPassword,
+            $passwordHasher
         );
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->client->loginUser($user);
+        $this->client->request('GET', '/user/profile/edit');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Modifier mon profil');
+        self::assertSelectorExists('form[name="profil_edit_form"]');
+        self::assertSelectorExists('#profil_edit_form_currentPassword');
+    }
+
+    private function createUser(
+        string $email,
+        string $firstName,
+        string $lastName,
+        string $plainPassword,
+        UserPasswordHasherInterface $passwordHasher
+    ): User {
+        $user = (new User())
+            ->setEmail($email)
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
+            ->setActive(true)
+            ->setRoles(['ROLE_USER']);
+
+        $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+
+        return $user;
     }
 }
 

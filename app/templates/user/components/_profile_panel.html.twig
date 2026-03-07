@@ -1,34 +1,66 @@
 <div class="account-profile">
     <div class="account-profile__header">
         <h2 class="account-section-title mb-0">Informations personnelles</h2>
-        <a class="account-action" href="{{ path('app_under_construction') }}">
+        <a class="account-action" href="{{ path('app_user_profile_edit') }}">
             <i class="bi bi-pencil"></i>
             Modifier
         </a>
     </div>
 
+    <div class="account-card account-profile__hero">
+        <div class="account-profile__hero-main">
+            <div class="account-profile__avatar" aria-hidden="true">
+                {{ app.user.firstName|default('')|slice(0, 1)|upper }}{{ app.user.lastName|default('')|slice(0, 1)|upper }}
+            </div>
+            <div>
+                <p class="account-profile__eyebrow">Espace profil</p>
+                <h3 class="account-profile__name">{{ app.user.firstName }} {{ app.user.lastName }}</h3>
+                <p class="account-profile__lead">
+                    Retrouvez ici vos informations personnelles et gardez-les a jour pour simplifier vos prochaines commandes.
+                </p>
+            </div>
+        </div>
+        <div class="account-profile__hero-side">
+            <div class="account-profile__badge">
+                <i class="bi bi-envelope-paper"></i>
+                {{ app.user.email }}
+            </div>
+            <div class="account-profile__hint">Les champs peuvent etre modifies a tout moment.</div>
+        </div>
+    </div>
+
     <div class="account-card">
-        <div class="account-profile__grid">
+        <div class="account-profile__section-head">
+            <div>
+                <h3 class="account-profile__section-title">Coordonnees</h3>
+                <p class="account-profile__section-text">Des informations claires pour la prise de contact et la livraison.</p>
+            </div>
+        </div>
+
+        <div class="account-profile__grid account-profile__grid--duo">
             <div class="account-profile__item">
-                <span>Nom</span>
+                <span><i class="bi bi-person"></i> Nom</span>
                 <div class="account-profile__value">{{ app.user.lastName }}</div>
             </div>
             <div class="account-profile__item">
-                <span>Prénom</span>
+                <span><i class="bi bi-person-badge"></i> Prenom</span>
                 <div class="account-profile__value">{{ app.user.firstName }}</div>
             </div>
             <div class="account-profile__item">
-                <span>Email</span>
+                <span><i class="bi bi-envelope"></i> Email</span>
                 <div class="account-profile__value">{{ app.user.email }}</div>
             </div>
             <div class="account-profile__item">
-                <span>Téléphone</span>
-                <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigné' }}</div>
+                <span><i class="bi bi-telephone"></i> Telephone</span>
+                <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigne' }}</div>
             </div>
+        </div>
+
+        <div class="account-profile__grid account-profile__grid--spaced">
             <div class="account-profile__item account-profile__item--full">
-                <span>Adresse</span>
+                <span><i class="bi bi-geo-alt"></i> Adresse</span>
                 <div class="account-profile__value">
-                    {{ app.user.postalAddress ?: 'Non renseignée' }}
+                    {{ app.user.postalAddress ?: 'Non renseignee' }}
                 </div>
             </div>
         </div>

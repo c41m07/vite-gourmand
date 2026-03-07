@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% macro field_row(field, full = false) %}
+    <div class="account-profile__item{{ full ? ' account-profile__item--full' : '' }}">
+        <label class="form-label mb-1 w-100" for="{{ field.vars.id }}">
+            <span class="d-inline-flex align-items-center gap-1 flex-nowrap">
+                <span>{{ field.vars.label|default(field.vars.name|humanize) }}</span>
+                {% if field.vars.required %}
+                    <span class="text-danger" aria-hidden="true">*</span>
+                {% endif %}
+            </span>
+        </label>
+        {{ form_widget(field) }}
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+
+{% block body %}
+    {% import _self as ui %}
+    {% set hasPasswordErrors = profileForm.newPassword.first.vars.errors|length > 0
+        or profileForm.newPassword.second.vars.errors|length > 0 %}
+
+    <section class="account-page">
+        <div class="container">
+            <h1 class="account-title">Modifier mon profil</h1>
+
+            {% include 'user/components/_tabs.html.twig' with { activeTab: 'profile' } %}
+
+            <div class="account-content">
+                <div class="account-profile">
+                    <div class="account-profile__header">
+                        <h2 class="account-section-title mb-0">Informations personnelles</h2>
+                        <a class="account-action" href="{{ path('app_user_profile', { tab: 'profile' }) }}">
+                            <i class="bi bi-arrow-left"></i>
+                            Retour au profil
+                        </a>
+                    </div>
+
+                    <div class="account-card">
+                        {{ form_start(profileForm) }}
+                        {{ form_errors(profileForm) }}
+
+                        <p class="small text-muted mb-4">
+                            <span class="text-danger">*</span> Champ obligatoire
+                        </p>
+
+                        <div class="account-profile__grid account-profile__grid--duo">
+                            {{ ui.field_row(profileForm.lastName) }}
+                            {{ ui.field_row(profileForm.firstName) }}
+                            {{ ui.field_row(profileForm.email) }}
+                            {{ ui.field_row(profileForm.phone) }}
+                        </div>
+
+                        <div class="account-profile__grid account-profile__grid--spaced">
+                            {{ ui.field_row(profileForm.postalAddress, true) }}
+                            {{ ui.field_row(profileForm.currentPassword, true) }}
+
+                            <div class="account-profile__item account-profile__item--full">
+                                <button
+                                    class="btn btn-outline-secondary"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#password-change-fields"
+                                    aria-expanded="{{ hasPasswordErrors ? 'true' : 'false' }}"
+                                    aria-controls="password-change-fields"
+                                >
+                                    Changer mon mot de passe
+                                </button>
+                            </div>
+
+                            <div class="account-profile__item--full">
+                                <div id="password-change-fields" class="collapse{{ hasPasswordErrors ? ' show' : '' }} mt-2">
+                                    <div class="account-profile__item">
+                                        <div class="account-profile__grid account-profile__grid--duo">
+                                            {{ ui.field_row(profileForm.newPassword.first) }}
+                                            {{ ui.field_row(profileForm.newPassword.second) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-secondary">Enregistrer</button>
+                            <a href="{{ path('app_user_profile', { tab: 'profile' }) }}" class="btn btn-outline-secondary">Annuler</a>
+                        </div>
+
+                        {{ form_end(profileForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
