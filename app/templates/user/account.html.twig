@@ -7,6 +7,14 @@
         <div class="container">
             <h1 class="account-title">Mon compte</h1>
 
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+
             {% include 'user/components/_tabs.html.twig' with { activeTab: activeTab } %}
 
             <div class="account-content">

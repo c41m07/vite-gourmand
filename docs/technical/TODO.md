@@ -1,8 +1,8 @@
-Review technique - 2026-03-03
+Review technique - 2026-03-04
 
 Etat des verifications:
 
-- PHPUnit complet: OK (23 tests, 128 assertions).
+- PHPUnit complet: OK (28 tests, 149 assertions).
 - Tests emails cibles: OK (3 tests, 27 assertions).
 - Test cible role_hierarchy: OK (1 test, 3 assertions).
 - PHPStan: KO (2 erreurs de configuration d'`ignoreErrors` non utilisees).
@@ -36,13 +36,13 @@ Dette technique:
 - [ ] Ajouter des tests sur le cas d'echec d'envoi mail contact (`/contact/failed`) et strategie de persistance associee.
 - [ ] Ajouter des tests unitaires sur `EmailFactory` (headers `From/Reply-To/To`, context Twig).
 - [ ] Mettre en place une CI (tests + phpstan + lint twig/php) pour eviter les regressions.
+- [ ] Refactor propre du flux `ProfileController::edit()` : extraire la logique metier dans un service dedie (`ProfileUpdateService` + DTO resultat),
+  garder un controleur HTTP thin (form/redirect/render), et couvrir les regles metier par tests unitaires.
 
-Pages a creer (actuellement liees a `app_under_construction`):
+Pages a creer / finaliser (certaines encore liees a `app_under_construction`):
 
 - [ ] Page "Commander un menu" (parcours commande depuis la fiche menu).
   Source: `app/templates/menu/show.html.twig` (bouton "Commander").
-- [ ] Page "Modifier mon profil" (edition des informations utilisateur).
-  Source: `app/templates/user/account.html.twig` (action "Modifier").
 - [ ] Page "Worker - Creer un nouveau menu".
   Source: `app/templates/worker/dashboard.html.twig` (bouton "Nouveau menu").
 - [ ] Page "Worker - Modifier un menu".
