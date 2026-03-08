@@ -42,19 +42,14 @@
             <div class="card-body">
                 <h2 class="h5 mb-4">Informations de commande</h2>
 
+                <div class="alert alert-light border mb-4" role="status">
+                    <p class="mb-2"><strong>Client :</strong> {{ app.user.firstName }} {{ app.user.lastName }}</p>
+                    <p class="mb-0"><strong>Email :</strong> {{ app.user.email }}</p>
+                </div>
+
                 {{ form_start(orderForm) }}
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.firstName) }}
-                    </div>
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.lastName) }}
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.email) }}
-                    </div>
                     <div class="col-12 col-md-6">
                         {{ form_row(orderForm.phone) }}
                     </div>
@@ -84,6 +79,30 @@
                     <div class="col-12 col-md-6">
                         {{ form_row(orderForm.distancekm) }}
                     </div>
+
+                    <div class="col-12">
+                        <div class="border rounded p-3">
+                            <h3 class="h6 mb-3">Pret de materiel</h3>
+
+                            {{ form_row(orderForm.needEquipmentLoan) }}
+
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    {{ form_row(orderForm.equipmentLoanStartAt) }}
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    {{ form_row(orderForm.equipmentLoanEndAt) }}
+                                </div>
+                                <div class="col-12">
+                                    {{ form_row(orderForm.equipmentLoanNote) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_row(orderForm.note) }}
+                    </div>
                 </div>
 
                 <div class="mt-4 d-flex gap-3 flex-wrap">
@@ -105,9 +124,8 @@
                 <div class="card-body">
                     <h2 class="h5 mb-3">Recapitulatif temporaire</h2>
 
-                    <p class="mb-2"><strong>Prenom :</strong> {{ orderPreview.firstName }}</p>
-                    <p class="mb-2"><strong>Nom :</strong> {{ orderPreview.lastName }}</p>
-                    <p class="mb-2"><strong>Email :</strong> {{ orderPreview.email }}</p>
+                    <p class="mb-2"><strong>Client :</strong> {{ app.user.firstName }} {{ app.user.lastName }}</p>
+                    <p class="mb-2"><strong>Email :</strong> {{ app.user.email }}</p>
                     <p class="mb-2"><strong>Telephone :</strong> {{ orderPreview.phone }}</p>
                     <p class="mb-2"><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
                     <p class="mb-2"><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
@@ -115,6 +133,7 @@
                     <p class="mb-2"><strong>Date de prestation:</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
                     <p class="mb-2"><strong>Heure de livraison :</strong> {{ orderPreview.serviceTime }}</p>
                     <p class="mb-2"><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
+                    <p class="mb-2"><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
 
 
                     <hr>

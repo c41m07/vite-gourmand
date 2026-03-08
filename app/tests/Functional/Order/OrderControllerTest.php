@@ -2,8 +2,14 @@
 
 namespace App\Tests\Functional\Order;
 
+use App\Entity\CustomerOrder;
+use App\Entity\CustomerOrderMenu;
+use App\Entity\CustomerOrderStatusHistory;
+use App\Entity\EquipmentLoan;
+use App\Entity\EquipmentLoanStatus;
 use App\Entity\Media;
 use App\Entity\Menu;
+use App\Entity\OrderStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -24,15 +30,23 @@ final class OrderControllerTest extends WebTestCase
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $this->passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
-        foreach ($this->entityManager->getRepository(Menu::class)->findAll() as $menu) {
-            $this->entityManager->remove($menu);
+        $this->cleanupDatabase();
+
+        if ($this->entityManager->getRepository(OrderStatus::class)->findOneBy(['code' => 'pending']) === null) {
+            $pendingStatus = (new OrderStatus())
+                ->setCode('pending')
+                ->setLabel('En attente');
+
+            $this->entityManager->persist($pendingStatus);
         }
-        foreach ($this->entityManager->getRepository(Media::class)->findAll() as $media) {
-            $this->entityManager->remove($media);
+
+        if ($this->entityManager->getRepository(EquipmentLoanStatus::class)->findOneBy(['status' => 'Emprunte']) === null) {
+            $equipmentLoanStatus = (new EquipmentLoanStatus())
+                ->setStatus('Emprunte');
+
+            $this->entityManager->persist($equipmentLoanStatus);
         }
-        foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
-            $this->entityManager->remove($user);
-        }
+
         $this->entityManager->flush();
 
         $now = new \DateTime();
@@ -81,6 +95,41 @@ final class OrderControllerTest extends WebTestCase
 
         $this->menuId = (int) $menu->getId();
         $this->outOfStockMenuId = (int) $outOfStockMenu->getId();
+    }
+
+    protected function tearDown(): void
+    {
+        if (isset($this->entityManager) && $this->entityManager->isOpen()) {
+            $this->cleanupDatabase();
+        }
+
+        parent::tearDown();
+    }
+
+    private function cleanupDatabase(): void
+    {
+        foreach ($this->entityManager->getRepository(CustomerOrderStatusHistory::class)->findAll() as $statusHistory) {
+            $this->entityManager->remove($statusHistory);
+        }
+        foreach ($this->entityManager->getRepository(CustomerOrderMenu::class)->findAll() as $orderMenu) {
+            $this->entityManager->remove($orderMenu);
+        }
+        foreach ($this->entityManager->getRepository(CustomerOrder::class)->findAll() as $order) {
+            $this->entityManager->remove($order);
+        }
+        foreach ($this->entityManager->getRepository(EquipmentLoan::class)->findAll() as $equipmentLoan) {
+            $this->entityManager->remove($equipmentLoan);
+        }
+        foreach ($this->entityManager->getRepository(Menu::class)->findAll() as $menu) {
+            $this->entityManager->remove($menu);
+        }
+        foreach ($this->entityManager->getRepository(Media::class)->findAll() as $media) {
+            $this->entityManager->remove($media);
+        }
+        foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
+            $this->entityManager->remove($user);
+        }
+        $this->entityManager->flush();
     }
 
     public function testOrderPageRedirectsAnonymousUserToLogin(): void
@@ -140,5 +189,62 @@ final class OrderControllerTest extends WebTestCase
 
         self::assertPageTitleContains('Menus');
         self::assertStringContainsString('Ce menu n est plus disponible a la commande.', $crawler->html());
+    }
+
+    public function testAuthenticatedUserCanCreateOrderWithEquipmentLoan(): void
+    {
+        $user = (new User())
+            ->setEmail('order.loan@example.com')
+            ->setFirstName('Order')
+            ->setLastName('Loan')
+            ->setPhone('0601020304')
+            ->setPostalAddress('10 rue des Tests')
+            ->setCity('Bordeaux')
+            ->setPostalCode('33000')
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
+            ->setActive(true)
+            ->setRoles(['ROLE_USER']);
+
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'Order1234*/'));
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('GET', '/order/new/' . $this->menuId);
+        $form = $crawler->selectButton('Continuer la commande')->form([
+            'order_form[phone]' => '0611223344',
+            'order_form[deliveryAddress]' => '15 quai des Tests',
+            'order_form[deliveryCity]' => 'Merignac',
+            'order_form[deliveryPostalCode]' => '33700',
+            'order_form[serviceDate]' => '2026-03-20',
+            'order_form[serviceTime]' => '12:30',
+            'order_form[peopleCount]' => '4',
+            'order_form[distancekm]' => '10',
+            'order_form[needEquipmentLoan]' => '1',
+            'order_form[equipmentLoanStartAt]' => '2026-03-20T10:00',
+            'order_form[equipmentLoanEndAt]' => '2026-03-21T18:00',
+            'order_form[equipmentLoanNote]' => 'Prevoir vaisselle et nappes.',
+            'order_form[note]' => 'Acces par le portail arriere.',
+        ]);
+
+        $this->client->submit($form);
+
+        self::assertResponseRedirects('/user/profile?tab=orders');
+
+        $order = $this->entityManager->getRepository(CustomerOrder::class)->findOneBy(
+            ['user' => $user],
+            ['id' => 'DESC']
+        );
+
+        self::assertNotNull($order);
+        self::assertSame('0611223344', $order->getPhone());
+        self::assertSame('Merignac', $order->getDeliveryCity());
+        self::assertSame('Acces par le portail arriere.', $order->getNote());
+        self::assertNotNull($order->getEquipmentLoan());
+        self::assertSame('Prevoir vaisselle et nappes.', $order->getEquipmentLoan()?->getNote());
+        self::assertSame('Emprunte', $order->getEquipmentLoan()?->getStatus()?->getStatus());
     }
 }
