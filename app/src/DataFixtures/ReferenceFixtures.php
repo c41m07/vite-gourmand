@@ -14,10 +14,12 @@ use Doctrine\Persistence\ObjectManager;
 final class ReferenceFixtures extends Fixture
 {
     public const ORDER_STATUS_PENDING = 'order-status-pending';
-    public const ORDER_STATUS_CONFIRMED = 'order-status-confirmed';
+    public const ORDER_STATUS_ACCEPTED = 'order-status-accepted';
     public const ORDER_STATUS_PREPARING = 'order-status-preparing';
-    public const ORDER_STATUS_READY = 'order-status-ready';
+    public const ORDER_STATUS_DELIVERING = 'order-status-delivering';
     public const ORDER_STATUS_DELIVERED = 'order-status-delivered';
+    public const ORDER_STATUS_AWAITING_EQUIPMENT_RETURN = 'order-status-awaiting-equipment-return';
+    public const ORDER_STATUS_COMPLETED = 'order-status-completed';
     public const ORDER_STATUS_CANCELLED = 'order-status-cancelled';
 
     public const DISH_TYPE_STARTER = 'dish-type-starter';
@@ -71,11 +73,13 @@ final class ReferenceFixtures extends Fixture
     {
         $statuses = [
             self::ORDER_STATUS_PENDING => ['code' => 'pending', 'label' => 'En attente'],
-            self::ORDER_STATUS_CONFIRMED => ['code' => 'confirmed', 'label' => 'Confirmee'],
-            self::ORDER_STATUS_PREPARING => ['code' => 'preparing', 'label' => 'En preparation'],
-            self::ORDER_STATUS_READY => ['code' => 'ready', 'label' => 'Prete'],
-            self::ORDER_STATUS_DELIVERED => ['code' => 'delivered', 'label' => 'Livree'],
-            self::ORDER_STATUS_CANCELLED => ['code' => 'cancelled', 'label' => 'Annulee'],
+            self::ORDER_STATUS_ACCEPTED => ['code' => 'accepted', 'label' => 'Acceptée'],
+            self::ORDER_STATUS_PREPARING => ['code' => 'preparing', 'label' => 'En préparation'],
+            self::ORDER_STATUS_DELIVERING => ['code' => 'delivering', 'label' => 'En cours de livraison'],
+            self::ORDER_STATUS_DELIVERED => ['code' => 'delivered', 'label' => 'Livrée'],
+            self::ORDER_STATUS_AWAITING_EQUIPMENT_RETURN => ['code' => 'awaiting_equipment_return', 'label' => 'En attente du retour de matériel'],
+            self::ORDER_STATUS_COMPLETED => ['code' => 'completed', 'label' => 'Terminée'],
+            self::ORDER_STATUS_CANCELLED => ['code' => 'cancelled', 'label' => 'Annulée'],
         ];
 
         foreach ($statuses as $reference => $data) {

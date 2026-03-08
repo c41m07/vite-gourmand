@@ -75,6 +75,7 @@ final class ProfileController extends AbstractController
         return $this->renderEditForm($form);
     }
 
+//    TODO Prévoir de créé un Manager pour faire en sorte que les fonction private soit séparer des routes
     private function createEditableUser(User $user): User
     {
         return (new User())

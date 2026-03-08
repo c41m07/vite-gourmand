@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander {{ menu.title }}{% endblock %}
+
+{% block body %}
+    <section class="container py-5">
+        <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-secondary mb-4">
+            Retour au menu
+        </a>
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endfor %}
+
+        <h1 class="mb-3">Commander {{ menu.title }}</h1>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Menu selectionne</h2>
+
+                <p class="mb-2">
+                    <strong>Titre :</strong> {{ menu.title }}
+                </p>
+
+                <p class="mb-2">
+                    <strong>Prix de base :</strong>
+                    {{ (menu.basePrice / 100)|number_format(2, ',', ' ') }} €
+                </p>
+
+                <p class="mb-2">
+                    <strong>Nombre minimum de personnes :</strong>
+                    {{ menu.minPeople }}
+                </p>
+
+                <p class="mb-0">
+                    <strong>Conditions :</strong>
+                    {{ menu.conditionInfo ?: 'Aucune condition renseignee.' }}
+                </p>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body">
+                <h2 class="h5 mb-4">Informations de commande</h2>
+
+                {{ form_start(orderForm) }}
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.firstName) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.lastName) }}
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.email) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.phone) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_row(orderForm.deliveryAddress) }}
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.deliveryCity) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.deliveryPostalCode) }}
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.serviceDate) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.serviceTime) }}
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.peopleCount) }}
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        {{ form_row(orderForm.distancekm) }}
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-3 flex-wrap">
+                    <button type="submit" class="btn btn-success">
+                        Continuer la commande
+                    </button>
+
+                    <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-secondary">
+                        Retour au detail
+                    </a>
+                </div>
+
+                {{ form_end(orderForm) }}
+            </div>
+        </div>
+
+        {% if orderPreview is not null %}
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Recapitulatif temporaire</h2>
+
+                    <p class="mb-2"><strong>Prenom :</strong> {{ orderPreview.firstName }}</p>
+                    <p class="mb-2"><strong>Nom :</strong> {{ orderPreview.lastName }}</p>
+                    <p class="mb-2"><strong>Email :</strong> {{ orderPreview.email }}</p>
+                    <p class="mb-2"><strong>Telephone :</strong> {{ orderPreview.phone }}</p>
+                    <p class="mb-2"><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
+                    <p class="mb-2"><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
+                    <p class="mb-2"><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
+                    <p class="mb-2"><strong>Date de prestation:</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
+                    <p class="mb-2"><strong>Heure de livraison :</strong> {{ orderPreview.serviceTime }}</p>
+                    <p class="mb-2"><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
+
+
+                    <hr>
+
+                    <p class="mb-2">
+                        <strong>Prix unitaire menu :</strong>
+                        {{ (orderPreview.menuBasePrice / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Sous-total menu :</strong>
+                        {{ (orderPreview.menuSubtotal / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Remise :</strong>
+                        -{{ (orderPreview.discountAmount / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Total avant livraison :</strong>
+                        {{ (orderPreview.menuPrice / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+                    <p class="mb-0">
+                        <strong> Distance de livraison:</strong>
+                        {{ orderPreview.distancekm }} km
+                    </p>
+
+
+                    <p class="mb-0">
+                        <strong> Prix livraison:</strong>
+                        {{ (orderPreview.deliveryPrice / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Total de la commande:</strong>
+                        {{ (orderPreview.totalPrice / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+
+                </div>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
