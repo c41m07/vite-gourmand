@@ -57,18 +57,14 @@ class OrderFormType extends AbstractType
             ])
             ->add('deliveryCity', TextType::class, [
                 'label' => 'Ville',
-                'data' => 'NO DEFINED',
-//TODO rajouter City dans l'entité User
-//                'data' => $builder->getOption('user')->getCity(),
+                'data' => $builder->getOption('user')->getCity(),
                 'attr' => [
                     'placeholder' => 'Bordeaux',
                 ],
             ])
             ->add('deliveryPostalCode', TextType::class, [
                 'label' => 'Code Postal',
-                'data' => 'NO DEFINED',
-//TODO rajouter PostalCode dans l'entité User
-//            'data' => $builder->getOption('user')->getPostalCode(),
+                'data' => $builder->getOption('user')->getPostalCode(),
                 'attr' => [
                     'placeholder' => '33000',
                 ],
