@@ -20,7 +20,6 @@ class OrderFormType extends AbstractType
     {
         $builder
             ->add('firstName', TextType::class, [
-//                'disabled' => true,
                 'label' => 'prenom',
                 'data' => $builder->getOption('user')->getFirstName(),
                 'attr' => [

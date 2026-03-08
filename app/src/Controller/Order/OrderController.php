@@ -64,8 +64,7 @@ final class OrderController extends AbstractController
                 $menuPrice = $menuSubtotal - $discountAmount;
                 $deliveryCity = trim((string)$data['deliveryCity']);
                 $distancekm = (int)($data['distancekm']);
-
-                $isBordeaux = strtolower($deliveryCity) === 'Bordeaux';
+                $isBordeaux = strtolower($deliveryCity) === 'bordeaux';
                 $deliveryPrice = 0;
                 if (!$isBordeaux) {
                     $deliveryPrice = 500 + ($distancekm * 59);
