@@ -44,14 +44,14 @@
                     </div>
                     <div class="account-meta__item">
                         <div class="account-meta__label">Total</div>
-                    <div class="account-meta__value account-meta__value--total">
-                    {% if order.totalPrice is not null %}
-                            {% set totalDisplay = order.totalPrice / 100 %}
-                            {{ totalDisplay|number_format(2, ',', ' ') }} €
-                        {% else %}
-                            -
-                        {% endif %}
-                    </div>
+                        <div class="account-meta__value account-meta__value--total">
+                            {% if order.totalPrice is not null %}
+                                {% set totalDisplay = order.totalPrice / 100 %}
+                                {{ totalDisplay|number_format(2, ',', ' ') }} €
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
@@ -66,6 +66,11 @@
                             -
                         {% endif %}
                     </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <a class="btn btn-outline-success" href="{{ path('app_user_order_show', { 'id': order.id }) }}">
+                        Voir la commande
+                    </a>
                 </div>
             </article>
         {% endfor %}

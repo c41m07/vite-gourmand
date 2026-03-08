@@ -4,11 +4,18 @@ namespace App\Controller\User;
 
 use App\Application\User\Exception\InvalidCurrentPasswordException;
 use App\Application\User\Handler\ProfileUpdateHandler;
+use App\Entity\CustomerOrder;
+use App\Entity\CustomerOrderStatusHistory;
 use App\Entity\User;
 use App\Form\User\ProfilEditFormType;
+use App\Repository\OrderStatusRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
@@ -112,4 +119,92 @@ final class ProfileController extends AbstractController
             'profileForm' => $form,
         ]);
     }
+
+    #[Route('/user/order/{id}', name: 'app_user_order_show', methods: ['GET'])]
+    public function showOrder(CustomerOrder $order): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+        if ($order->getUser() !== $user) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('user/order_show.html.twig', [
+            'order' => $order,
+        ]);
+    }
+
+    #[Route('/user/order/{id}/cancel', name: 'app_user_order_cancel', methods: ['POST'])]
+    public function cancelOrder(CustomerOrder          $order, Request $request, OrderStatusRepository $orderStatusRepository,
+                                EntityManagerInterface $em): RedirectResponse
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+        if ($order->getUser() !== $user) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$this->isCsrfTokenValid('cancel_order_' . $order->getid(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la tentative de suppression de la commande.');
+        }
+
+
+        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
+        $currentStatusCode = $lastHistory && $lastHistory->getOrderStatus() ? $lastHistory->getOrderStatus()->getCode() : null;
+
+        if ($currentStatusCode !== 'pending') {
+            $this->addFlash('error', 'Cette commande ne peux plus être annulée');
+            return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
+        }
+        $cancelledStatus = $orderStatusRepository->findOneBy(['code' => 'cancelled']);
+        if ($cancelledStatus === null) {
+            throw new RuntimeException('Status non trouvé');
+        }
+        $history = new CustomerOrderStatusHistory()
+            ->setCustomerOrder($order)
+            ->setOrderStatus($cancelledStatus)
+            ->setChangedByUser($user)
+            ->setChangedAt(new DateTime())
+            ->setComment('Commande annulee par le client.');
+
+        $em->persist($history);
+        $em->flush();
+
+
+        $this->addFlash('success', 'Commande annulee avec succes');
+        return $this->redirectToRoute('app_user_profile', [
+            'tab' => 'orders',
+        ]);
+
+    }
+
+    #[Route('/user/order/{id}/edit', name: 'app_user_order_edit', methods: ['GET'])]
+    public function deleteOrder(CustomerOrder $order): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+        if ($order->getUser() !== $user) {
+            throw $this->createNotFoundException();
+        }
+        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
+        $currentStatusCode = $lastHistory && $lastHistory->getOrderStatus() ? $lastHistory->getOrderStatus()->getCode() : null;
+        if ($currentStatusCode !== 'pending') {
+            $this->addFlash('error', 'Cette commande ne peux plus être modifiée');
+            return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
+        }
+
+        return $this->render('user/order_edit.html.twig', [
+            'order' => $order,
+        ]);
+    }
 }
+
+
+
+

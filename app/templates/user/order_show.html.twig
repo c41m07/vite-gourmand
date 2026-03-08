@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande CMD-{{ order.id }}{% endblock %}
+
+{% block body %}
+    {% set orderMenu = order.customerOrderMenus|first %}
+    {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
+    {% set currentStatusHistory = order.customerOrderStatusHistories|last %}
+    {% set currentStatus = currentStatusHistory and currentStatusHistory.orderStatus ? currentStatusHistory.orderStatus.label : 'En cours' %}
+    {% set currentStatusCode = currentStatusHistory and currentStatusHistory.orderStatus ? currentStatusHistory.orderStatus.code: null %}
+
+    <section class="container py-5">
+        <a href="{{ path('app_user_profile', { tab: 'orders' }) }}" class="btn btn-outline-secondary mb-4">
+            Retour a mes commandes
+        </a>
+
+        {% if currentStatusCode == 'pending' %}
+            <div class="d-flex gap-3 flex-wrap mb-4">
+                <a href="{{ path('app_user_order_edit', { id: order.id }) }}" class="btn btn-outline-success">
+                    Modifier
+                </a>
+
+                <form method="post" action="{{ path('app_user_order_cancel', { id: order.id }) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('cancel_order_' ~ order.id) }}">
+                    <button type="submit" class="btn btn-outline-danger">
+                        Annuler
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <h1 class="mb-1">Commande CMD-{{ order.id }}</h1>
+                <p class="text-muted mb-0">{{ menuTitle }}</p>
+            </div>
+
+            <span class="badge text-bg-secondary fs-6">{{ currentStatus }}</span>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Informations generales</h2>
+
+                <p class="mb-2"><strong>Date de prestation :</strong>
+                    {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
+                </p>
+
+                <p class="mb-2"><strong>Heure souhaitee :</strong>
+                    {{ order.serviceTime ?: '-' }}
+                </p>
+
+                <p class="mb-2"><strong>Nombre de personnes :</strong>
+                    {{ order.peopleCount ?: '-' }}
+                </p>
+
+                <p class="mb-2"><strong>Telephone :</strong>
+                    {{ order.phone ?: '-' }}
+                </p>
+
+                <p class="mb-0"><strong>Adresse :</strong>
+                    {{ order.deliveryAddress }},
+                    {{ order.deliveryPostalCode }}
+                    {{ order.deliveryCity }}
+                </p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Menu commande</h2>
+
+                {% if orderMenu and orderMenu.menu %}
+                    <p class="mb-2"><strong>Menu :</strong> {{ orderMenu.menu.title }}</p>
+
+                    <p class="mb-2"><strong>Quantite :</strong> {{ orderMenu.quantity ?: '-' }}</p>
+
+                    <p class="mb-2"><strong>Prix unitaire :</strong>
+                        {{ ((orderMenu.unitPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+
+                    <p class="mb-0"><strong>Sous-total menu :</strong>
+                        {{ ((orderMenu.lineTotal ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+                {% else %}
+                    <p class="mb-0 text-muted">Aucun menu associe a cette commande.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Tarification</h2>
+
+                <p class="mb-2"><strong>Remise :</strong>
+                    {{ ((order.discountAmount ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                </p>
+
+                <p class="mb-2"><strong>Livraison :</strong>
+                    {{ ((order.deliveryPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                </p>
+
+                <p class="mb-0"><strong>Total :</strong>
+                    {{ ((order.totalPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                </p>
+            </div>
+        </div>
+
+        {% if order.note %}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Note client</h2>
+                    <p class="mb-0">{{ order.note }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if order.equipmentLoan %}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Pret de materiel</h2>
+
+                    <p class="mb-2"><strong>Debut :</strong>
+                        {{ order.equipmentLoan.loanStartAt ? order.equipmentLoan.loanStartAt|date('d/m/Y H:i') : '-' }}
+                    </p>
+
+                    <p class="mb-2"><strong>Fin :</strong>
+                        {{ order.equipmentLoan.loanEndAt ? order.equipmentLoan.loanEndAt|date('d/m/Y H:i') : '-' }}
+                    </p>
+
+                    <p class="mb-2"><strong>Statut :</strong>
+                        {{ order.equipmentLoan.status ? order.equipmentLoan.status.status : '-' }}
+                    </p>
+
+                    <p class="mb-0"><strong>Note :</strong>
+                        {{ order.equipmentLoan.note ?: '-' }}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Historique de la commande</h2>
+
+                {% if order.customerOrderStatusHistories is empty %}
+                    <p class="mb-0 text-muted">Aucun historique disponible pour cette commande.</p>
+                {% else %}
+                    <div class="list-group list-group-flush">
+                        {% for history in order.customerOrderStatusHistories %}
+                            <div class="list-group-item px-0">
+                                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                                    <div>
+                                        <div class="fw-semibold">
+                                            {{ history.orderStatus ? history.orderStatus.label : 'Statut inconnu' }}
+                                        </div>
+
+                                        {% if history.comment %}
+                                            <div class="text-muted small mt-1">
+                                                {{ history.comment }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="text-muted small text-end">
+                                        {% if history.changedAt %}
+                                            {{ history.changedAt|date('d/m/Y H:i') }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

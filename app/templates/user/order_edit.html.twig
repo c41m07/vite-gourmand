@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier CMD-{{ order.id }}{% endblock %}
+
+{% block body %}
+    <section class="container py-5">
+        <a href="{{ path('app_user_order_show', { id: order.id }) }}" class="btn btn-outline-secondary mb-4">
+            Retour au detail
+        </a>
+
+        <h1>Modifier la commande CMD-{{ order.id }}</h1>
+
+    </section>
+{% endblock %}
