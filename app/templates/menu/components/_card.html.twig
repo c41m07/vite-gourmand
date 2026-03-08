@@ -23,7 +23,7 @@
                 <span class="menu-card__label">
                     Min. {{ menu.minPeople }} pers.
                 </span>
-                <span class="menu-card__label {{ menu.stock > 0 ? 'menu-card__label--success' : 'menu-card__label--danger' }}">
+                <span class="menu-card__label menu-card__label--stock {{ menu.stock > 0 ? 'menu-card__label--success' : 'menu-card__label--danger' }}">
                     Stock : {{ menu.stock }}
                 </span>
             </div>

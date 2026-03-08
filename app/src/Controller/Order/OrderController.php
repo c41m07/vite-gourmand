@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Form\Order\OrderFormType;
 use App\Repository\EquipmentLoanStatusRepository;
 use App\Repository\OrderStatusRepository;
+use App\Service\Mail\EmailFactory;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -28,11 +30,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class OrderController extends AbstractController
 {
     #[Route('/new/{id}', name: '_new', methods: ['GET', 'POST'])]
-    public function new(Request                $request,
-                        Menu                   $menu,
-                        EntityManagerInterface $entityManager,
-                        OrderStatusRepository  $orderStatusRepository,
-                        EquipmentLoanStatusRepository $equipmentLoanStatusRepository): Response
+    public function new(Request                       $request,
+                        Menu                          $menu,
+                        EntityManagerInterface        $entityManager,
+                        OrderStatusRepository         $orderStatusRepository,
+                        EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
+                        MailerInterface               $mailer,
+                        EmailFactory                  $factory): Response
     {
         if (!$menu->isActive()) {
             throw $this->createNotFoundException();
@@ -60,10 +64,10 @@ final class OrderController extends AbstractController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $peopleCount = (int) ($data['peopleCount'] ?? 0);
-            $minpeople = (int) ($menu->getMinPeople() ?? 0);
-            $stock = (int) ($menu->getStock() ?? 0);
-            $needEquipmentLoan = (bool) $form->get('needEquipmentLoan')->getData();
+            $peopleCount = (int)($data['peopleCount'] ?? 0);
+            $minpeople = (int)($menu->getMinPeople() ?? 0);
+            $stock = (int)($menu->getStock() ?? 0);
+            $needEquipmentLoan = (bool)$form->get('needEquipmentLoan')->getData();
 
             if ($peopleCount < $minpeople || $peopleCount > $stock) {
                 $form->get('peopleCount')->addError(new FormError(sprintf('Le nombre de personnes doit etre compris entre %d et %d', $minpeople,
@@ -88,16 +92,16 @@ final class OrderController extends AbstractController
             }
 
             if ($form->isValid()) {
-                $basePrice = (int) ($menu->getBasePrice() ?? 0);
+                $basePrice = (int)($menu->getBasePrice() ?? 0);
                 $menuSubtotal = $basePrice * $peopleCount;
                 $discountAmount = 0;
                 if ($peopleCount >= ($minpeople + 5)) {
-                    $discountAmount = (int) round($menuSubtotal * 0.10);
+                    $discountAmount = (int)round($menuSubtotal * 0.10);
                 }
 
                 $menuPrice = $menuSubtotal - $discountAmount;
-                $deliveryCity = trim((string) ($data['deliveryCity'] ?? ''));
-                $distancekm = (int) ($data['distancekm'] ?? 0);
+                $deliveryCity = trim((string)($data['deliveryCity'] ?? ''));
+                $distancekm = (int)($data['distancekm'] ?? 0);
                 $isBordeaux = mb_strtolower($deliveryCity) === 'bordeaux';
                 $deliveryPrice = 0;
                 if (!$isBordeaux) {
@@ -142,12 +146,12 @@ final class OrderController extends AbstractController
                     ->setUser($user)
                     ->setOrderedAt(clone $now)
                     ->setServiceDate(DateTime::createFromInterface($serviceDate))
-                    ->setserviceTime((string) ($data['serviceTime'] ?? ''))
+                    ->setserviceTime((string)($data['serviceTime'] ?? ''))
                     ->setPeopleCount($peopleCount)
                     ->setPhone($data['phone'] ?? null)
-                    ->setDeliveryAddress((string) ($data['deliveryAddress'] ?? ''))
+                    ->setDeliveryAddress((string)($data['deliveryAddress'] ?? ''))
                     ->setDeliveryCity($deliveryCity)
-                    ->setDeliveryPostalCode((string) ($data['deliveryPostalCode'] ?? ''))
+                    ->setDeliveryPostalCode((string)($data['deliveryPostalCode'] ?? ''))
                     ->setDeliveryPrice($deliveryPrice)
                     ->setDiscountAmount($discountAmount)
                     ->setTotalPrice($totalPrice)
@@ -177,7 +181,7 @@ final class OrderController extends AbstractController
                 $entityManager->persist($orderMenu);
                 $entityManager->persist($statushistory);
                 $entityManager->flush();
-
+                $mailer->send($factory->createOrderConfirmationEmail($order, (string)$menu->getTitle()));
                 $this->addFlash('success', 'Votre commande a bien ete enregistree. Nous vous remercions de votre confiance.');
                 return $this->redirectToRoute('app_user_profile', ['tab' => 'orders']);
             }

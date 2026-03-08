@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Confirmation de commande</title>
+    <style>
+        body.email-body {
+            margin: 0;
+            padding: 0;
+            background: #fbf7f0;
+            font-family: "Hind Madurai", Arial, sans-serif;
+        }
+
+        .email-preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fbf7f0;
+        }
+
+        .email-wrapper-cell {
+            padding: 24px 12px;
+            text-align: center;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(15, 20, 17, 0.08);
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .email-hero {
+            background: #1f5e3b;
+            padding: 24px 28px;
+        }
+
+        .email-hero-title {
+            margin: 0;
+            color: #ffffff;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .email-hero-sub {
+            margin: 8px 0 0;
+            color: #dfe9e2;
+            font-size: 14px;
+        }
+
+        .email-content {
+            padding: 28px;
+        }
+
+        .email-text {
+            margin: 0 0 12px;
+            color: #0f1411;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .email-section-title {
+            margin: 0 0 10px;
+            color: #0f1411;
+            font-family: "Montserrat", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .email-panel {
+            background: #fbf7f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 0 0 16px;
+        }
+
+        .email-meta {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        .email-meta-row td {
+            padding: 8px 0;
+            border-bottom: 1px solid #e8e3d7;
+            vertical-align: top;
+            font-size: 14px;
+            color: #0f1411;
+        }
+
+        .email-meta-row td:first-child {
+            width: 170px;
+            font-weight: 700;
+            color: #1f5e3b;
+            padding-right: 8px;
+        }
+
+        .email-action-table {
+            margin: 16px 0 0;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+
+        .email-action-cell {
+            background: #c9a227;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .email-action-link {
+            display: inline-block;
+            padding: 12px 20px;
+            color: #0f1411;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .email-footer {
+            background: #f4efe6;
+            padding: 14px 28px;
+            color: #7a8c7a;
+            font-size: 12px;
+        }
+
+        .email-link {
+            color: #1f5e3b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="email-body">
+<span class="email-preheader">
+    Votre commande {{ menuTitle }} a bien ete enregistree.
+</span>
+
+<table role="presentation" class="email-wrapper">
+    <tr>
+        <td class="email-wrapper-cell">
+            <table role="presentation" class="email-container">
+                <tr>
+                    <td class="email-hero">
+                        <h1 class="email-hero-title">Commande confirmee</h1>
+                        <p class="email-hero-sub">Merci, votre demande a bien ete prise en compte par {{ appName }}.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-content">
+                        <p class="email-text">Bonjour {{ firstName }},</p>
+                        <p class="email-text">
+                            Votre commande a bien ete enregistree. Nous vous recontacterons si un complement d information est necessaire.
+                        </p>
+
+                        <div class="email-panel">
+                            <h2 class="email-section-title">Recapitulatif</h2>
+                            <table role="presentation" class="email-meta">
+                                <tr class="email-meta-row">
+                                    <td>Commande</td>
+                                    <td>CMD-{{ order.id }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Menu</td>
+                                    <td>{{ menuTitle }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Date de prestation</td>
+                                    <td>{{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Heure souhaitee</td>
+                                    <td>{{ order.serviceTime ?: '-' }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Nombre de personnes</td>
+                                    <td>{{ order.peopleCount ?: '-' }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Adresse</td>
+                                    <td>{{ order.deliveryAddress }}, {{ order.deliveryPostalCode }} {{ order.deliveryCity }}</td>
+                                </tr>
+                                <tr class="email-meta-row">
+                                    <td>Total</td>
+                                    <td>{{ (order.totalPrice / 100)|number_format(2, ',', ' ') }} €</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <table role="presentation" class="email-action-table">
+                            <tr>
+                                <td class="email-action-cell">
+                                    <a class="email-action-link" href="{{ url('app_user_profile', { tab: 'orders' }) }}">
+                                        Voir mes commandes
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="email-footer">
+                        {{ appName }} · <a class="email-link" href="{{ url('app_contact_index') }}">Contact</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
