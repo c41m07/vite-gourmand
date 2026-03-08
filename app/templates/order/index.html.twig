@@ -3,179 +3,314 @@
 {% block title %}Commander {{ menu.title }}{% endblock %}
 
 {% block body %}
-    <section class="container py-5">
-        <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-secondary mb-4">
-            Retour au menu
-        </a>
+    {% set previewPeople = orderPreview is not null and orderPreview.peopleCount is defined ? orderPreview.peopleCount : menu.minPeople %}
+    {% set previewSubtotal = orderPreview is not null and orderPreview.menuSubtotal is defined ? orderPreview.menuSubtotal : (menu.basePrice * previewPeople) %}
+    {% set previewDiscount = orderPreview is not null and orderPreview.discountAmount is defined ? orderPreview.discountAmount : 0 %}
+    {% set previewDelivery = orderPreview is not null and orderPreview.deliveryPrice is defined ? orderPreview.deliveryPrice : 0 %}
+    {% set previewTotal = orderPreview is not null and orderPreview.totalPrice is defined ? orderPreview.totalPrice : (previewSubtotal - previewDiscount + previewDelivery) %}
+    {% set discountActive = previewDiscount > 0 %}
 
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger" role="alert">{{ message }}</div>
-        {% endfor %}
+    {% include 'components/_hero.html.twig' with {
+        title: 'Commander ' ~ menu.title,
+        asset_url: menu.media ? menu.media.imgUrl : null,
+        subtitle: (menu.basePrice / 100)|number_format(2, ',', ' ') ~ '€ par personne'
+    } %}
 
-        <h1 class="mb-3">Commander {{ menu.title }}</h1>
-
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h2 class="h5 mb-3">Menu selectionne</h2>
-
-                <p class="mb-2">
-                    <strong>Titre :</strong> {{ menu.title }}
-                </p>
-
-                <p class="mb-2">
-                    <strong>Prix de base :</strong>
-                    {{ (menu.basePrice / 100)|number_format(2, ',', ' ') }} €
-                </p>
-
-                <p class="mb-2">
-                    <strong>Nombre minimum de personnes :</strong>
-                    {{ menu.minPeople }}
-                </p>
-
-                <p class="mb-0">
-                    <strong>Conditions :</strong>
-                    {{ menu.conditionInfo ?: 'Aucune condition renseignee.' }}
-                </p>
+    <section class="order-entry py-5">
+        <div class="container">
+            <div class="order-entry__topbar">
+                <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="order-entry__back">
+                    <i class="bi bi-arrow-left me-2"></i>Retour au menu
+                </a>
             </div>
-        </div>
-        <div class="card shadow-sm border-0 mt-4">
-            <div class="card-body">
-                <h2 class="h5 mb-4">Informations de commande</h2>
 
-                <div class="alert alert-light border mb-4" role="status">
-                    <p class="mb-2"><strong>Client :</strong> {{ app.user.firstName }} {{ app.user.lastName }}</p>
-                    <p class="mb-0"><strong>Email :</strong> {{ app.user.email }}</p>
-                </div>
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger order-entry__flash" role="alert">{{ message }}</div>
+            {% endfor %}
 
-                {{ form_start(orderForm) }}
+            <div class="order-entry__layout">
+                <div class="order-entry__main">
+                    <article class="order-entry__panel order-entry__panel--menu">
+                        <div class="card-body">
+                            <div class="order-entry__eyebrow">Menu selectionne</div>
 
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.phone) }}
-                    </div>
-
-                    <div class="col-12">
-                        {{ form_row(orderForm.deliveryAddress) }}
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.deliveryCity) }}
-                    </div>
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.deliveryPostalCode) }}
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.serviceDate) }}
-                    </div>
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.serviceTime) }}
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.peopleCount) }}
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        {{ form_row(orderForm.distancekm) }}
-                    </div>
-
-                    <div class="col-12">
-                        <div class="border rounded p-3">
-                            <h3 class="h6 mb-3">Pret de materiel</h3>
-
-                            {{ form_row(orderForm.needEquipmentLoan) }}
-
-                            <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    {{ form_row(orderForm.equipmentLoanStartAt) }}
+                            <div class="order-entry__menu">
+                                <div class="order-entry__menu-media">
+                                    {% if menu.media %}
+                                        <img src="{{ menu.media.imgUrl }}" alt="{{ menu.media.altText }}">
+                                    {% endif %}
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    {{ form_row(orderForm.equipmentLoanEndAt) }}
-                                </div>
-                                <div class="col-12">
-                                    {{ form_row(orderForm.equipmentLoanNote) }}
+
+                                <div class="order-entry__menu-content">
+                                    <h2 class="order-entry__menu-title">{{ menu.title }}</h2>
+                                    <p class="order-entry__menu-price">
+                                        {{ (menu.basePrice / 100)|number_format(2, ',', ' ') }} € par personne
+                                    </p>
+
+                                    <div class="order-entry__badges">
+                                        <span class="order-entry__badge">
+                                            <i class="bi bi-people me-2"></i>{{ menu.minPeople }} pers. minimum
+                                        </span>
+                                        <span class="order-entry__badge order-entry__badge--accent">
+                                            <i class="bi bi-box-seam me-2"></i>{{ menu.stock }} en stock
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </article>
 
-                    <div class="col-12">
-                        {{ form_row(orderForm.note) }}
-                    </div>
+                    <article class="order-entry__panel">
+                        <details class="order-entry__details">
+                            <summary class="order-entry__summary-toggle">
+                                <span>
+                                    <span class="order-entry__eyebrow">Profil client</span>
+                                    <span class="order-entry__section-title order-entry__section-title--summary">Vos informations</span>
+                                </span>
+                                <i class="bi bi-chevron-down order-entry__summary-chevron" aria-hidden="true"></i>
+                            </summary>
+
+                            <div class="order-entry__customer-grid">
+                                <div class="order-entry__customer-card">
+                                    <span class="order-entry__customer-label">Nom</span>
+                                    <strong class="order-entry__customer-value">{{ app.user.lastName }}</strong>
+                                </div>
+                                <div class="order-entry__customer-card">
+                                    <span class="order-entry__customer-label">Prenom</span>
+                                    <strong class="order-entry__customer-value">{{ app.user.firstName }}</strong>
+                                </div>
+                                <div class="order-entry__customer-card">
+                                    <span class="order-entry__customer-label">Email</span>
+                                    <strong class="order-entry__customer-value">{{ app.user.email }}</strong>
+                                </div>
+                                <div class="order-entry__customer-card">
+                                    <span class="order-entry__customer-label">Telephone du compte</span>
+                                    <strong class="order-entry__customer-value">{{ app.user.phone ?: '-' }}</strong>
+                                </div>
+                            </div>
+                        </details>
+                    </article>
+
+                    <article class="order-entry__panel">
+                        <div class="order-entry__section-head">
+                            <div>
+                                <div class="order-entry__eyebrow">Configuration</div>
+                                <h2 class="order-entry__section-title">Votre commande</h2>
+                            </div>
+                            <i class="bi bi-basket2 order-entry__section-icon" aria-hidden="true"></i>
+                        </div>
+
+                        {{ form_start(orderForm, { attr: { class: 'order-entry__form', id: 'order-entry-form' } }) }}
+
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.peopleCount) }}
+                                    <div class="order-entry__hint">Minimum requis : {{ menu.minPeople }} personnes</div>
+                                    {% if discountActive %}
+                                        <div class="order-entry__hint order-entry__hint--success">
+                                            <i class="bi bi-check-circle me-1"></i>La remise de 10% est deja appliquee dans le recapitulatif.
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.phone) }}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.serviceDate) }}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.serviceTime) }}
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.distancekm) }}
+                                    <div class="order-entry__hint">Estimation temporaire (TEMP) a renseigner uniquement pour les livraisons hors
+                                        Bordeaux.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__subsection">
+                                    <div>
+                                        <div class="order-entry__eyebrow">Livraison</div>
+                                        <h3 class="order-entry__subsection-title">Adresse de prestation</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.deliveryAddress) }}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.deliveryPostalCode) }}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.deliveryCity) }}
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__loan">
+                                    <div class="order-entry__subsection order-entry__subsection--tight">
+                                        <div>
+                                            <div class="order-entry__eyebrow">Service complementaire</div>
+                                            <h3 class="order-entry__subsection-title">Pret de materiel</h3>
+                                        </div>
+                                        <i class="bi bi-box2-heart order-entry__subsection-icon" aria-hidden="true"></i>
+                                    </div>
+
+                                    {{ form_row(orderForm.needEquipmentLoan) }}
+
+                                    <div
+                                        class="row g-3 mt-1 d-none"
+                                        id="equipment-loan-fields"
+                                        data-order-loan-fields
+                                    >
+                                        <div class="col-12 col-md-6">
+                                            {{ form_row(orderForm.equipmentLoanStartAt) }}
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            {{ form_row(orderForm.equipmentLoanEndAt) }}
+                                        </div>
+                                        <div class="col-12">
+                                            {{ form_row(orderForm.equipmentLoanNote) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__block">
+                                    {{ form_row(orderForm.note) }}
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="order-entry__conditions">
+                                    <div class="order-entry__conditions-icon">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="order-entry__conditions-title">Conditions importantes</h3>
+                                        <ul class="order-entry__conditions-list mb-0">
+                                            <li>Commande a confirmer au minimum 48h avant la prestation.</li>
+                                            <li>Ce menu est disponible a partir de {{ menu.minPeople }} convives.</li>
+                                            {% if menu.conditionInfo %}
+                                                <li>{{ menu.conditionInfo }}</li>
+                                            {% endif %}
+                                            <li>Le montant final reste valide par l equipe avant confirmation definitive.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-entry__actions">
+                            <button type="submit" class="btn btn-primary btn-lg visually-hidden">
+                                Continuer la commande
+                            </button>
+                        </div>
+
+                        {{ form_end(orderForm) }}
+                    </article>
+
+                    {% if orderPreview is not null %}
+                        <article class="order-entry__panel order-entry__panel--preview">
+                            <div class="order-entry__section-head">
+                                <div>
+                                    <div class="order-entry__eyebrow">Verification</div>
+                                    <h2 class="order-entry__section-title">Recapitulatif temporaire</h2>
+                                </div>
+                                <i class="bi bi-clipboard-check order-entry__section-icon" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="order-entry__preview-grid">
+                                <p><strong>Telephone :</strong> {{ orderPreview.phone }}</p>
+                                <p><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
+                                <p><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
+                                <p><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
+                                <p><strong>Date de prestation :</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
+                                <p><strong>Heure :</strong> {{ orderPreview.serviceTime }}</p>
+                                <p><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
+                                <p><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
+                            </div>
+                        </article>
+                    {% endif %}
                 </div>
 
-                <div class="mt-4 d-flex gap-3 flex-wrap">
-                    <button type="submit" class="btn btn-success">
-                        Continuer la commande
-                    </button>
+                <aside class="order-entry__sidebar">
+                    <article class="order-entry__summary">
+                        <div class="order-entry__eyebrow">Budget</div>
+                        <h2 class="order-entry__summary-title">Recapitulatif</h2>
 
-                    <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-secondary">
-                        Retour au detail
-                    </a>
-                </div>
+                        <div class="order-entry__summary-row">
+                            <span>Menu ({{ previewPeople }} pers.)</span>
+                            <strong>{{ (previewSubtotal / 100)|number_format(2, ',', ' ') }} €</strong>
+                        </div>
 
-                {{ form_end(orderForm) }}
+                        <div class="order-entry__summary-row {{ discountActive ? 'order-entry__summary-row--discount' : '' }}">
+                            <span>Remise</span>
+                            <strong>{{ ((previewDiscount * -1) / 100)|number_format(2, ',', ' ') }} €</strong>
+                        </div>
+
+                        <div class="order-entry__summary-row">
+                            <span>Livraison</span>
+                            <strong>{{ (previewDelivery / 100)|number_format(2, ',', ' ') }} €</strong>
+                        </div>
+
+                        <div class="order-entry__summary-divider"></div>
+
+                        <div class="order-entry__summary-total">
+                            <span>Total</span>
+                            <strong>{{ (previewTotal / 100)|number_format(2, ',', ' ') }} €</strong>
+                        </div>
+
+                        <div class="order-entry__summary-actions">
+                            <button type="submit" form="order-entry-form" class="btn btn-primary btn-lg">
+                                Continuer la commande
+                            </button>
+                            <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-primary btn-lg">
+                                Retour au detail
+                            </a>
+                        </div>
+                    </article>
+                </aside>
             </div>
         </div>
-
-        {% if orderPreview is not null %}
-            <div class="card shadow-sm border-0 mt-4">
-                <div class="card-body">
-                    <h2 class="h5 mb-3">Recapitulatif temporaire</h2>
-
-                    <p class="mb-2"><strong>Client :</strong> {{ app.user.firstName }} {{ app.user.lastName }}</p>
-                    <p class="mb-2"><strong>Email :</strong> {{ app.user.email }}</p>
-                    <p class="mb-2"><strong>Telephone :</strong> {{ orderPreview.phone }}</p>
-                    <p class="mb-2"><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
-                    <p class="mb-2"><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
-                    <p class="mb-2"><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
-                    <p class="mb-2"><strong>Date de prestation:</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
-                    <p class="mb-2"><strong>Heure de livraison :</strong> {{ orderPreview.serviceTime }}</p>
-                    <p class="mb-2"><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
-                    <p class="mb-2"><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
-
-
-                    <hr>
-
-                    <p class="mb-2">
-                        <strong>Prix unitaire menu :</strong>
-                        {{ (orderPreview.menuBasePrice / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-
-                    <p class="mb-2">
-                        <strong>Sous-total menu :</strong>
-                        {{ (orderPreview.menuSubtotal / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-
-                    <p class="mb-2">
-                        <strong>Remise :</strong>
-                        -{{ (orderPreview.discountAmount / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-
-                    <p class="mb-0">
-                        <strong>Total avant livraison :</strong>
-                        {{ (orderPreview.menuPrice / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-                    <p class="mb-0">
-                        <strong> Distance de livraison:</strong>
-                        {{ orderPreview.distancekm }} km
-                    </p>
-
-
-                    <p class="mb-0">
-                        <strong> Prix livraison:</strong>
-                        {{ (orderPreview.deliveryPrice / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-
-                    <p class="mb-0">
-                        <strong>Total de la commande:</strong>
-                        {{ (orderPreview.totalPrice / 100)|number_format(2, ',', ' ') }} €
-                    </p>
-
-
-                </div>
-            </div>
-        {% endif %}
     </section>
+
+    <script>
+        (() => {
+            const loanToggle = document.getElementById('{{ orderForm.needEquipmentLoan.vars.id }}');
+            const loanFields = document.querySelector('[data-order-loan-fields]');
+
+            if (!loanToggle || !loanFields) {
+                return;
+            }
+
+            const syncLoanFieldsVisibility = () => {
+                loanFields.classList.toggle('d-none', !loanToggle.checked);
+            };
+
+            syncLoanFieldsVisibility();
+            loanToggle.addEventListener('change', syncLoanFieldsVisibility);
+        })();
+    </script>
 {% endblock %}
