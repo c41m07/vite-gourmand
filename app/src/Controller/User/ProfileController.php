@@ -27,21 +27,65 @@ final class ProfileController extends AbstractController
     public function index(Request $request): Response
     {
         $activeTab = $request->query->get('tab', 'orders');
+        $orderStatusFilter = (string) $request->query->get('status', 'all');
         if (!in_array($activeTab, ['orders', 'profile', 'reviews'], true)) {
             $activeTab = 'orders';
         }
 
         $orders = [];
+        $orderStatusFilters = [
+            'all' => [
+                'label' => 'Toutes',
+                'count' => 0,
+            ],
+        ];
         $reviews = [];
         $user = $this->getUser();
         if ($user instanceof User) {
-            $orders = $user->getCustomerOrders();
+            $orders = $user->getCustomerOrders()->toArray();
+            usort($orders, static function (CustomerOrder $left, CustomerOrder $right): int {
+                $leftOrderedAt = $left->getOrderedAt()?->getTimestamp() ?? 0;
+                $rightOrderedAt = $right->getOrderedAt()?->getTimestamp() ?? 0;
+
+                if ($leftOrderedAt === $rightOrderedAt) {
+                    return ($right->getId() ?? 0) <=> ($left->getId() ?? 0);
+                }
+
+                return $rightOrderedAt <=> $leftOrderedAt;
+            });
+
+            $orderStatusFilters['all']['count'] = count($orders);
+
+            foreach ($orders as $order) {
+                $status = $this->resolveCurrentOrderStatus($order);
+
+                if (!isset($orderStatusFilters[$status['code']])) {
+                    $orderStatusFilters[$status['code']] = [
+                        'label' => $status['label'],
+                        'count' => 0,
+                    ];
+                }
+
+                $orderStatusFilters[$status['code']]['count']++;
+            }
+
+            if ($orderStatusFilter !== 'all' && isset($orderStatusFilters[$orderStatusFilter])) {
+                $orders = array_values(array_filter(
+                    $orders,
+                    fn (CustomerOrder $order): bool => $this->resolveCurrentOrderStatus($order)['code'] === $orderStatusFilter
+                ));
+            } else {
+                $orderStatusFilter = 'all';
+            }
+
             $reviews = $user->getReviews();
         }
 
         return $this->render('user/account.html.twig', [
             'activeTab' => $activeTab,
             'orders' => $orders,
+            'orderStatusFilter' => $orderStatusFilter,
+            'orderStatusFilters' => $orderStatusFilters,
             'reviews' => $reviews,
         ]);
     }
@@ -120,6 +164,25 @@ final class ProfileController extends AbstractController
         ]);
     }
 
+    /**
+     * @return array{code: string, label: string}
+     */
+    private function resolveCurrentOrderStatus(CustomerOrder $order): array
+    {
+        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
+        if (!$lastHistory instanceof CustomerOrderStatusHistory || $lastHistory->getOrderStatus() === null) {
+            return [
+                'code' => 'unknown',
+                'label' => 'En cours',
+            ];
+        }
+
+        return [
+            'code' => $lastHistory->getOrderStatus()->getCode(),
+            'label' => $lastHistory->getOrderStatus()->getLabel(),
+        ];
+    }
+
     #[Route('/user/order/{id}', name: 'app_user_order_show', methods: ['GET'])]
     public function showOrder(CustomerOrder $order): Response
     {
@@ -127,7 +190,7 @@ final class ProfileController extends AbstractController
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser() !== $user) {
+        if ($order->getUser()?->getId() !== $user->getId()) {
             throw $this->createNotFoundException();
         }
 
@@ -144,12 +207,14 @@ final class ProfileController extends AbstractController
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser() !== $user) {
+        if ($order->getUser()?->getId() !== $user->getId()) {
             throw $this->createNotFoundException();
         }
 
-        if (!$this->isCsrfTokenValid('cancel_order_' . $order->getid(), $request->request->get('_token'))) {
-            $this->addFlash('error', 'Une erreur est survenue lors de la tentative de suppression de la commande.');
+        if (!$this->isCsrfTokenValid('cancel_order_' . $order->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la tentative d annulation de la commande.');
+
+            return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
         }
 
 
@@ -189,7 +254,7 @@ final class ProfileController extends AbstractController
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser() !== $user) {
+        if ($order->getUser()?->getId() !== $user->getId()) {
             throw $this->createNotFoundException();
         }
         $lastHistory = $order->getCustomerOrderStatusHistories()->last();

@@ -1,6 +1,20 @@
 {% set ordersCount = orders|length %}
 <h2 class="account-section-title">Mes commandes ({{ ordersCount }})</h2>
 
+{% if orderStatusFilters is defined and orderStatusFilters|length > 1 %}
+    <nav class="account-filters" aria-label="Filtrer les commandes par statut">
+        {% for statusCode, statusFilter in orderStatusFilters %}
+            <a
+                class="account-filter {{ orderStatusFilter == statusCode ? 'is-active' : '' }}"
+                href="{{ path('app_user_profile', { tab: 'orders', status: statusCode }) }}"
+            >
+                <span>{{ statusFilter.label }}</span>
+                <span class="account-filter__count">{{ statusFilter.count }}</span>
+            </a>
+        {% endfor %}
+    </nav>
+{% endif %}
+
 {% if ordersCount == 0 %}
     <div class="account-card account-empty">
         <p class="mb-3">Aucune commande pour le moment.</p>

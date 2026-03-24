@@ -59,6 +59,56 @@
     font-size: 1.2rem;
 }
 
+.account-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+}
+
+.account-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .55rem .9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .88);
+    border: 1px solid rgba(15, 20, 17, 0.08);
+    color: $dark;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .9rem;
+    transition: border-color .2s ease, color .2s ease, background-color .2s ease;
+}
+
+.account-filter:hover,
+.account-filter:focus-visible {
+    color: $primary;
+    border-color: rgba($primary, .28);
+}
+
+.account-filter.is-active {
+    color: $primary;
+    background: rgba($primary, .08);
+    border-color: rgba($primary, .24);
+}
+
+.account-filter__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.8rem;
+    padding: .15rem .45rem;
+    border-radius: 999px;
+    background: rgba(15, 20, 17, 0.08);
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.account-filter.is-active .account-filter__count {
+    background: rgba($primary, .14);
+}
+
 .account-card {
     background: $light;
     border-radius: 16px;

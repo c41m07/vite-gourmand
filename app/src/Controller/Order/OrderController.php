@@ -32,7 +32,7 @@ final class OrderController extends AbstractController
     #[Route('/new/{id}', name: '_new', methods: ['GET', 'POST'])]
     public function new(Request                       $request,
                         Menu                          $menu,
-                        EntityManagerInterface        $entityManager,
+                        EntityManagerInterface        $em,
                         OrderStatusRepository         $orderStatusRepository,
                         EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
                         MailerInterface               $mailer,
@@ -65,8 +65,8 @@ final class OrderController extends AbstractController
         if ($form->isSubmitted()) {
             $data = $form->getData();
             $peopleCount = (int)($data['peopleCount'] ?? 0);
-            $minpeople = (int)($menu->getMinPeople() ?? 0);
-            $stock = (int)($menu->getStock() ?? 0);
+            $minpeople = (int)$menu->getMinPeople();
+            $stock = (int)$menu->getStock();
             $needEquipmentLoan = (bool)$form->get('needEquipmentLoan')->getData();
 
             if ($peopleCount < $minpeople || $peopleCount > $stock) {
@@ -175,12 +175,12 @@ final class OrderController extends AbstractController
                     ->setComment('Commande creee depuis le formulaire client.');
 
                 if ($equipmentLoan !== null) {
-                    $entityManager->persist($equipmentLoan);
+                    $em->persist($equipmentLoan);
                 }
-                $entityManager->persist($order);
-                $entityManager->persist($orderMenu);
-                $entityManager->persist($statushistory);
-                $entityManager->flush();
+                $em->persist($order);
+                $em->persist($orderMenu);
+                $em->persist($statushistory);
+                $em->flush();
                 $mailer->send($factory->createOrderConfirmationEmail($order, (string)$menu->getTitle()));
                 $this->addFlash('success', 'Votre commande a bien ete enregistree. Nous vous remercions de votre confiance.');
                 return $this->redirectToRoute('app_user_profile', ['tab' => 'orders']);
@@ -192,7 +192,5 @@ final class OrderController extends AbstractController
             'orderForm' => $form,
             'orderPreview' => $orderPreview,
         ]);
-
-
     }
 }

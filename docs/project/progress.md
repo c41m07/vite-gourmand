@@ -1,5 +1,8 @@
 # Avancement
 
+Etat verifie sur le code et les tests le 2026-03-24.
+Les cases cochees correspondent a des fonctionnalites visibles dans le repo, pas seulement a des intentions ou a des maquettes.
+
 ## Sprint 0
 
 - [x] Repo GitHub public + branches main/develop + convention feature/
@@ -56,24 +59,24 @@
 - [x] Refactor envoi email : extraction `EmailFactory` pour Register + Contact
 - [x] Email contact : template HTML complet et lisible (resume + message)
 - [x] Connexion / Deconnexion
-- [ ] Mot de passe oublie (ResetPasswordBundle)
+- [x] Mot de passe oublie (ResetPasswordBundle)
 - [x] Page Profil utilisateur (affichage infos)
 
 ## Sprint 6
 
-- [ ] Formulaire commande (pre-rempli si connecte)
-- [ ] Pre-selection menu depuis detail menu
-- [ ] Calcul livraison (Bordeaux=0 sinon 5 EUR + 0,59 EUR/km)
-- [ ] Validation nb personnes >= min menu
-- [ ] Reduction -10% si nb personnes >= min+5
-- [ ] Recap prix avant validation (menu + livraison + remise)
-- [ ] Creation commande + statut initial + historique statuts
-- [ ] Mail confirmation commande
+- [x] Formulaire commande (pre-rempli si connecte) - base fonctionnelle
+- [x] Pre-selection menu depuis detail menu
+- [x] Calcul livraison (Bordeaux=0 sinon 5 EUR + 0,59 EUR/km) - via saisie manuelle de la distance
+- [x] Validation nb personnes >= min menu
+- [x] Reduction -10% si nb personnes >= min+5
+- [ ] Recap prix avant validation (menu + livraison + remise) - recap visuel present, confirmation metier a fiabiliser
+- [x] Creation commande + statut initial + historique statuts
+- [x] Mail confirmation commande
 
 ## Sprint 7
 
-- [ ] Dashboard user : liste commandes
-- [ ] Detail commande : infos + historique statuts
+- [x] Dashboard user : liste commandes
+- [x] Detail commande : infos + historique statuts
 - [ ] Modifier commande si statut != accepte (menu non modifiable)
 - [ ] Annuler commande si statut != accepte
 - [ ] Mail avis a commande "terminee" (lien + instructions)
@@ -81,7 +84,7 @@
 
 ## Sprint 8
 
-- [ ] Back-office employe : acces + navigation
+- [x] Back-office employe : acces + navigation (dashboard)
 - [ ] CRUD Menus + stock
 - [ ] CRUD Plats + liaison menus (MenuDish)
 - [ ] CRUD Horaires (OpeningHour)
@@ -93,7 +96,7 @@
 
 ## Sprint 9
 
-- [ ] Admin : acces + navigation
+- [x] Admin : acces + navigation (dashboard)
 - [ ] Admin : creer employe + mail "compte cree" sans mdp
 - [ ] Admin : desactiver employe
 - [ ] MongoDB : modele documents stats
