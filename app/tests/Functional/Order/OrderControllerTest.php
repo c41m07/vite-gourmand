@@ -214,7 +214,7 @@ final class OrderControllerTest extends WebTestCase
         $this->client->loginUser($user);
 
         $crawler = $this->client->request('GET', '/order/new/' . $this->menuId);
-        $form = $crawler->selectButton('Continuer la commande')->form([
+        $form = $crawler->filter('form#order-entry-form')->form([
             'order_form[phone]' => '0611223344',
             'order_form[deliveryAddress]' => '15 quai des Tests',
             'order_form[deliveryCity]' => 'Merignac',

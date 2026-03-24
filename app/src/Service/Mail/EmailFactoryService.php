@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 
 
-final readonly class EmailFactory
+final readonly class EmailFactoryService
 {
     public function __construct(
         #[Autowire('%no_reply_address%')]
