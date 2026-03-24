@@ -5,7 +5,7 @@ namespace App\Controller\Security;
 use App\Entity\User;
 use App\Form\Security\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Service\Mail\EmailFactory;
+use App\Service\Mail\EmailFactoryService;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,13 +21,14 @@ class RegisterController extends AbstractController
 {
     #[Route(path: '/register', name: 'app_register')]
     public function register(
-        Request $request,
+        Request                     $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $entityManager,
-        MailerInterface $mailer,
-        UserRepository $userRepository,
-        EmailFactory $emailFactory,
-    ): Response {
+        EntityManagerInterface      $entityManager,
+        MailerInterface             $mailer,
+        UserRepository              $userRepository,
+        EmailFactoryService         $emailFactory,
+    ): Response
+    {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
@@ -47,7 +48,7 @@ class RegisterController extends AbstractController
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
-                (string) $form->get('plainPassword')->getData()
+                (string)$form->get('plainPassword')->getData()
             );
 
             $user->setPassword($hashedPassword);

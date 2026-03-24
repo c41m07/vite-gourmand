@@ -11,7 +11,8 @@ use App\Entity\User;
 use App\Form\Order\OrderFormType;
 use App\Repository\EquipmentLoanStatusRepository;
 use App\Repository\OrderStatusRepository;
-use App\Service\Mail\EmailFactory;
+use App\Service\Mail\EmailFactoryService;
+use App\Service\Order\OrderPricingService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +37,8 @@ final class OrderController extends AbstractController
                         OrderStatusRepository         $orderStatusRepository,
                         EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
                         MailerInterface               $mailer,
-                        EmailFactory                  $factory): Response
+                        EmailFactoryService           $factory,
+                        OrderPricingService           $orderPricingService): Response
     {
         if (!$menu->isActive()) {
             throw $this->createNotFoundException();
@@ -57,20 +59,17 @@ final class OrderController extends AbstractController
             'user' => $user,
             'menu' => $menu
         ]);
-
-
         $form->handleRequest($request);
-        $orderPreview = null;
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
             $peopleCount = (int)($data['peopleCount'] ?? 0);
-            $minpeople = (int)$menu->getMinPeople();
+            $minPeople = (int)$menu->getMinPeople();
             $stock = (int)$menu->getStock();
             $needEquipmentLoan = (bool)$form->get('needEquipmentLoan')->getData();
 
-            if ($peopleCount < $minpeople || $peopleCount > $stock) {
-                $form->get('peopleCount')->addError(new FormError(sprintf('Le nombre de personnes doit etre compris entre %d et %d', $minpeople,
+            if ($peopleCount < $minPeople || $peopleCount > $stock) {
+                $form->get('peopleCount')->addError(new FormError(sprintf('Le nombre de personnes doit etre compris entre %d et %d', $minPeople,
                     $stock)));
             }
 
@@ -92,23 +91,21 @@ final class OrderController extends AbstractController
             }
 
             if ($form->isValid()) {
-                $basePrice = (int)($menu->getBasePrice() ?? 0);
-                $menuSubtotal = $basePrice * $peopleCount;
-                $discountAmount = 0;
-                if ($peopleCount >= ($minpeople + 5)) {
-                    $discountAmount = (int)round($menuSubtotal * 0.10);
-                }
 
-                $menuPrice = $menuSubtotal - $discountAmount;
-                $deliveryCity = trim((string)($data['deliveryCity'] ?? ''));
-                $distancekm = (int)($data['distancekm'] ?? 0);
-                $isBordeaux = mb_strtolower($deliveryCity) === 'bordeaux';
-                $deliveryPrice = 0;
-                if (!$isBordeaux) {
-                    $deliveryPrice = 500 + ($distancekm * 59);
-                }
+                $pricing = $orderPricingService->calculate(
+                    $menu,
+                    $peopleCount,
+                    (string)($data['deliveryCity'] ?? ''),
+                    (int)($data['distancekm'] ?? 0),
+                    $needEquipmentLoan,
+                );
 
-                $totalPrice = $menuPrice + $deliveryPrice;
+                $basePrice = $pricing->basePrice;
+                $menuSubtotal = $pricing->menuSubtotal;
+                $discountAmount = $pricing->discountAmount;
+                $deliveryPrice = $pricing->deliveryPrice;
+                $totalPrice = $pricing->totalPrice;
+                $deliveryCity = $pricing->deliveryCity;
 
                 $pendingStatus = $orderStatusRepository->findOneBy(['code' => 'pending']);
                 if ($pendingStatus === null) {
@@ -190,7 +187,6 @@ final class OrderController extends AbstractController
         return $this->render('order/index.html.twig', [
             'menu' => $menu,
             'orderForm' => $form,
-            'orderPreview' => $orderPreview,
         ]);
     }
 }

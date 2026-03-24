@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ContactMessage;
 use App\Form\Contact\ContactFormType;
-use App\Service\Mail\EmailFactory;
+use App\Service\Mail\EmailFactoryService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     #[Route('/', name: '_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, EmailFactory $emailFactory): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, EmailFactoryService $emailFactory): Response
     {
         $contactMessage = new ContactMessage();
         $form = $this->createForm(ContactFormType::class, $contactMessage);
