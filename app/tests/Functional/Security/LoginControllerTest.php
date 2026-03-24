@@ -23,6 +23,11 @@ class LoginControllerTest extends WebTestCase
         $em = $container->get(EntityManagerInterface::class);
         $userRepository = $em->getRepository(User::class);
 
+        $em->getConnection()->executeStatement('DELETE FROM customer_order_status_history');
+        $em->getConnection()->executeStatement('DELETE FROM customer_order_menu');
+        $em->getConnection()->executeStatement('DELETE FROM customer_order');
+        $em->getConnection()->executeStatement('DELETE FROM equipment_loan');
+        $em->getConnection()->executeStatement('DELETE FROM review');
         $em->getConnection()->executeStatement('DELETE FROM reset_password_request');
 
         // Remove any existing users from the test database
@@ -89,6 +94,9 @@ class LoginControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert-danger', 'Identifiants invalides.');
 
         // Success - Login with valid credentials is allowed.
+        $this->client->request('GET', '/login');
+        self::assertResponseIsSuccessful();
+
         $this->client->submitForm('Se connecter', [
             '_username' => 'email@example.com',
             '_password' => $this->validPassword,
@@ -98,6 +106,42 @@ class LoginControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         self::assertSelectorNotExists('.alert-danger');
+    }
+
+    public function testInactiveUserCannotLogin(): void
+    {
+        /** @var EntityManagerInterface $em */
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = static::getContainer()->get('security.user_password_hasher');
+
+        $inactivePassword = self::generateTestPassword();
+        $inactiveUser = (new User())
+            ->setEmail('inactive@example.com')
+            ->setFirstName('Inactive')
+            ->setLastName('User')
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
+            ->setActive(false)
+            ->setRoles(['ROLE_USER']);
+        $inactiveUser->setPassword($passwordHasher->hashPassword($inactiveUser, $inactivePassword));
+
+        $em->persist($inactiveUser);
+        $em->flush();
+
+        $this->client->request('GET', '/login');
+        self::assertResponseIsSuccessful();
+
+        $this->client->submitForm('Se connecter', [
+            '_username' => 'inactive@example.com',
+            '_password' => $inactivePassword,
+        ]);
+
+        self::assertResponseRedirects('/login');
+
+        $this->client->followRedirect();
+
+        self::assertSelectorTextContains('.alert-danger', 'Votre compte est desactive.');
     }
 }
 

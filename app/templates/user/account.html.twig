@@ -24,7 +24,11 @@
                         <a class="btn btn-primary px-4" href="{{ path('app_login') }}">Se connecter</a>
                     </div>
                 {% elseif activeTab == 'orders' %}
-                    {% include 'user/components/_orders_panel.html.twig' with { orders: orders } %}
+                    {% include 'user/components/_orders_panel.html.twig' with {
+                        orders: orders,
+                        orderStatusFilter: orderStatusFilter,
+                        orderStatusFilters: orderStatusFilters
+                    } %}
                 {% elseif activeTab == 'reviews' %}
                     {% include 'user/components/_reviews_panel.html.twig' with { reviews: reviews } %}
                 {% else %}

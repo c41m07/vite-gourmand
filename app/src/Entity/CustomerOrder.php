@@ -37,6 +37,9 @@ class CustomerOrder
     #[ORM\Column(length: 255)]
     private ?string $deliveryPostalCode = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
+
     #[ORM\Column]
     private ?int $deliveryPrice = null;
 
@@ -167,6 +170,18 @@ class CustomerOrder
     public function setDeliveryPostalCode(string $deliveryPostalCode): static
     {
         $this->deliveryPostalCode = $deliveryPostalCode;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }

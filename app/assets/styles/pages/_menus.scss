@@ -9,6 +9,46 @@
     padding: 1.25rem;
 }
 
+.menu-card__labels {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.menu-card__label {
+    display: inline-flex;
+    align-items: center;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    background: rgba(33, 37, 41, .06);
+    color: #253238;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.menu-card__label--stock {
+    margin-left: auto;
+}
+
+.menu-card__label--success {
+    background: rgba(25, 135, 84, .12);
+    color: #146c43;
+}
+
+.menu-card__label--danger {
+    background: rgba(198, 78, 68, .12);
+    color: #b13b32;
+}
+
+.menu-card__actions {
+    display: grid;
+    gap: .75rem;
+}
+
+.menu-card__actions .btn {
+    width: 100%;
+}
+
 .menu-card__alert {
     border-radius: 14px;
     border: 1px solid transparent;

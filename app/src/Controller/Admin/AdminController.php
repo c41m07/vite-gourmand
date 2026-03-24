@@ -19,12 +19,13 @@ final class AdminController extends AbstractController
 {
     #[Route('', name: '_dashboard', methods: ['GET'])]
     public function dashboard(
-        Request $request,
+        Request                 $request,
         CustomerOrderRepository $customerOrderRepository,
-        MenuRepository $menuRepository,
-        ReviewRepository $reviewRepository,
-        UserRepository $userRepository
-    ): Response {
+        MenuRepository          $menuRepository,
+        ReviewRepository        $reviewRepository,
+        UserRepository          $userRepository
+    ): Response
+    {
         $activeTab = $request->query->get('tab', 'dashboard');
         if (!in_array($activeTab, ['dashboard', 'employees'], true)) {
             $activeTab = 'dashboard';
@@ -55,27 +56,27 @@ final class AdminController extends AbstractController
             if (!$lastHistory || !$lastHistory->getOrderStatus()) {
                 continue;
             }
-            $label = mb_strtolower($lastHistory->getOrderStatus()->getLabel() ?? '');
-            if (!in_array($label, ['terminée', 'terminee', 'livrée', 'livree'], true)) {
+            $code = $lastHistory->getOrderStatus()->getCode();
+            if (!in_array($code, ['completed', 'cancelled'], true)) {
                 $ordersInProgress++;
             }
         }
 
         $revenueTotal = 0;
         foreach ($orders as $order) {
-            $revenueTotal += (int) ($order->getTotalPrice() ?? 0);
+            $revenueTotal += (int)($order->getTotalPrice() ?? 0);
         }
 
         $avgRating = 0.0;
         if (count($reviews) > 0) {
             $ratingSum = 0;
             foreach ($reviews as $review) {
-                $ratingSum += (int) ($review->getRating() ?? 0);
+                $ratingSum += (int)($review->getRating() ?? 0);
             }
             $avgRating = $ratingSum / count($reviews);
         }
 
-        $activeMenus = count(array_filter($menus, static fn($menu): bool => (bool) $menu->isActive()));
+        $activeMenus = count(array_filter($menus, static fn($menu): bool => (bool)$menu->isActive()));
 
         return $this->render('admin/dashboard.html.twig', [
             'activeTab' => $activeTab,

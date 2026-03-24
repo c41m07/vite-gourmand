@@ -3,6 +3,7 @@
 namespace App\Service\Mail;
 
 use App\Entity\ContactMessage;
+use App\Entity\CustomerOrder;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -66,4 +67,20 @@ final readonly class EmailFactory
                 'resetToken' => $resetToken,
             ]);
     }
+
+    public function createOrderConfirmationEmail(CustomerOrder $customerOrder, string $menuTitle): TemplatedEmail
+    {
+        return new TemplatedEmail()
+            ->from($this->noreplyEmail)
+            ->to((string)$customerOrder->getUser()?->getEmail())
+            ->subject('Confirmation de votre commande sur ' . $this->appName)
+            ->htmlTemplate('emails/order_confirmation.html.twig')
+            ->context([
+                'appName' => $this->appName,
+                'order' => $customerOrder,
+                'menuTitle' => $menuTitle,
+                'firstName' => $customerOrder->getUser()?->getFirstName(),
+            ]);
+    }
+
 }
