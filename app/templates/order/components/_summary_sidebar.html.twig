@@ -1,0 +1,35 @@
+<article class="order-entry__summary">
+    <div class="order-entry__eyebrow">Budget</div>
+    <h2 class="order-entry__summary-title">Récapitulatif</h2>
+
+    <div class="order-entry__summary-row">
+        <span>Menu (<span data-order-preview-target="summaryPeople">{{ preview_people }}</span> pers.)</span>
+        <strong data-order-preview-target="summarySubtotal">{{ preview_subtotal|price_cents }}</strong>
+    </div>
+
+    <div class="order-entry__summary-row {{ discount_active ? 'order-entry__summary-row--discount' : '' }}">
+        <span>Remise</span>
+        <strong data-order-preview-target="summaryDiscount">{{ (preview_discount * - 1)|price_cents }}</strong>
+    </div>
+
+    <div class="order-entry__summary-row">
+        <span>Livraison</span>
+        <strong data-order-preview-target="summaryDelivery">{{ preview_delivery|price_cents }}</strong>
+    </div>
+
+    <div class="order-entry__summary-divider"></div>
+
+    <div class="order-entry__summary-total">
+        <span>Total</span>
+        <strong data-order-preview-target="summaryTotal">{{ preview_total|price_cents }}</strong>
+    </div>
+
+    <div class="order-entry__summary-actions">
+        <button type="submit" form="order-entry-form" class="btn btn-primary btn-lg">
+            Continuer la commande
+        </button>
+        <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn btn-outline-primary btn-lg">
+            Retour au détail
+        </a>
+    </div>
+</article>

@@ -15,7 +15,7 @@
                 <div class="alert alert-danger" role="alert">{{ message }}</div>
             {% endfor %}
 
-            {% include 'user/components/_tabs.html.twig' with { activeTab: activeTab } %}
+            {% include 'user/components/_tabs.html.twig' with {activeTab: activeTab} %}
 
             <div class="account-content">
                 {% if not app.user %}
@@ -30,7 +30,7 @@
                         orderStatusFilters: orderStatusFilters
                     } %}
                 {% elseif activeTab == 'reviews' %}
-                    {% include 'user/components/_reviews_panel.html.twig' with { reviews: reviews } %}
+                    {% include 'user/components/_reviews_panel.html.twig' with {reviews: reviews} %}
                 {% else %}
                     {% include 'user/components/_profile_panel.html.twig' %}
                 {% endif %}

@@ -25,7 +25,7 @@ class Review
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ['default' => false])]
     private ?bool $validated = null;
 
     #[ORM\Column]
@@ -146,6 +146,30 @@ class Review
         return $this->customerOrderMenus;
     }
 
+    public function getPrimaryOrderMenu(): ?CustomerOrderMenu
+    {
+        $orderMenu = $this->customerOrderMenus->first();
+
+        return $orderMenu instanceof CustomerOrderMenu ? $orderMenu : null;
+    }
+
+    public function getReviewedMenu(): ?Menu
+    {
+        return $this->getPrimaryOrderMenu()?->getMenu();
+    }
+
+    public function getReviewedMenuTitle(): string
+    {
+        return $this->getReviewedMenu()?->getTitle() ?? 'Menu';
+    }
+
+    public function getNormalizedRating(): int
+    {
+        $rating = (int) ($this->rating ?? 0);
+
+        return max(0, min(5, $rating));
+    }
+
     public function addCustomerOrderMenu(CustomerOrderMenu $customerOrderMenu): static
     {
         if (!$this->customerOrderMenus->contains($customerOrderMenu)) {
@@ -159,7 +183,6 @@ class Review
     public function removeCustomerOrderMenu(CustomerOrderMenu $customerOrderMenu): static
     {
         if ($this->customerOrderMenus->removeElement($customerOrderMenu)) {
-            // set the owning side to null (unless already changed)
             if ($customerOrderMenu->getReview() === $this) {
                 $customerOrderMenu->setReview(null);
             }

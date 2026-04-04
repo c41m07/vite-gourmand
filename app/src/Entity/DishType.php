@@ -67,7 +67,7 @@ class DishType
     public function removeDish(Dish $dish): static
     {
         if ($this->dishes->removeElement($dish)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($dish->getDishType() === $this) {
                 $dish->setDishType(null);
             }

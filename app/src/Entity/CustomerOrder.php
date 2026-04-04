@@ -278,6 +278,28 @@ class CustomerOrder
         return $this->customerOrderStatusHistories;
     }
 
+    public function getLatestStatusHistory(): ?CustomerOrderStatusHistory
+    {
+        $history = $this->customerOrderStatusHistories->last();
+
+        return $history instanceof CustomerOrderStatusHistory ? $history : null;
+    }
+
+    public function getCurrentStatusCode(): ?string
+    {
+        return $this->getLatestStatusHistory()?->getOrderStatus()?->getCode();
+    }
+
+    public function getCurrentStatusLabel(): string
+    {
+        return $this->getLatestStatusHistory()?->getOrderStatus()?->getLabel() ?? 'En cours';
+    }
+
+    public function isPending(): bool
+    {
+        return 'pending' === $this->getCurrentStatusCode();
+    }
+
     public function addCustomerOrderStatusHistory(CustomerOrderStatusHistory $customerOrderStatusHistory): static
     {
         if (!$this->customerOrderStatusHistories->contains($customerOrderStatusHistory)) {
@@ -291,7 +313,6 @@ class CustomerOrder
     public function removeCustomerOrderStatusHistory(CustomerOrderStatusHistory $customerOrderStatusHistory): static
     {
         if ($this->customerOrderStatusHistories->removeElement($customerOrderStatusHistory)) {
-            // set the owning side to null (unless already changed)
             if ($customerOrderStatusHistory->getCustomerOrder() === $this) {
                 $customerOrderStatusHistory->setCustomerOrder(null);
             }
@@ -310,11 +331,11 @@ class CustomerOrder
         $previousEquipmentLoan = $this->equipmentLoan;
         $this->equipmentLoan = $equipmentLoan;
 
-        if ($previousEquipmentLoan !== null && $previousEquipmentLoan->getCustomerOrder() === $this) {
+        if (null !== $previousEquipmentLoan && $previousEquipmentLoan->getCustomerOrder() === $this) {
             $previousEquipmentLoan->setCustomerOrder(null);
         }
 
-        if ($equipmentLoan !== null && $equipmentLoan->getCustomerOrder() !== $this) {
+        if (null !== $equipmentLoan && $equipmentLoan->getCustomerOrder() !== $this) {
             $equipmentLoan->setCustomerOrder($this);
         }
 
@@ -327,6 +348,38 @@ class CustomerOrder
     public function getCustomerOrderMenus(): Collection
     {
         return $this->customerOrderMenus;
+    }
+
+    public function getPrimaryOrderMenu(): ?CustomerOrderMenu
+    {
+        $orderMenu = $this->customerOrderMenus->first();
+
+        return $orderMenu instanceof CustomerOrderMenu ? $orderMenu : null;
+    }
+
+    public function getPrimaryMenu(): ?Menu
+    {
+        return $this->getPrimaryOrderMenu()?->getMenu();
+    }
+
+    public function getPrimaryMenuTitle(): string
+    {
+        return $this->getPrimaryMenu()?->getTitle() ?? 'Menu';
+    }
+
+    public function getDeliveryAddressLine(): ?string
+    {
+        if (null === $this->deliveryAddress || '' === trim($this->deliveryAddress)) {
+            return null;
+        }
+
+        $cityLine = trim(($this->deliveryPostalCode ?? '') . ' ' . ($this->deliveryCity ?? ''));
+        $parts = array_filter(
+            [$this->deliveryAddress, $cityLine],
+            static fn (?string $part): bool => null !== $part && '' !== trim($part)
+        );
+
+        return implode(', ', $parts);
     }
 
     public function addCustomerOrderMenu(CustomerOrderMenu $customerOrderMenu): static
@@ -342,7 +395,6 @@ class CustomerOrder
     public function removeCustomerOrderMenu(CustomerOrderMenu $customerOrderMenu): static
     {
         if ($this->customerOrderMenus->removeElement($customerOrderMenu)) {
-            // set the owning side to null (unless already changed)
             if ($customerOrderMenu->getCustomerOrder() === $this) {
                 $customerOrderMenu->setCustomerOrder(null);
             }

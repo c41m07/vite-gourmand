@@ -1,0 +1,36 @@
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.peopleCount, {attr: {'data-order-preview-target': 'peopleCountField'}}) }}
+        <div class="order-entry__hint">Minimum requis : {{ menu.minPeople }} personnes</div>
+        <div
+            class="order-entry__hint order-entry__hint--success{{ discount_active ? '' : ' d-none' }}"
+            data-order-preview-target="discountHint"
+        >
+            <i class="bi bi-check-circle me-1"></i>La remise de 10% est deja appliquee dans le recapitulatif.
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.phone) }}
+    </div>
+</div>
+
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.serviceDate) }}
+    </div>
+</div>
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.serviceTime) }}
+    </div>
+</div>
+
+<div class="col-12">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.distancekm, {attr: {'data-order-preview-target': 'distanceKmField'}}) }}
+        <div class="order-entry__hint">Estimation temporaire (TEMP) a renseigner uniquement pour les livraisons hors Bordeaux.</div>
+    </div>
+</div>

@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProfilEditFormType extends AbstractType
+class ProfileEditFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -22,8 +22,8 @@ class ProfilEditFormType extends AbstractType
                 'attr' => ['placeholder' => 'Votre nom'],
             ])
             ->add('firstName', TextType::class, [
-                'label' => 'Prenom',
-                'attr' => ['placeholder' => 'Votre prenom'],
+                'label' => 'Prénom',
+                'attr' => ['placeholder' => 'Votre prénom'],
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
@@ -38,7 +38,7 @@ class ProfilEditFormType extends AbstractType
             ])
             ->add('phone', TelType::class, [
                 'required' => false,
-                'label' => 'Telephone',
+                'label' => 'Téléphone',
                 'attr' => ['placeholder' => '06 00 00 00 00'],
             ])
             ->add('postalAddress', TextType::class, [
@@ -52,7 +52,7 @@ class ProfilEditFormType extends AbstractType
                 'required' => false,
                 'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'first_options' => ['label' => 'Nouveau mot de passe', 'attr' => ['placeholder' => 'Laisser vide pour ne pas changer le mot de passe']],
-                'second_options' => ['label' => 'Confirmer le nouveau mot de passe', 'attr' => ['placeholder' => 'doit être identique au nouveau mot de passe']],
+                'second_options' => ['label' => 'Confirmer le nouveau mot de passe', 'attr' => ['placeholder' => 'Doit être identique au nouveau mot de passe']],
             ]);
     }
 

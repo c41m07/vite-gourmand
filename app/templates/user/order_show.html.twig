@@ -3,11 +3,7 @@
 {% block title %}Commande CMD-{{ order.id }}{% endblock %}
 
 {% block body %}
-    {% set orderMenu = order.customerOrderMenus|first %}
-    {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
-    {% set currentStatusHistory = order.customerOrderStatusHistories|last %}
-    {% set currentStatus = currentStatusHistory and currentStatusHistory.orderStatus ? currentStatusHistory.orderStatus.label : 'En cours' %}
-    {% set currentStatusCode = currentStatusHistory and currentStatusHistory.orderStatus ? currentStatusHistory.orderStatus.code: null %}
+    {% set orderMenu = order.primaryOrderMenu %}
 
     <section class="container py-5">
         {% for message in app.flashes('success') %}
@@ -18,17 +14,17 @@
             <div class="alert alert-danger mb-4" role="alert">{{ message }}</div>
         {% endfor %}
 
-        <a href="{{ path('app_user_profile', { tab: 'orders' }) }}" class="btn btn-outline-secondary mb-4">
-            Retour a mes commandes
+        <a href="{{ path('app_user_profile', {tab: 'orders'}) }}" class="btn btn-outline-secondary mb-4">
+            Retour à mes commandes
         </a>
 
-        {% if currentStatusCode == 'pending' %}
+        {% if order.pending %}
             <div class="d-flex gap-3 flex-wrap mb-4">
-                <a href="{{ path('app_user_order_edit', { id: order.id }) }}" class="btn btn-outline-success">
+                <a href="{{ path('app_user_order_edit', {id: order.id}) }}" class="btn btn-outline-success">
                     Modifier
                 </a>
 
-                <form method="post" action="{{ path('app_user_order_cancel', { id: order.id }) }}">
+                <form method="post" action="{{ path('app_user_order_cancel', {id: order.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('cancel_order_' ~ order.id) }}">
                     <button type="submit" class="btn btn-outline-danger">
                         Annuler
@@ -40,21 +36,21 @@
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div>
                 <h1 class="mb-1">Commande CMD-{{ order.id }}</h1>
-                <p class="text-muted mb-0">{{ menuTitle }}</p>
+                <p class="text-muted mb-0">{{ order.primaryMenuTitle }}</p>
             </div>
 
-            <span class="badge text-bg-secondary fs-6">{{ currentStatus }}</span>
+            <span class="badge text-bg-secondary fs-6">{{ order.currentStatusLabel }}</span>
         </div>
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
-                <h2 class="h5 mb-3">Informations generales</h2>
+                <h2 class="h5 mb-3">Informations générales</h2>
 
                 <p class="mb-2"><strong>Date de prestation :</strong>
                     {{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}
                 </p>
 
-                <p class="mb-2"><strong>Heure souhaitee :</strong>
+                <p class="mb-2"><strong>Heure souhaitée :</strong>
                     {{ order.serviceTime ?: '-' }}
                 </p>
 
@@ -62,14 +58,12 @@
                     {{ order.peopleCount ?: '-' }}
                 </p>
 
-                <p class="mb-2"><strong>Telephone :</strong>
+                <p class="mb-2"><strong>Téléphone :</strong>
                     {{ order.phone ?: '-' }}
                 </p>
 
                 <p class="mb-0"><strong>Adresse :</strong>
-                    {{ order.deliveryAddress }},
-                    {{ order.deliveryPostalCode }}
-                    {{ order.deliveryCity }}
+                    {% include 'shared/order/_delivery_address.html.twig' with {order: order} only %}
                 </p>
             </div>
         </div>
@@ -81,17 +75,17 @@
                 {% if orderMenu and orderMenu.menu %}
                     <p class="mb-2"><strong>Menu :</strong> {{ orderMenu.menu.title }}</p>
 
-                    <p class="mb-2"><strong>Quantite :</strong> {{ orderMenu.quantity ?: '-' }}</p>
+                    <p class="mb-2"><strong>Quantité :</strong> {{ orderMenu.quantity ?: '-' }}</p>
 
                     <p class="mb-2"><strong>Prix unitaire :</strong>
-                        {{ ((orderMenu.unitPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                        {{ (orderMenu.unitPrice ?? 0)|price_cents }}
                     </p>
 
                     <p class="mb-0"><strong>Sous-total menu :</strong>
-                        {{ ((orderMenu.lineTotal ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                        {{ (orderMenu.lineTotal ?? 0)|price_cents }}
                     </p>
                 {% else %}
-                    <p class="mb-0 text-muted">Aucun menu associe a cette commande.</p>
+                    <p class="mb-0 text-muted">Aucun menu associé à cette commande.</p>
                 {% endif %}
             </div>
         </div>
@@ -101,15 +95,15 @@
                 <h2 class="h5 mb-3">Tarification</h2>
 
                 <p class="mb-2"><strong>Remise :</strong>
-                    {{ ((order.discountAmount ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                    {{ (order.discountAmount ?? 0)|price_cents }}
                 </p>
 
                 <p class="mb-2"><strong>Livraison :</strong>
-                    {{ ((order.deliveryPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                    {{ (order.deliveryPrice ?? 0)|price_cents }}
                 </p>
 
                 <p class="mb-0"><strong>Total :</strong>
-                    {{ ((order.totalPrice ?? 0) / 100)|number_format(2, ',', ' ') }} €
+                    {{ (order.totalPrice ?? 0)|price_cents }}
                 </p>
             </div>
         </div>
@@ -126,9 +120,9 @@
         {% if order.equipmentLoan %}
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
-                    <h2 class="h5 mb-3">Pret de materiel</h2>
+                    <h2 class="h5 mb-3">Prêt de matériel</h2>
 
-                    <p class="mb-2"><strong>Debut :</strong>
+                    <p class="mb-2"><strong>Début :</strong>
                         {{ order.equipmentLoan.loanStartAt ? order.equipmentLoan.loanStartAt|date('d/m/Y H:i') : '-' }}
                     </p>
 

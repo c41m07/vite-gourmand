@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 class Menu
@@ -52,7 +51,6 @@ class Menu
 
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
-
 
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Theme $theme = null;
@@ -263,7 +261,7 @@ class Menu
     public function removeMenuDish(MenuDish $menuDish): static
     {
         if ($this->menuDishes->removeElement($menuDish)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($menuDish->getMenu() === $this) {
                 $menuDish->setMenu(null);
             }
@@ -293,7 +291,7 @@ class Menu
     public function removeCustomerOrderMenu(CustomerOrderMenu $customerOrderMenu): static
     {
         if ($this->customerOrderMenus->removeElement($customerOrderMenu)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($customerOrderMenu->getMenu() === $this) {
                 $customerOrderMenu->setMenu(null);
             }

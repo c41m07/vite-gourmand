@@ -4,8 +4,7 @@ namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Tests\Support\GeneratesTestPasswords;
-use DateTime;
+use App\Tests\Support\GeneratesTestPasswordsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -13,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ResetPasswordControllerTest extends WebTestCase
 {
-    use GeneratesTestPasswords;
+    use GeneratesTestPasswordsTrait;
 
     private KernelBrowser $client;
     private EntityManagerInterface $em;
@@ -27,12 +26,10 @@ class ResetPasswordControllerTest extends WebTestCase
             $newPassword = self::generateTestPassword();
         }
 
-        /**@var UserPasswordHasherInterface $passwordHasher */
+        /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = static::getContainer()->get(UserPasswordHasherInterface::class);
 
-        $now = new DateTime();
-        // Create a test user
-
+        $now = new \DateTime();
         $user = new User()
             ->setEmail('me@exemple.fr')
             ->setFirstName('Albert')
@@ -47,36 +44,30 @@ class ResetPasswordControllerTest extends WebTestCase
         $this->em->persist($user);
         $this->em->flush();
 
-        // Test Request reset password page
         $this->client->request('GET', '/reset-password');
 
         self::assertResponseIsSuccessful();
-        self::assertPageTitleContains('Reset your password');
+        self::assertPageTitleContains('Réinitialiser votre mot de passe');
 
-        // Submit the reset password form and test email message is queued / sent
         $this->client->submitForm('Envoyer le lien de réinitialisation', [
             'reset_password_request_form[email]' => 'me@exemple.fr',
         ]);
-
 
         self::assertResponseRedirects('/reset-password/check-email');
 
         $emailMessage = self::getMailerMessage();
         self::assertEmailAddressContains($emailMessage, 'from', 'no-reply@vite-gourmand.test');
         self::assertEmailAddressContains($emailMessage, 'to', 'me@exemple.fr');
-        self::assertEmailHtmlBodyContains($emailMessage, 'This link will expire in');
-
+        self::assertEmailHtmlBodyContains($emailMessage, 'Ce lien expirera dans');
 
         self::assertResponseRedirects('/reset-password/check-email');
 
-        // Test check email landing page shows correct "expires at" time
         $crawler = $this->client->followRedirect();
 
-        self::assertPageTitleContains('Password Reset Email Sent');
-        self::assertStringContainsString('This link will expire in 1 heure', $crawler->html());
+        self::assertPageTitleContains('Email de réinitialisation envoyé');
+        self::assertStringContainsString('Ce lien expirera dans 1 heure', $crawler->html());
 
-        // Test the link sent in the email is valid
-        $emailHtml = (string)$emailMessage->getHtmlBody();
+        $emailHtml = (string) $emailMessage->getHtmlBody();
         preg_match('#href="([^"]*/reset-password/reset/[^"]+)"#', $emailHtml, $resetLink);
         self::assertArrayHasKey(1, $resetLink);
 
@@ -86,7 +77,6 @@ class ResetPasswordControllerTest extends WebTestCase
 
         $this->client->followRedirect();
 
-        // Test we can set a new password
         $this->client->submitForm('Confirmer', [
             'change_password_form[plainPassword][first]' => $newPassword,
             'change_password_form[plainPassword][second]' => $newPassword,
@@ -107,7 +97,6 @@ class ResetPasswordControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
 
-        // Ensure we have a clean database
         $container = static::getContainer();
 
         /** @var EntityManagerInterface $em */

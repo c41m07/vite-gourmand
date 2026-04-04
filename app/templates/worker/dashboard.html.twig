@@ -7,15 +7,15 @@
         <div class="container">
             <h1 class="worker-title">Espace Employé</h1>
 
-            {% include 'worker/components/_tabs.html.twig' with { activeTab: activeTab, pendingReviews: pendingReviews } %}
+            {% include 'worker/components/_tabs.html.twig' with {activeTab: activeTab, pendingReviews: pendingReviews} %}
 
             <div class="worker-content">
                 {% if activeTab == 'orders' %}
-                    {% include 'worker/components/_orders_panel.html.twig' with { orders: orders, orderStatuses: orderStatuses } %}
+                    {% include 'worker/components/_orders_panel.html.twig' with {orders: orders, orderStatuses: orderStatuses} %}
                 {% elseif activeTab == 'menus' %}
-                    {% include 'worker/components/_menus_panel.html.twig' with { menus: menus } %}
+                    {% include 'worker/components/_menus_panel.html.twig' with {menus: menus} %}
                 {% else %}
-                    {% include 'worker/components/_reviews_panel.html.twig' with { pendingReviews: pendingReviews, publishedReviews: publishedReviews } %}
+                    {% include 'worker/components/_reviews_panel.html.twig' with {pendingReviews: pendingReviews, publishedReviews: publishedReviews} %}
                 {% endif %}
             </div>
         </div>

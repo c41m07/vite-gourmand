@@ -32,7 +32,7 @@ final class OrderControllerTest extends WebTestCase
 
         $this->cleanupDatabase();
 
-        if ($this->entityManager->getRepository(OrderStatus::class)->findOneBy(['code' => 'pending']) === null) {
+        if (null === $this->entityManager->getRepository(OrderStatus::class)->findOneBy(['code' => 'pending'])) {
             $pendingStatus = (new OrderStatus())
                 ->setCode('pending')
                 ->setLabel('En attente');
@@ -40,7 +40,7 @@ final class OrderControllerTest extends WebTestCase
             $this->entityManager->persist($pendingStatus);
         }
 
-        if ($this->entityManager->getRepository(EquipmentLoanStatus::class)->findOneBy(['status' => 'Emprunte']) === null) {
+        if (null === $this->entityManager->getRepository(EquipmentLoanStatus::class)->findOneBy(['status' => 'Emprunte'])) {
             $equipmentLoanStatus = (new EquipmentLoanStatus())
                 ->setStatus('Emprunte');
 
@@ -62,7 +62,7 @@ final class OrderControllerTest extends WebTestCase
             ->setDescription('Description commande test')
             ->setMinPeople(4)
             ->setBasePrice(5200)
-            ->setConditionInfo('Commande 48h a l avance.')
+            ->setConditionInfo('Commande 48 h à l\'avance.')
             ->setStock(5)
             ->setActive(true)
             ->setCreatedAt($now)
@@ -160,8 +160,8 @@ final class OrderControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Commander Menu Commande Test');
-        self::assertSelectorTextContains('.card-body', 'Menu selectionne');
-        self::assertStringContainsString('Commande 48h a l avance.', (string) $this->client->getResponse()->getContent());
+        self::assertSelectorTextContains('.card-body', 'Menu sélectionné');
+        self::assertSelectorTextContains('.order-entry__conditions-list', 'Commande 48 h à l\'avance.');
     }
 
     public function testOrderPageRedirectsToMenuIndexWhenStockIsEmpty(): void
@@ -188,7 +188,7 @@ final class OrderControllerTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         self::assertPageTitleContains('Menus');
-        self::assertStringContainsString('Ce menu n est plus disponible a la commande.', $crawler->html());
+        self::assertStringContainsString('Ce menu n\'est plus disponible à la commande.', $crawler->html());
     }
 
     public function testAuthenticatedUserCanCreateOrderWithEquipmentLoan(): void

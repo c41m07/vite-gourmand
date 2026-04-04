@@ -146,7 +146,7 @@
 </head>
 <body class="email-body">
 <span class="email-preheader">
-    Votre commande {{ menuTitle }} a bien ete enregistree.
+    Votre commande {{ menuTitle }} a bien été enregistrée.
 </span>
 
 <table role="presentation" class="email-wrapper">
@@ -155,19 +155,19 @@
             <table role="presentation" class="email-container">
                 <tr>
                     <td class="email-hero">
-                        <h1 class="email-hero-title">Commande confirmee</h1>
-                        <p class="email-hero-sub">Merci, votre demande a bien ete prise en compte par {{ appName }}.</p>
+                        <h1 class="email-hero-title">Commande confirmée</h1>
+                        <p class="email-hero-sub">Merci, votre demande a bien été prise en compte par {{ appName }}.</p>
                     </td>
                 </tr>
                 <tr>
                     <td class="email-content">
                         <p class="email-text">Bonjour {{ firstName }},</p>
                         <p class="email-text">
-                            Votre commande a bien ete enregistree. Nous vous recontacterons si un complement d information est necessaire.
+                            Votre commande a bien été enregistrée. Nous vous recontacterons si un complément d'information est nécessaire.
                         </p>
 
                         <div class="email-panel">
-                            <h2 class="email-section-title">Recapitulatif</h2>
+                            <h2 class="email-section-title">Récapitulatif</h2>
                             <table role="presentation" class="email-meta">
                                 <tr class="email-meta-row">
                                     <td>Commande</td>
@@ -182,7 +182,7 @@
                                     <td>{{ order.serviceDate ? order.serviceDate|date('d/m/Y') : '-' }}</td>
                                 </tr>
                                 <tr class="email-meta-row">
-                                    <td>Heure souhaitee</td>
+                                    <td>Heure souhaitée</td>
                                     <td>{{ order.serviceTime ?: '-' }}</td>
                                 </tr>
                                 <tr class="email-meta-row">
@@ -203,7 +203,7 @@
                         <table role="presentation" class="email-action-table">
                             <tr>
                                 <td class="email-action-cell">
-                                    <a class="email-action-link" href="{{ url('app_user_profile', { tab: 'orders' }) }}">
+                                    <a class="email-action-link" href="{{ url('app_user_profile', {tab: 'orders'}) }}">
                                         Voir mes commandes
                                     </a>
                                 </td>

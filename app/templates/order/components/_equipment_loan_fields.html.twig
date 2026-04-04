@@ -1,0 +1,29 @@
+<div class="col-12">
+    <div class="order-entry__loan">
+        <div class="order-entry__subsection order-entry__subsection--tight">
+            <div>
+                <div class="order-entry__eyebrow">Service complémentaire</div>
+                <h3 class="order-entry__subsection-title">Prêt de matériel</h3>
+            </div>
+            <i class="bi bi-box2-heart order-entry__subsection-icon" aria-hidden="true"></i>
+        </div>
+
+        {{ form_row(orderForm.needEquipmentLoan, {attr: {'data-order-preview-target': 'needEquipmentLoanField'}}) }}
+
+        <div
+            class="row g-3 mt-1 d-none"
+            id="equipment-loan-fields"
+            data-order-preview-target="loanFields"
+        >
+            <div class="col-12 col-md-6">
+                {{ form_row(orderForm.equipmentLoanStartAt) }}
+            </div>
+            <div class="col-12 col-md-6">
+                {{ form_row(orderForm.equipmentLoanEndAt) }}
+            </div>
+            <div class="col-12">
+                {{ form_row(orderForm.equipmentLoanNote) }}
+            </div>
+        </div>
+    </div>
+</div>

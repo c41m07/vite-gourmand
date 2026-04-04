@@ -29,8 +29,9 @@ class ChangePasswordFormType extends AbstractType
                         new NotBlank(message: 'Merci de saisir un mot de passe'),
                         new Assert\Length(
                             min: 10,
-                            minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractére.',
-                            max: 4096),
+                            minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractère.',
+                            max: 4096
+                        ),
                         new Assert\Regex(
                             pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\/])[A-Za-z\d@$!%*?&\/]{10,}$/',
                             message: 'Votre mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
@@ -38,14 +39,12 @@ class ChangePasswordFormType extends AbstractType
                         new PasswordStrength(),
                         new NotCompromisedPassword(),
                     ],
-                    'label' => 'New password',
+                    'label' => 'Nouveau mot de passe',
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'label' => 'Confirmer le mot de passe',
                 ],
-                'invalid_message' => 'The password fields must match.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'mapped' => false,
             ]);
     }

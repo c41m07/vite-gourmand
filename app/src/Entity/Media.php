@@ -38,8 +38,6 @@ class Media
         $this->menus = new ArrayCollection();
     }
 
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -114,7 +112,7 @@ class Media
     public function removeMenu(Menu $menu): static
     {
         if ($this->menus->removeElement($menu)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($menu->getMedia() === $this) {
                 $menu->setMedia(null);
             }
@@ -122,5 +120,4 @@ class Media
 
         return $this;
     }
-
 }

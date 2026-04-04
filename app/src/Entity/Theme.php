@@ -67,7 +67,7 @@ class Theme
     public function removeMenu(Menu $menu): static
     {
         if ($this->menus->removeElement($menu)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($menu->getTheme() === $this) {
                 $menu->setTheme(null);
             }

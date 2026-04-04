@@ -120,7 +120,7 @@ class Dish
     public function removeMenuDish(MenuDish $menuDish): static
     {
         if ($this->menuDishes->removeElement($menuDish)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($menuDish->getDish() === $this) {
                 $menuDish->setDish(null);
             }
@@ -150,7 +150,7 @@ class Dish
     public function removeDishAllergen(DishAllergen $dishAllergen): static
     {
         if ($this->dishAllergens->removeElement($dishAllergen)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($dishAllergen->getDish() === $this) {
                 $dishAllergen->setDish(null);
             }

@@ -1,0 +1,24 @@
+<div class="col-12">
+    <div class="order-entry__subsection">
+        <div>
+            <div class="order-entry__eyebrow">Livraison</div>
+            <h3 class="order-entry__subsection-title">Adresse de prestation</h3>
+        </div>
+    </div>
+</div>
+
+<div class="col-12">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.deliveryAddress) }}
+    </div>
+</div>
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.deliveryPostalCode) }}
+    </div>
+</div>
+<div class="col-12 col-md-6">
+    <div class="order-entry__block">
+        {{ form_row(orderForm.deliveryCity, {attr: {'data-order-preview-target': 'deliveryCityField'}}) }}
+    </div>
+</div>

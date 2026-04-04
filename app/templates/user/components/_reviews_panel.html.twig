@@ -11,13 +11,9 @@
 {% else %}
     <div class="account-stack">
         {% for review in reviews %}
-            {% set reviewMenu = review.customerOrderMenus|first %}
-            {% set reviewMenuTitle = reviewMenu and reviewMenu.menu ? reviewMenu.menu.title : 'Menu' %}
-            {% set rating = review.rating > 5 ? 5 : review.rating %}
-
             <article class="account-card account-review">
                 <div class="account-review__header">
-                    <h3 class="account-review__title">{{ reviewMenuTitle }}</h3>
+                    <h3 class="account-review__title">{{ review.reviewedMenuTitle }}</h3>
                     <span class="account-review__status">
                         <i class="bi bi-check-circle"></i>
                         {{ review.validated ? 'Publié' : 'En attente' }}
@@ -25,13 +21,7 @@
                 </div>
 
                 <div class="account-review__stars">
-                    {% for i in 1..5 %}
-                        {% if i <= rating %}
-                            <i class="bi bi-star-fill"></i>
-                        {% else %}
-                            <i class="bi bi-star"></i>
-                        {% endif %}
-                    {% endfor %}
+                    {% include 'shared/review/_rating_stars.html.twig' with {rating: review.normalizedRating} only %}
                 </div>
 
                 <p class="account-review__text">
