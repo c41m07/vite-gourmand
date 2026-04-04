@@ -5,7 +5,7 @@ namespace App\Controller\Security;
 use App\Entity\User;
 use App\Form\Security\ChangePasswordFormType;
 use App\Form\Security\ResetPasswordRequestFormType;
-use App\Service\Mail\EmailFactory;
+use App\Service\Mail\EmailFactoryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,7 +35,7 @@ class ResetPasswordController extends AbstractController
      * Affiche et traite le formulaire de demande de réinitialisation.
      */
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator, EmailFactory $emailFactory): Response
+    public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator, EmailFactoryService $emailFactory): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -52,7 +52,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator, EmailFactory $emailFactory): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator, EmailFactoryService $emailFactory): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,

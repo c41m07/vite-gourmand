@@ -12,7 +12,7 @@ use App\Entity\OrderStatus;
 use App\Entity\User;
 use App\Repository\EquipmentLoanStatusRepository;
 use App\Repository\OrderStatusRepository;
-use App\Service\Mail\EmailFactory;
+use App\Service\Mail\EmailFactoryService;
 use App\Service\Order\OrderPricingCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormError;
@@ -27,7 +27,7 @@ final readonly class CreateOrderHandler
         private EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
         private OrderPricingCalculator $orderPricingCalculator,
         private MailerInterface $mailer,
-        private EmailFactory $emailFactory,
+        private EmailFactoryService $emailFactory,
     ) {
     }
 
