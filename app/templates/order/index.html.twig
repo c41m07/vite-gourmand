@@ -3,22 +3,29 @@
 {% block title %}Commander {{ menu.title }}{% endblock %}
 
 {% block body %}
-    {% set previewPeople = orderForm.peopleCount.vars.value ?: menu.minPeople %}
-    {% set previewSubtotal = menu.basePrice * previewPeople %}
-    {% set previewDiscount = previewPeople >= (menu.minPeople + 5) ? (previewSubtotal * 0.10)|round(0, 'common') : 0 %}
-    {% set previewDelivery = 0 %}
-    {% set previewTotal = previewSubtotal - previewDiscount + previewDelivery %}
+    {% set previewPeople = orderPreview is not null and orderPreview.peopleCount is defined ? orderPreview.peopleCount : menu.minPeople %}
+    {% set previewSubtotal = orderPreview is not null and orderPreview.menuSubtotal is defined ? orderPreview.menuSubtotal : (menu.basePrice * previewPeople) %}
+    {% set previewDiscount = orderPreview is not null and orderPreview.discountAmount is defined ? orderPreview.discountAmount : 0 %}
+    {% set previewDelivery = orderPreview is not null and orderPreview.deliveryPrice is defined ? orderPreview.deliveryPrice : 0 %}
+    {% set previewTotal = orderPreview is not null and orderPreview.totalPrice is defined ? orderPreview.totalPrice : (previewSubtotal - previewDiscount + previewDelivery) %}
+    {% set discountActive = previewDiscount > 0 %}
 
     {% include 'components/_hero.html.twig' with {
         title: 'Commander ' ~ menu.title,
         asset_url: menu.media ? menu.media.imgUrl : null,
-        subtitle: (menu.basePrice / 100)|number_format(2, ',', ' ') ~ '€ par personne'
+        subtitle: menu.basePrice|price_cents ~ ' par personne'
     } %}
 
-    <section class="order-entry py-5">
+    <section
+        class="order-entry py-5"
+        {{ stimulus_controller('order-preview', {
+            basePrice: menu.basePrice ?? 0,
+            minPeople: menu.minPeople ?? 0
+        }) }}
+    >
         <div class="container">
             <div class="order-entry__topbar">
-                <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="order-entry__back">
+                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="order-entry__back">
                     <i class="bi bi-arrow-left me-2"></i>Retour au menu
                 </a>
             </div>
@@ -27,12 +34,7 @@
                 <div class="alert alert-danger order-entry__flash" role="alert">{{ message }}</div>
             {% endfor %}
 
-            <div class="order-entry__layout"
-                {{ stimulus_controller('order-preview',{
-                    basePrice: menu.basePrice,
-                    minPeople: menu.minPeople,
-                    stock:menu.stock
-                }) }}>
+            <div class="order-entry__layout">
                 <div class="order-entry__main">
                     <article class="order-entry__panel order-entry__panel--menu">
                         <div class="card-body">
@@ -109,12 +111,13 @@
                         <div class="row g-4">
                             <div class="col-12 col-md-6">
                                 <div class="order-entry__block">
-                                    {{ form_row(orderForm.peopleCount,
-                                        { attr:
-                                            stimulus_target('order-preview','peopleCount').toArray()|merge(
-                                            stimulus_action('order-preview', 'refresh', 'input').toArray())
-                                        }) }}
+                                    {{ form_row(orderForm.peopleCount) }}
                                     <div class="order-entry__hint">Minimum requis : {{ menu.minPeople }} personnes</div>
+                                    {% if discountActive %}
+                                        <div class="order-entry__hint order-entry__hint--success">
+                                            <i class="bi bi-check-circle me-1"></i>La remise de 10% est deja appliquee dans le recapitulatif.
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -137,10 +140,7 @@
 
                             <div class="col-12">
                                 <div class="order-entry__block">
-                                    {{ form_row(orderForm.distancekm,{
-                                        attr: stimulus_target('order-preview','distanceKm').toArray()|merge(
-                                            stimulus_action('order-preview', 'refresh', 'input').toArray())
-                                    }) }}
+                                    {{ form_row(orderForm.distancekm) }}
                                     <div class="order-entry__hint">Estimation temporaire (TEMP) a renseigner uniquement pour les livraisons hors
                                         Bordeaux.
                                     </div>
@@ -168,10 +168,7 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="order-entry__block">
-                                    {{ form_row(orderForm.deliveryCity, {
-                                        attr: stimulus_target('order-preview', 'deliveryCity').toArray()|merge(
-                                            stimulus_action('order-preview', 'refresh', 'input').toArray())
-                                    }) }}
+                                    {{ form_row(orderForm.deliveryCity) }}
                                 </div>
                             </div>
 
@@ -185,27 +182,18 @@
                                         <i class="bi bi-box2-heart order-entry__subsection-icon" aria-hidden="true"></i>
                                     </div>
 
-                                    {{ form_row(orderForm.needEquipmentLoan, {
-                                        attr: stimulus_target('order-preview', 'needEquipmentLoan').toArray()|merge(
-                                            stimulus_action('order-preview', 'refresh', 'change').toArray())
-                                    }) }}
+                                    {{ form_row(orderForm.needEquipmentLoan) }}
 
                                     <div
                                         class="row g-3 mt-1 d-none"
                                         id="equipment-loan-fields"
-                                        {{ stimulus_target('order-preview','equipmentLoanField') }}
+                                        data-order-loan-fields
                                     >
                                         <div class="col-12 col-md-6">
-                                            {{ form_row(orderForm.equipmentLoanStartAt, {
-                                                attr: stimulus_target('order-preview', 'equipmentLoanStartAt').toArray()|merge(
-                                                    stimulus_action('order-preview', 'refresh', 'input').toArray())
-                                            }) }}
+                                            {{ form_row(orderForm.equipmentLoanStartAt) }}
                                         </div>
                                         <div class="col-12 col-md-6">
-                                            {{ form_row(orderForm.equipmentLoanEndAt, {
-                                                attr: stimulus_target('order-preview', 'equipmentLoanEndAt').toArray()|merge(
-                                                    stimulus_action('order-preview', 'refresh', 'input').toArray())
-                                            }) }}
+                                            {{ form_row(orderForm.equipmentLoanEndAt) }}
                                         </div>
                                         <div class="col-12">
                                             {{ form_row(orderForm.equipmentLoanNote) }}
@@ -240,8 +228,37 @@
                             </div>
                         </div>
 
+                        <div class="order-entry__actions">
+                            <button type="submit" class="btn btn-primary btn-lg visually-hidden">
+                                Continuer la commande
+                            </button>
+                        </div>
+
                         {{ form_end(orderForm) }}
                     </article>
+
+                    {% if orderPreview is not null %}
+                        <article class="order-entry__panel order-entry__panel--preview">
+                            <div class="order-entry__section-head">
+                                <div>
+                                    <div class="order-entry__eyebrow">Verification</div>
+                                    <h2 class="order-entry__section-title">Recapitulatif temporaire</h2>
+                                </div>
+                                <i class="bi bi-clipboard-check order-entry__section-icon" aria-hidden="true"></i>
+                            </div>
+
+                            <div class="order-entry__preview-grid">
+                                <p><strong>Telephone :</strong> {{ orderPreview.phone }}</p>
+                                <p><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
+                                <p><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
+                                <p><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
+                                <p><strong>Date de prestation :</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
+                                <p><strong>Heure :</strong> {{ orderPreview.serviceTime }}</p>
+                                <p><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
+                                <p><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
+                            </div>
+                        </article>
+                    {% endif %}
                 </div>
 
                 <aside class="order-entry__sidebar">
@@ -250,40 +267,30 @@
                         <h2 class="order-entry__summary-title">Recapitulatif</h2>
 
                         <div class="order-entry__summary-row">
-                            <span {{ stimulus_target('order-preview', 'summaryPeople') }}>Menu ({{ previewPeople }} pers.)</span>
-                            <strong {{ stimulus_target('order-preview', 'summarySubtotal') }}>
-                                {{ (previewSubtotal / 100)|number_format(2, ',', ' ') }} €
-                            </strong>
+                            <span>Menu ({{ previewPeople }} pers.)</span>
+                            <strong>{{ (previewSubtotal / 100)|number_format(2, ',', ' ') }} €</strong>
                         </div>
 
-                        <div class="order-entry__summary-row">
+                        <div class="order-entry__summary-row {{ discountActive ? 'order-entry__summary-row--discount' : '' }}">
                             <span>Remise</span>
-                            <strong {{ stimulus_target('order-preview','summaryDiscount') }}>
-                                {{ ((previewDiscount * -1) / 100)|number_format(2, ',', ' ') }}
-                                €</strong>
+                            <strong>{{ ((previewDiscount * -1) / 100)|number_format(2, ',', ' ') }} €</strong>
                         </div>
 
                         <div class="order-entry__summary-row">
                             <span>Livraison</span>
-                            <strong {{ stimulus_target('order-preview','deliveryPrice') }}>{{ (previewDelivery / 100)|number_format(2, ',', ' ') }}
-                                €</strong>
+                            <strong>{{ (previewDelivery / 100)|number_format(2, ',', ' ') }} €</strong>
                         </div>
-                        <div class="order-entry__summary-row">
-                            <span>Pret de materiel</span>
-                            <strong {{ stimulus_target('order-preview', 'summaryLoan') }}>Aucun</strong>
-                        </div>
+
                         <div class="order-entry__summary-divider"></div>
 
                         <div class="order-entry__summary-total">
                             <span>Total</span>
-                            <strong {{ stimulus_target('order-preview','summaryTotal') }}>{{ (previewTotal / 100)|number_format(2, ',', ' ') }}
-                                €</strong>
+                            <strong>{{ (previewTotal / 100)|number_format(2, ',', ' ') }} €</strong>
                         </div>
 
                         <div class="order-entry__summary-actions">
-                            <button type="submit" form="order-entry-form" class="btn btn-primary btn-lg"
-                                    disabled {{ stimulus_target('order-preview', 'submitButton') }}>
-                                Confirmer la commande
+                            <button type="submit" form="order-entry-form" class="btn btn-primary btn-lg">
+                                Continuer la commande
                             </button>
                             <a href="{{ path('app_menu_show', { id: menu.id }) }}" class="btn btn-outline-primary btn-lg">
                                 Retour au detail
@@ -292,8 +299,6 @@
                     </article>
                 </aside>
             </div>
-
-
         </div>
     </section>
 

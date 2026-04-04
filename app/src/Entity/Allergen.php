@@ -67,7 +67,7 @@ class Allergen
     public function removeDishAllergen(DishAllergen $dishAllergen): static
     {
         if ($this->dishAllergens->removeElement($dishAllergen)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($dishAllergen->getAllergen() === $this) {
                 $dishAllergen->setAllergen(null);
             }

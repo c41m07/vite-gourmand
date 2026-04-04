@@ -9,7 +9,7 @@ use App\Entity\Media;
 use App\Entity\Menu;
 use App\Entity\OrderStatus;
 use App\Entity\User;
-use App\Tests\Support\GeneratesTestPasswords;
+use App\Tests\Support\GeneratesTestPasswordsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -17,7 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfileControllerTest extends WebTestCase
 {
-    use GeneratesTestPasswords;
+    use GeneratesTestPasswordsTrait;
 
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;
@@ -129,8 +129,8 @@ class ProfileControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Modifier mon profil');
-        self::assertSelectorExists('form[name="profil_edit_form"]');
-        self::assertSelectorExists('#profil_edit_form_currentPassword');
+        self::assertSelectorExists('form[name="profile_edit_form"]');
+        self::assertSelectorExists('#profile_edit_form_currentPassword');
     }
 
     public function testCancelOrderWithInvalidCsrfDoesNotCancelOrder(): void
@@ -160,7 +160,7 @@ class ProfileControllerTest extends WebTestCase
         self::assertResponseRedirects('/user/order/' . $order->getId());
 
         $this->client->followRedirect();
-        self::assertSelectorTextContains('.alert-danger', 'Une erreur est survenue lors de la tentative d annulation de la commande.');
+        self::assertSelectorTextContains('.alert-danger', 'Une erreur est survenue lors de la tentative d\'annulation de la commande.');
 
         $this->entityManager->clear();
 
@@ -228,7 +228,7 @@ class ProfileControllerTest extends WebTestCase
         string $firstName,
         string $lastName,
         string $plainPassword,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): User {
         $user = (new User())
             ->setEmail($email)
@@ -253,7 +253,7 @@ class ProfileControllerTest extends WebTestCase
             ->setLabel('En attente');
         $cancelledStatus = (new OrderStatus())
             ->setCode('cancelled')
-            ->setLabel('Annulee');
+            ->setLabel('Annulée');
 
         $media = (new Media())
             ->setImgUrl('/build/images/test-profile-order.jpg')
@@ -266,7 +266,7 @@ class ProfileControllerTest extends WebTestCase
             ->setDescription('Description commande profil')
             ->setMinPeople(4)
             ->setBasePrice(5200)
-            ->setConditionInfo('Commande 48h a l avance.')
+            ->setConditionInfo('Commande 48 h à l\'avance.')
             ->setStock(5)
             ->setActive(true)
             ->setCreatedAt($now)
@@ -301,7 +301,7 @@ class ProfileControllerTest extends WebTestCase
             ->setOrderStatus($pendingStatus)
             ->setChangedByUser($user)
             ->setChangedAt(clone $now)
-            ->setComment('Commande creee pour le test.');
+            ->setComment('Commande créée pour le test.');
 
         $this->entityManager->persist($pendingStatus);
         $this->entityManager->persist($cancelledStatus);
@@ -314,4 +314,3 @@ class ProfileControllerTest extends WebTestCase
         return $order;
     }
 }
-

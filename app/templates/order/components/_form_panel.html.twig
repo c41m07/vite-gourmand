@@ -1,0 +1,50 @@
+<article class="order-entry__panel">
+    <div class="order-entry__section-head">
+        <div>
+            <div class="order-entry__eyebrow">Configuration</div>
+            <h2 class="order-entry__section-title">Votre commande</h2>
+        </div>
+        <i class="bi bi-basket2 order-entry__section-icon" aria-hidden="true"></i>
+    </div>
+
+    {{ form_start(orderForm, {attr: {
+        class: 'order-entry__form',
+        id: 'order-entry-form',
+        'data-order-preview-target': 'form',
+        'data-action': 'input->order-preview#sync change->order-preview#sync'
+    }}) }}
+
+    <div class="row g-4">
+        {% include 'order/components/_form_primary_fields.html.twig' with {
+            orderForm: orderForm,
+            menu: menu,
+            discount_active: discount_active
+        } only %}
+
+        {% include 'order/components/_delivery_fields.html.twig' with {
+            orderForm: orderForm
+        } only %}
+
+        {% include 'order/components/_equipment_loan_fields.html.twig' with {
+            orderForm: orderForm
+        } only %}
+
+        <div class="col-12">
+            <div class="order-entry__block">
+                {{ form_row(orderForm.note) }}
+            </div>
+        </div>
+
+        {% include 'order/components/_conditions.html.twig' with {
+            menu: menu
+        } only %}
+    </div>
+
+    <div class="order-entry__actions">
+        <button type="submit" class="btn btn-primary btn-lg visually-hidden">
+            Continuer la commande
+        </button>
+    </div>
+
+    {{ form_end(orderForm) }}
+</article>

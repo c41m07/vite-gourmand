@@ -7,35 +7,35 @@
             Les champs marqués <span class="text-danger fw-bold" aria-hidden="true">*</span>
             sont obligatoires.
         </p>
-        {{ form_start(contactForm, { attr: { class: 'contact-form__form' } }) }}
+        {{ form_start(contactForm, {attr: {class: 'contact-form__form'}}) }}
         <div class="row g-3">
             <div class="col-12 col-md-6">
                 <label for="{{ contactForm.lastName.vars.id }}" class="form-label small">Nom <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
-                {{ form_widget(contactForm.lastName, { attr: { class: 'form-control border border-dark border-1' } }) }}
+                {{ form_widget(contactForm.lastName, {attr: {class: 'form-control border border-dark border-1'}}) }}
                 {{ form_errors(contactForm.lastName) }}
             </div>
 
             <div class="col-12 col-md-6">
                 <label for="{{ contactForm.firstName.vars.id }}" class="form-label small">Prénom <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
-                {{ form_widget(contactForm.firstName, { attr: { class: 'form-control border border-dark border-1' } }) }}
+                {{ form_widget(contactForm.firstName, {attr: {class: 'form-control border border-dark border-1'}}) }}
                 {{ form_errors(contactForm.firstName) }}
             </div>
 
             <div class="col-12">
                 <label for="{{ contactForm.email.vars.id }}" class="form-label small">Email <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
-                {{ form_widget(contactForm.email, { attr: { class: 'form-control border border-dark border-1' } }) }}
+                {{ form_widget(contactForm.email, {attr: {class: 'form-control border border-dark border-1'}}) }}
                 {{ form_errors(contactForm.email) }}
             </div>
 
             <div class="col-12">
                 <label for="{{ contactForm.subject.vars.id }}" class="form-label small">Sujet <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
-                {{ form_widget(contactForm.subject, { attr: { class: 'form-control border border-dark border-1' } }) }}
+                {{ form_widget(contactForm.subject, {attr: {class: 'form-control border border-dark border-1'}}) }}
                 {{ form_errors(contactForm.subject) }}
             </div>
 
             <div class="col-12">
                 <label for="{{ contactForm.message.vars.id }}" class="form-label small">Message <span class="text-danger fw-bold" aria-hidden="true">*</span><span class="visually-hidden"> champ obligatoire</span></label>
-                {{ form_widget(contactForm.message, { attr: { class: 'form-control border border-dark border-1', rows: 6 } }) }}
+                {{ form_widget(contactForm.message, {attr: {class: 'form-control border border-dark border-1', rows: 6}}) }}
                 {{ form_errors(contactForm.message) }}
             </div>
 

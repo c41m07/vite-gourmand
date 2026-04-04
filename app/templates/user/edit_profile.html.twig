@@ -26,13 +26,13 @@
         <div class="container">
             <h1 class="account-title">Modifier mon profil</h1>
 
-            {% include 'user/components/_tabs.html.twig' with { activeTab: 'profile' } %}
+            {% include 'user/components/_tabs.html.twig' with {activeTab: 'profile'} %}
 
             <div class="account-content">
                 <div class="account-profile">
                     <div class="account-profile__header">
                         <h2 class="account-section-title mb-0">Informations personnelles</h2>
-                        <a class="account-action" href="{{ path('app_user_profile', { tab: 'profile' }) }}">
+                        <a class="account-action" href="{{ path('app_user_profile', {tab: 'profile'}) }}">
                             <i class="bi bi-arrow-left"></i>
                             Retour au profil
                         </a>
@@ -84,7 +84,7 @@
 
                         <div class="mt-4 d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-secondary">Enregistrer</button>
-                            <a href="{{ path('app_user_profile', { tab: 'profile' }) }}" class="btn btn-outline-secondary">Annuler</a>
+                            <a href="{{ path('app_user_profile', {tab: 'profile'}) }}" class="btn btn-outline-secondary">Annuler</a>
                         </div>
 
                         {{ form_end(profileForm) }}

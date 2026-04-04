@@ -2,16 +2,13 @@
 
 namespace App\Controller\User;
 
-use App\Application\User\Exception\InvalidCurrentPasswordException;
-use App\Application\User\Handler\ProfileUpdateHandler;
 use App\Entity\CustomerOrder;
-use App\Entity\CustomerOrderStatusHistory;
 use App\Entity\User;
-use App\Form\User\ProfilEditFormType;
-use App\Repository\OrderStatusRepository;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
+use App\Exception\User\InvalidCurrentPasswordException;
+use App\Form\User\ProfileEditFormType;
+use App\Handler\User\ProfileUpdateHandler;
+use App\Service\User\ProfileAccountViewBuilder;
+use App\Service\User\UserOrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -24,69 +21,25 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProfileController extends AbstractController
 {
     #[Route('/user/profile', name: 'app_user_profile', methods: ['GET'])]
-    public function index(Request $request): Response
+    public function index(Request $request, ProfileAccountViewBuilder $profileAccountViewBuilder): Response
     {
-        $activeTab = $request->query->get('tab', 'orders');
-        $orderStatusFilter = (string) $request->query->get('status', 'all');
-        if (!in_array($activeTab, ['orders', 'profile', 'reviews'], true)) {
-            $activeTab = 'orders';
-        }
-
-        $orders = [];
-        $orderStatusFilters = [
-            'all' => [
-                'label' => 'Toutes',
-                'count' => 0,
-            ],
-        ];
-        $reviews = [];
         $user = $this->getUser();
-        if ($user instanceof User) {
-            $orders = $user->getCustomerOrders()->toArray();
-            usort($orders, static function (CustomerOrder $left, CustomerOrder $right): int {
-                $leftOrderedAt = $left->getOrderedAt()?->getTimestamp() ?? 0;
-                $rightOrderedAt = $right->getOrderedAt()?->getTimestamp() ?? 0;
-
-                if ($leftOrderedAt === $rightOrderedAt) {
-                    return ($right->getId() ?? 0) <=> ($left->getId() ?? 0);
-                }
-
-                return $rightOrderedAt <=> $leftOrderedAt;
-            });
-
-            $orderStatusFilters['all']['count'] = count($orders);
-
-            foreach ($orders as $order) {
-                $status = $this->resolveCurrentOrderStatus($order);
-
-                if (!isset($orderStatusFilters[$status['code']])) {
-                    $orderStatusFilters[$status['code']] = [
-                        'label' => $status['label'],
-                        'count' => 0,
-                    ];
-                }
-
-                $orderStatusFilters[$status['code']]['count']++;
-            }
-
-            if ($orderStatusFilter !== 'all' && isset($orderStatusFilters[$orderStatusFilter])) {
-                $orders = array_values(array_filter(
-                    $orders,
-                    fn (CustomerOrder $order): bool => $this->resolveCurrentOrderStatus($order)['code'] === $orderStatusFilter
-                ));
-            } else {
-                $orderStatusFilter = 'all';
-            }
-
-            $reviews = $user->getReviews();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
         }
+
+        $accountView = $profileAccountViewBuilder->build(
+            $user,
+            $request->query->get('tab'),
+            $request->query->get('status')
+        );
 
         return $this->render('user/account.html.twig', [
-            'activeTab' => $activeTab,
-            'orders' => $orders,
-            'orderStatusFilter' => $orderStatusFilter,
-            'orderStatusFilters' => $orderStatusFilters,
-            'reviews' => $reviews,
+            'activeTab' => $accountView->activeTab,
+            'orders' => $accountView->orders,
+            'orderStatusFilter' => $accountView->orderStatusFilter,
+            'orderStatusFilters' => $accountView->orderStatusFilters,
+            'reviews' => $accountView->reviews,
         ]);
     }
 
@@ -100,18 +53,18 @@ final class ProfileController extends AbstractController
 
         $userEdited = $this->createEditableUser($user);
 
-        $form = $this->createForm(ProfilEditFormType::class, $userEdited);
+        $form = $this->createForm(ProfileEditFormType::class, $userEdited);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $currentPassword = (string)$form->get('currentPassword')->getData();
+            $currentPassword = (string) $form->get('currentPassword')->getData();
             /** @var string|null $newPassword */
             $newPassword = $form->get('newPassword')->getData();
 
             try {
                 $updateHandler->handle($user, $userEdited, $currentPassword, $newPassword);
 
-                $this->addFlash('success', 'Profil mis a jour');
+                $this->addFlash('success', 'Profil mis à jour.');
 
                 return $this->redirectToRoute('app_user_profile', [
                     'tab' => 'profile',
@@ -126,7 +79,6 @@ final class ProfileController extends AbstractController
         return $this->renderEditForm($form);
     }
 
-//    TODO Prévoir de créé un Manager pour faire en sorte que les fonction private soit séparer des routes
     private function createEditableUser(User $user): User
     {
         return (new User())
@@ -141,9 +93,9 @@ final class ProfileController extends AbstractController
     private function addValidationErrors(FormInterface $form, ValidationFailedException $e): void
     {
         foreach ($e->getViolations() as $violation) {
-            $path = (string)$violation->getPropertyPath();
+            $path = (string) $violation->getPropertyPath();
 
-            if ($path !== '' && $form->has($path)) {
+            if ('' !== $path && $form->has($path)) {
                 $form->get($path)->addError(new FormError($violation->getMessage()));
                 continue;
             }
@@ -164,33 +116,14 @@ final class ProfileController extends AbstractController
         ]);
     }
 
-    /**
-     * @return array{code: string, label: string}
-     */
-    private function resolveCurrentOrderStatus(CustomerOrder $order): array
-    {
-        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
-        if (!$lastHistory instanceof CustomerOrderStatusHistory || $lastHistory->getOrderStatus() === null) {
-            return [
-                'code' => 'unknown',
-                'label' => 'En cours',
-            ];
-        }
-
-        return [
-            'code' => $lastHistory->getOrderStatus()->getCode(),
-            'label' => $lastHistory->getOrderStatus()->getLabel(),
-        ];
-    }
-
     #[Route('/user/order/{id}', name: 'app_user_order_show', methods: ['GET'])]
-    public function showOrder(CustomerOrder $order): Response
+    public function showOrder(CustomerOrder $order, UserOrderService $userOrderService): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser()?->getId() !== $user->getId()) {
+        if (!$userOrderService->isOwnedBy($order, $user)) {
             throw $this->createNotFoundException();
         }
 
@@ -200,67 +133,53 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/user/order/{id}/cancel', name: 'app_user_order_cancel', methods: ['POST'])]
-    public function cancelOrder(CustomerOrder          $order, Request $request, OrderStatusRepository $orderStatusRepository,
-                                EntityManagerInterface $em): RedirectResponse
-    {
+    public function cancelOrder(
+        CustomerOrder $order,
+        Request $request,
+        UserOrderService $userOrderService,
+    ): RedirectResponse {
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser()?->getId() !== $user->getId()) {
+        if (!$userOrderService->isOwnedBy($order, $user)) {
             throw $this->createNotFoundException();
         }
 
         if (!$this->isCsrfTokenValid('cancel_order_' . $order->getId(), $request->request->get('_token'))) {
-            $this->addFlash('error', 'Une erreur est survenue lors de la tentative d annulation de la commande.');
+            $this->addFlash('error', 'Une erreur est survenue lors de la tentative d\'annulation de la commande.');
 
             return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
         }
 
+        if (!$userOrderService->canBeModified($order)) {
+            $this->addFlash('error', 'Cette commande ne peut plus être annulée.');
 
-        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
-        $currentStatusCode = $lastHistory && $lastHistory->getOrderStatus() ? $lastHistory->getOrderStatus()->getCode() : null;
-
-        if ($currentStatusCode !== 'pending') {
-            $this->addFlash('error', 'Cette commande ne peux plus être annulée');
             return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
         }
-        $cancelledStatus = $orderStatusRepository->findOneBy(['code' => 'cancelled']);
-        if ($cancelledStatus === null) {
-            throw new RuntimeException('Status non trouvé');
-        }
-        $history = new CustomerOrderStatusHistory()
-            ->setCustomerOrder($order)
-            ->setOrderStatus($cancelledStatus)
-            ->setChangedByUser($user)
-            ->setChangedAt(new DateTime())
-            ->setComment('Commande annulee par le client.');
 
-        $em->persist($history);
-        $em->flush();
+        $userOrderService->cancel($order, $user);
+        $this->addFlash('success', 'Commande annulée avec succès.');
 
-
-        $this->addFlash('success', 'Commande annulee avec succes');
         return $this->redirectToRoute('app_user_profile', [
             'tab' => 'orders',
         ]);
-
     }
 
     #[Route('/user/order/{id}/edit', name: 'app_user_order_edit', methods: ['GET'])]
-    public function deleteOrder(CustomerOrder $order): Response
+    public function editOrder(CustomerOrder $order, UserOrderService $userOrderService): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
-        if ($order->getUser()?->getId() !== $user->getId()) {
+        if (!$userOrderService->isOwnedBy($order, $user)) {
             throw $this->createNotFoundException();
         }
-        $lastHistory = $order->getCustomerOrderStatusHistories()->last();
-        $currentStatusCode = $lastHistory && $lastHistory->getOrderStatus() ? $lastHistory->getOrderStatus()->getCode() : null;
-        if ($currentStatusCode !== 'pending') {
-            $this->addFlash('error', 'Cette commande ne peux plus être modifiée');
+
+        if (!$userOrderService->canBeModified($order)) {
+            $this->addFlash('error', 'Cette commande ne peut plus être modifiée.');
+
             return $this->redirectToRoute('app_user_order_show', ['id' => $order->getId()]);
         }
 
@@ -269,7 +188,3 @@ final class ProfileController extends AbstractController
         ]);
     }
 }
-
-
-
-

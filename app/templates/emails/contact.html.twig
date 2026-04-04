@@ -173,17 +173,17 @@
                 <tr>
                     <td class="email-hero">
                         <h1 class="email-hero-title">Nouveau message de contact</h1>
-                        <p class="email-hero-sub">Message recu depuis le formulaire du site {{ appName|default('Vite Gourmand') }}.</p>
+                        <p class="email-hero-sub">Message reçu depuis le formulaire du site {{ appName|default('Vite Gourmand') }}.</p>
                     </td>
                 </tr>
                 <tr>
                     <td class="email-content">
                         <div class="email-panel">
-                            <h2 class="email-section-title">Resume</h2>
+                            <h2 class="email-section-title">Résumé</h2>
                             <table role="presentation" class="email-meta">
                                 <tr class="email-meta-row">
                                     <td>Nom</td>
-                                    <td>{{ fullName ?: 'Non renseigne' }}</td>
+                                    <td>{{ fullName ?: 'Non renseigné' }}</td>
                                 </tr>
                                 <tr class="email-meta-row">
                                     <td>Email</td>
@@ -205,13 +205,13 @@
                             <table role="presentation" class="email-action-table">
                                 <tr>
                                     <td class="email-action-cell">
-                                        <a class="email-action-link" href="mailto:{{ contactEmailValue }}?subject=Re:%20{{ subjectValue|url_encode }}">Repondre</a>
+                                        <a class="email-action-link" href="mailto:{{ contactEmailValue }}?subject=Re:%20{{ subjectValue|url_encode }}">Répondre</a>
                                     </td>
                                 </tr>
                             </table>
                         {% endif %}
                         <p class="email-help">
-                            Reponse rapide: {{ contactEmailValue }}.
+                            Réponse rapide : {{ contactEmailValue }}.
                         </p>
                     </td>
                 </tr>

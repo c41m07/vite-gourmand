@@ -73,12 +73,13 @@ class RegistrationFormType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(
                         min: 10,
-                        minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractére.',
-                        max: 4096),
+                        minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractère.',
+                        max: 4096
+                    ),
                     new Assert\Regex(
                         pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\/])[A-Za-z\d@$!%*?&\/]{10,}$/',
                         message: 'Votre mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
-                    )
+                    ),
                 ],
             ]);
     }

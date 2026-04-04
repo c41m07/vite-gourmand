@@ -1,0 +1,20 @@
+<article class="order-entry__panel order-entry__panel--preview">
+    <div class="order-entry__section-head">
+        <div>
+            <div class="order-entry__eyebrow">Vérification</div>
+            <h2 class="order-entry__section-title">Récapitulatif temporaire</h2>
+        </div>
+        <i class="bi bi-clipboard-check order-entry__section-icon" aria-hidden="true"></i>
+    </div>
+
+    <div class="order-entry__preview-grid">
+        <p><strong>Téléphone :</strong> {{ orderPreview.phone }}</p>
+        <p><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
+        <p><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
+        <p><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
+        <p><strong>Date de prestation :</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
+        <p><strong>Heure :</strong> {{ orderPreview.serviceTime }}</p>
+        <p><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
+        <p><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
+    </div>
+</article>

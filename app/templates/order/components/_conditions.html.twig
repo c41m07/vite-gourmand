@@ -1,0 +1,18 @@
+<div class="col-12">
+    <div class="order-entry__conditions">
+        <div class="order-entry__conditions-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <div>
+            <h3 class="order-entry__conditions-title">Conditions importantes</h3>
+            <ul class="order-entry__conditions-list mb-0">
+                <li>Commande a confirmer au minimum 48h avant la prestation.</li>
+                <li>Ce menu est disponible a partir de {{ menu.minPeople }} convives.</li>
+                {% if menu.conditionInfo %}
+                    <li>{{ menu.conditionInfo }}</li>
+                {% endif %}
+                <li>Le montant final reste valide par l equipe avant confirmation definitive.</li>
+            </ul>
+        </div>
+    </div>
+</div>

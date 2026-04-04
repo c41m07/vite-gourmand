@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"/>
-    <title>Reinitialisation du mot de passe</title>
+    <title>Réinitialisation du mot de passe</title>
     <style>
         body.email-body {
             margin: 0;
@@ -120,7 +120,7 @@
 {% set resetUrl = url('app_reset_password', {token: resetToken.token}) %}
 
 <span class="email-preheader">
-    Reinitialise ton mot de passe {{ appNameValue }} en quelques clics.
+    Réinitialisez votre mot de passe {{ appNameValue }} en quelques clics.
 </span>
 
 <table role="presentation" class="email-wrapper">
@@ -129,9 +129,9 @@
             <table role="presentation" class="email-container">
                 <tr>
                     <td class="email-hero">
-                        <h1 class="email-hero-title">Mot de passe oublie ?</h1>
+                        <h1 class="email-hero-title">Mot de passe oublié ?</h1>
                         <p class="email-hero-sub">
-                            Reinitialise ton acces en toute securite.
+                            Réinitialisez votre accès en toute sécurité.
                         </p>
                     </td>
                 </tr>
@@ -139,17 +139,17 @@
                 <tr>
                     <td class="email-content">
                         <p class="email-text">
-                            Nous avons recu une demande de reinitialisation pour votre compte.
+                            Nous avons reçu une demande de réinitialisation pour votre compte.
                         </p>
                         <p class="email-text">
-                            Cliquez sur le bouton ci-dessous pour definir un nouveau mot de passe.
+                            Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe.
                         </p>
 
                         <table role="presentation" class="email-cta-table">
                             <tr>
                                 <td class="email-cta-cell">
                                     <a class="email-cta" href="{{ resetUrl }}">
-                                        Reinitialiser mon mot de passe
+                                        Réinitialiser mon mot de passe
                                     </a>
                                 </td>
                             </tr>
@@ -157,9 +157,9 @@
 
                         <div class="email-panel">
                             <ul class="email-list">
-                                <li class="email-list-item">This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</li>
-                                <li class="email-list-item">Ce lien est a usage unique.</li>
-                                <li class="email-list-item">Si vous n'etes pas a l'origine de cette demande, ignorez cet email.</li>
+                                <li class="email-list-item">Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</li>
+                                <li class="email-list-item">Ce lien est à usage unique.</li>
+                                <li class="email-list-item">Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</li>
                             </ul>
                         </div>
 
@@ -171,7 +171,7 @@
                         </p>
 
                         <p class="email-muted">
-                            {{ appNameValue }} - Ceci est un email automatique, merci de ne pas y repondre.
+                            {{ appNameValue }} - Ceci est un email automatique, merci de ne pas y répondre.
                         </p>
                     </td>
                 </tr>

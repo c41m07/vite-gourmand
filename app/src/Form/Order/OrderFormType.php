@@ -6,11 +6,11 @@ use App\Entity\Menu;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,7 +27,7 @@ class OrderFormType extends AbstractType
 
         $builder
             ->add('phone', TelType::class, [
-                'label' => 'Telephone',
+                'label' => 'Téléphone',
                 'data' => $user->getPhone(),
                 'required' => false,
                 'attr' => [
@@ -38,7 +38,7 @@ class OrderFormType extends AbstractType
                 'label' => 'Adresse de livraison',
                 'data' => $user->getPostalAddress(),
                 'attr' => [
-                    'placeholder' => 'Numero et rue',
+                    'placeholder' => 'Numéro et rue',
                 ],
             ])
             ->add('deliveryCity', TextType::class, [
@@ -56,11 +56,11 @@ class OrderFormType extends AbstractType
                 ],
             ])
             ->add('serviceDate', DateType::class, [
-                'label' => 'Date souhaitee de livraison',
+                'label' => 'Date souhaitée de livraison',
                 'widget' => 'single_text',
             ])
             ->add('serviceTime', TimeType::class, [
-                'label' => 'Heure souhaitee de livraison',
+                'label' => 'Heure souhaitée de livraison',
                 'widget' => 'single_text',
                 'input' => 'string',
             ])
@@ -81,33 +81,33 @@ class OrderFormType extends AbstractType
                 ],
             ])
             ->add('needEquipmentLoan', CheckboxType::class, [
-                'label' => 'J ai besoin d un pret de materiel',
+                'label' => 'J\'ai besoin d\'un prêt de matériel',
                 'required' => false,
                 'mapped' => false,
             ])
             ->add('equipmentLoanStartAt', DateTimeType::class, [
-                'label' => 'Debut du pret',
+                'label' => 'Début du prêt',
                 'required' => false,
                 'mapped' => false,
                 'widget' => 'single_text',
             ])
             ->add('equipmentLoanEndAt', DateTimeType::class, [
-                'label' => 'Fin du pret',
+                'label' => 'Fin du prêt',
                 'required' => false,
                 'mapped' => false,
                 'widget' => 'single_text',
             ])
             ->add('equipmentLoanNote', TextareaType::class, [
-                'label' => 'Notes sur le materiel',
+                'label' => 'Notes sur le matériel',
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
                     'rows' => 3,
-                    'placeholder' => 'Materiel a prevoir, contraintes de reprise, informations utiles',
+                    'placeholder' => 'Matériel à prévoir, contraintes de reprise, informations utiles',
                 ],
             ])
             ->add('note', TextareaType::class, [
-                'label' => 'Notes complementaires',
+                'label' => 'Notes complémentaires',
                 'required' => false,
                 'attr' => [
                     'rows' => 4,

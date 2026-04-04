@@ -15,14 +15,14 @@
         <tbody>
         {% for employee in employees %}
             {% set roles = employee.roles %}
-            {% set isAdmin = 'ROLE_ADMIN' in roles %}
+            {% set is_admin = 'ROLE_ADMIN' in roles %}
             <tr>
                 <td>{{ employee.lastName }} {{ employee.firstName }}</td>
                 <td>{{ employee.email }}</td>
                 <td>{{ employee.phone ?: '-' }}</td>
                 <td>
-                        <span class="admin-badge {{ isAdmin ? 'admin-badge--admin' : 'admin-badge--employee' }}">
-                            {{ isAdmin ? 'Admin' : 'Employé' }}
+                        <span class="admin-badge {{ is_admin ? 'admin-badge--admin' : 'admin-badge--employee' }}">
+                            {{ is_admin ? 'Admin' : 'Employé' }}
                         </span>
                 </td>
                 <td>
@@ -32,7 +32,7 @@
                         </span>
                 </td>
                 <td>
-                    {% if isAdmin %}
+                    {% if is_admin %}
                         <button class="btn btn-outline-secondary btn-sm" type="button" disabled>
                             Désactiver
                         </button>
