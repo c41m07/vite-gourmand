@@ -1,142 +1,89 @@
-import {Controller} from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus'
+import {
+    buildOrderPreview,
+    formatPriceCents,
+    shouldShowEquipmentLoanFields,
+} from '../modules/order/order_preview'
 
 export default class extends Controller {
     static targets = [
-        'peopleCount',
-        'deliveryCity',
-        'distanceKm',
+        'form',
+        'peopleCountField',
+        'deliveryCityField',
+        'distanceKmField',
+        'needEquipmentLoanField',
+        'loanFields',
+        'discountHint',
         'summaryPeople',
         'summarySubtotal',
         'summaryDiscount',
-        'deliveryPrice',
+        'summaryDelivery',
         'summaryTotal',
-        'needEquipmentLoan',
-        'equipmentLoanStartAt',
-        'equipmentLoanEndAt',
-        'equipmentLoanField',
-        'summaryLoan',
-        'submitButton'
-    ];
+    ]
 
     static values = {
         basePrice: Number,
         minPeople: Number,
-        stock: Number,
-    };
+        hiddenClass: {type: String, default: 'd-none'},
+    }
 
     connect() {
-        this.refresh();
+        this.sync()
     }
 
-    refresh() {
-        const state = this.readState();
-        const result = this.calculate(state);
-        const isValid = this.validate(state);
+    sync() {
+        const preview = buildOrderPreview({
+            basePriceCents: this.basePriceValue,
+            minimumPeople: this.minPeopleValue,
+            peopleCount: this.hasPeopleCountFieldTarget ? this.peopleCountFieldTarget.value : this.minPeopleValue,
+            deliveryCity: this.hasDeliveryCityFieldTarget ? this.deliveryCityFieldTarget.value : '',
+            distanceKm: this.hasDistanceKmFieldTarget ? this.distanceKmFieldTarget.value : 0,
+            needEquipmentLoan: this.hasNeedEquipmentLoanFieldTarget && this.needEquipmentLoanFieldTarget.checked,
+        })
 
-        this.render(result, isValid);
+        this.renderSummary(preview)
+        this.syncEquipmentLoanFields(preview.needEquipmentLoan)
+        this.syncDiscountHint(preview.discountActive)
     }
 
-    readState() {
-        const peopleCount = Number.parseInt(this.peopleCountTarget.value || '0', 10);
-        const deliveryCity = this.deliveryCityTarget.value.trim();
-        const normalizedCity = deliveryCity.toLowerCase();
-        const distanceKm = Math.max(0, Number.parseInt(this.distanceKmTarget.value || '0', 10));
-        const needEquipmentLoan = this.needEquipmentLoanTarget.checked;
-        const equipmentLoanStartAt = this.equipmentLoanStartAtTarget.value;
-        const equipmentLoanEndAt = this.equipmentLoanEndAtTarget.value;
-
-        return {
-            peopleCount,
-            deliveryCity,
-            normalizedCity,
-            distanceKm,
-            needEquipmentLoan,
-            equipmentLoanStartAt,
-            equipmentLoanEndAt,
-        };
-    }
-
-    calculate(state) {
-        const isBordeaux = state.normalizedCity === 'bordeaux';
-        const effectiveDistanceKm = isBordeaux ? 0 : state.distanceKm;
-        const menuSubtotal = state.peopleCount * this.basePriceValue;
-        const discountApplied = state.peopleCount >= (this.minPeopleValue + 5);
-        const discountAmount = discountApplied ? Math.round(menuSubtotal * 0.10) : 0;
-        const deliveryPrice = isBordeaux ? 0 : 500 + (effectiveDistanceKm * 59);
-        const totalPrice = menuSubtotal - discountAmount + deliveryPrice;
-        const formattedStartAt = this.formatDateTime(state.equipmentLoanStartAt);
-        const formattedEndAt = this.formatDateTime(state.equipmentLoanEndAt);
-
-        let loanText = 'Aucun';
-
-        if (state.needEquipmentLoan) {
-            if (state.equipmentLoanStartAt && state.equipmentLoanEndAt) {
-                loanText = `Du ${formattedStartAt} au ${formattedEndAt}`;
-            } else {
-                loanText = 'Pret de materiel demande';
-            }
+    renderSummary(preview) {
+        if (this.hasSummaryPeopleTarget) {
+            this.summaryPeopleTarget.textContent = String(preview.peopleCount)
         }
 
-        return {
-            peopleCount: state.peopleCount,
-            isBordeaux,
-            effectiveDistanceKm,
-            menuSubtotal,
-            discountApplied,
-            discountAmount,
-            deliveryPrice,
-            totalPrice,
-            loanText,
-            needEquipmentLoan: state.needEquipmentLoan,
-        };
-    }
-
-    validate(state) {
-        const peopleCountValid =
-            state.peopleCount >= this.minPeopleValue &&
-            state.peopleCount <= this.stockValue;
-        const deliveryCityValid = state.deliveryCity !== '';
-        const distanceKmValid = state.distanceKm >= 0;
-
-        let equipmentLoanValid = true;
-        if (state.needEquipmentLoan) {
-            equipmentLoanValid =
-                state.equipmentLoanStartAt !== '' &&
-                state.equipmentLoanEndAt !== '' &&
-                state.equipmentLoanEndAt >= state.equipmentLoanStartAt;
+        if (this.hasSummarySubtotalTarget) {
+            this.summarySubtotalTarget.textContent = formatPriceCents(preview.menuSubtotal)
         }
 
-        return peopleCountValid && deliveryCityValid && distanceKmValid && equipmentLoanValid;
-    }
-
-    render(result, isValid) {
-        this.summaryPeopleTarget.textContent = `Menu (${result.peopleCount} pers.)`;
-        this.summarySubtotalTarget.textContent = this.formatPrice(result.menuSubtotal);
-        this.summaryDiscountTarget.textContent = `- ${this.formatPrice(result.discountAmount)}`;
-        this.deliveryPriceTarget.textContent = this.formatPrice(result.deliveryPrice);
-        this.summaryTotalTarget.textContent = this.formatPrice(result.totalPrice);
-        this.equipmentLoanFieldTarget.classList.toggle('d-none', !result.needEquipmentLoan);
-        this.summaryLoanTarget.textContent = result.loanText;
-        this.submitButtonTarget.disabled = !isValid;
-    }
-
-    formatPrice(cents) {
-        return `${(cents / 100).toFixed(2).replace('.', ',')} €`;
-    }
-
-    formatDateTime(value) {
-        if (!value) {
-            return '';
+        if (this.hasSummaryDiscountTarget) {
+            this.summaryDiscountTarget.textContent = formatPriceCents(preview.discountAmount * -1)
         }
 
-        const date = new Date(value);
-
-        if (Number.isNaN(date.getTime())) {
-            return value;
+        if (this.hasSummaryDeliveryTarget) {
+            this.summaryDeliveryTarget.textContent = formatPriceCents(preview.deliveryPrice)
         }
 
-        return new Intl.DateTimeFormat('fr-FR', {
-            dateStyle: 'short',
-        }).format(date);
+        if (this.hasSummaryTotalTarget) {
+            this.summaryTotalTarget.textContent = formatPriceCents(preview.totalPrice)
+        }
+    }
+
+    syncEquipmentLoanFields(needEquipmentLoan) {
+        if (!this.hasLoanFieldsTarget) {
+            return
+        }
+
+        this.loanFieldsTarget.classList.toggle(
+            this.hiddenClassValue,
+            !shouldShowEquipmentLoanFields({needEquipmentLoan}),
+        )
+    }
+
+    syncDiscountHint(discountActive) {
+        if (!this.hasDiscountHintTarget) {
+            return
+        }
+
+        this.discountHintTarget.classList.toggle(this.hiddenClassValue, !discountActive)
     }
 }

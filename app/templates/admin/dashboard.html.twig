@@ -7,19 +7,19 @@
         <div class="container">
             <h1 class="admin-title">Espace Admin</h1>
 
-            {% include 'admin/components/_tabs.html.twig' with { activeTab: activeTab, employees: employees } %}
+            {% include 'admin/components/_tabs.html.twig' with {
+                activeTab: viewData.activeTab,
+                employees: viewData.employees
+            } %}
 
             <div class="admin-content">
-                {% if activeTab == 'employees' %}
-                    {% include 'admin/components/_employees_panel.html.twig' with { employees: employees } %}
+                {% if viewData.activeTab == 'employees' %}
+                    {% include 'admin/components/_employees_panel.html.twig' with {
+                        employees: viewData.employees
+                    } %}
                 {% else %}
                     {% include 'admin/components/_dashboard_panel.html.twig' with {
-                        orders: orders,
-                        ordersInProgress: ordersInProgress,
-                        revenueTotal: revenueTotal,
-                        avgRating: avgRating,
-                        clientsCount: clientsCount,
-                        activeMenus: activeMenus
+                        dashboard: viewData
                     } %}
                 {% endif %}
             </div>

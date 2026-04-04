@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
 
 {% block body %}
     <section class="auth-page">
@@ -18,13 +18,13 @@
                     <div class="alert alert-danger mb-0" role="alert">{{ flash_error }}</div>
                 {% endfor %}
 
-                {{ form_start(requestForm, { attr: { class: 'auth-form' } }) }}
+                {{ form_start(requestForm, {attr: {class: 'auth-form'}}) }}
                 <div class="auth-field">
                     <label for="{{ requestForm.email.vars.id }}" class="form-label">
                         Adresse email <span class="text-danger fw-bold" aria-hidden="true">*</span>
                         <span class="visually-hidden">champ obligatoire</span>
                     </label>
-                    {{ form_widget(requestForm.email, { attr: { class: 'form-control auth-input', placeholder: 'votre.email@example.com', autofocus: true } }) }}
+                    {{ form_widget(requestForm.email, {attr: {class: 'form-control auth-input', placeholder: 'votre.email@example.com', autofocus: true}}) }}
                     {{ form_errors(requestForm.email) }}
                 </div>
 

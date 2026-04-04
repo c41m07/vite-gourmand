@@ -3,7 +3,7 @@
 namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
-use App\Tests\Support\GeneratesTestPasswords;
+use App\Tests\Support\GeneratesTestPasswordsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class BackOfficeAccessControlTest extends WebTestCase
 {
-    use GeneratesTestPasswords;
+    use GeneratesTestPasswordsTrait;
 
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;
@@ -87,4 +87,3 @@ final class BackOfficeAccessControlTest extends WebTestCase
         return $user;
     }
 }
-

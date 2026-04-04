@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
-use App\Tests\Support\GeneratesTestPasswords;
+use App\Tests\Support\GeneratesTestPasswordsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -10,7 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoginControllerTest extends WebTestCase
 {
-    use GeneratesTestPasswords;
+    use GeneratesTestPasswordsTrait;
 
     private KernelBrowser $client;
     private string $validPassword;
@@ -30,14 +31,12 @@ class LoginControllerTest extends WebTestCase
         $em->getConnection()->executeStatement('DELETE FROM review');
         $em->getConnection()->executeStatement('DELETE FROM reset_password_request');
 
-        // Remove any existing users from the test database
         foreach ($userRepository->findAll() as $user) {
             $em->remove($user);
         }
 
         $em->flush();
 
-        // Create a User fixture
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
@@ -63,7 +62,6 @@ class LoginControllerTest extends WebTestCase
             $invalidPassword = self::generateTestPassword();
         }
 
-        // Denied - Can't login with invalid email address.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
@@ -75,10 +73,8 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseRedirects('/login');
         $this->client->followRedirect();
 
-        // Ensure we do not reveal if the user exists or not.
         self::assertSelectorTextContains('.alert-danger', 'Identifiants invalides.');
 
-        // Denied - Can't login with invalid password.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
@@ -90,10 +86,8 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseRedirects('/login');
         $this->client->followRedirect();
 
-        // Ensure we do not reveal the user exists but the password is wrong.
         self::assertSelectorTextContains('.alert-danger', 'Identifiants invalides.');
 
-        // Success - Login with valid credentials is allowed.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
 
@@ -144,4 +138,3 @@ class LoginControllerTest extends WebTestCase
         self::assertSelectorTextContains('.alert-danger', 'Votre compte est desactive.');
     }
 }
-

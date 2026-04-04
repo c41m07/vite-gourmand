@@ -10,17 +10,14 @@
 {% else %}
     <div class="worker-stack">
         {% for order in orders %}
-            {% set orderMenu = order.customerOrderMenus|first %}
-            {% set menuTitle = orderMenu and orderMenu.menu ? orderMenu.menu.title : 'Menu' %}
-            {% set statusHistory = order.customerOrderStatusHistories|last %}
-            {% set statusLabel = statusHistory and statusHistory.orderStatus ? statusHistory.orderStatus.label : 'Terminée' %}
+            {% set currentStatus = order.latestStatusHistory ? order.latestStatusHistory.orderStatus : null %}
 
             <article class="worker-card worker-order">
                 <div class="worker-order__header">
                     <div class="worker-order__main">
                         <div class="worker-order__title-row">
-                            <h3 class="worker-order__title">{{ menuTitle }}</h3>
-                            <span class="worker-status">{{ statusLabel }}</span>
+                            <h3 class="worker-order__title">{{ order.primaryMenuTitle }}</h3>
+                            <span class="worker-status">{{ order.currentStatusCode ? order.currentStatusLabel : 'Terminée' }}</span>
                         </div>
                         <p class="worker-order__subtitle">
                             {% if order.user %}
@@ -37,7 +34,7 @@
                             {% else %}
                                 {% for status in orderStatuses %}
                                     <option value="{{ status.id }}"
-                                        {{ statusHistory and statusHistory.orderStatus and statusHistory.orderStatus.id == status.id ? 'selected' : '' }}>
+                                        {{ currentStatus and currentStatus.id == status.id ? 'selected' : '' }}>
                                         {{ status.label }}
                                     </option>
                                 {% endfor %}
@@ -64,12 +61,7 @@
                     <div class="worker-meta">
                         <div class="worker-meta__label">Total</div>
                         <div class="worker-meta__value worker-meta__value--total">
-                            {% if order.totalPrice is not null %}
-                                {% set totalDisplay = order.totalPrice / 100 %}
-                                {{ totalDisplay|number_format(2, ',', ' ') }} €
-                            {% else %}
-                                -
-                            {% endif %}
+                            {{ order.totalPrice|price_cents }}
                         </div>
                     </div>
                 </div>
@@ -77,13 +69,7 @@
                 <div class="worker-order__address">
                     <div class="worker-meta__label">Adresse de livraison</div>
                     <div class="worker-meta__value">
-                        {% if order.deliveryAddress %}
-                            {{ order.deliveryAddress }},
-                            {{ order.deliveryPostalCode }}
-                            {{ order.deliveryCity }}
-                        {% else %}
-                            -
-                        {% endif %}
+                        {% include 'shared/order/_delivery_address.html.twig' with {order: order} only %}
                     </div>
                 </div>
 

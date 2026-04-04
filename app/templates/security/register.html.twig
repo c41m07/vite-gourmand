@@ -8,7 +8,7 @@
             <h1 class="auth-title">Créer un compte</h1>
 
             <div class="auth-card">
-                {{ form_start(registrationForm, { attr: { class: 'auth-form' } }) }}
+                {{ form_start(registrationForm, {attr: {class: 'auth-form'}}) }}
                     {{ form_errors(registrationForm) }}
 
                     <div class="row g-3">
@@ -18,7 +18,7 @@
                                     Nom <span class="text-danger fw-bold" aria-hidden="true">*</span>
                                     <span class="visually-hidden">champ obligatoire</span>
                                 </label>
-                                {{ form_widget(registrationForm.lastName, { attr: { class: 'form-control auth-input' } }) }}
+                                {{ form_widget(registrationForm.lastName, {attr: {class: 'form-control auth-input'}}) }}
                                 {{ form_errors(registrationForm.lastName) }}
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                                     Prénom <span class="text-danger fw-bold" aria-hidden="true">*</span>
                                     <span class="visually-hidden">champ obligatoire</span>
                                 </label>
-                                {{ form_widget(registrationForm.firstName, { attr: { class: 'form-control auth-input' } }) }}
+                                {{ form_widget(registrationForm.firstName, {attr: {class: 'form-control auth-input'}}) }}
                                 {{ form_errors(registrationForm.firstName) }}
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                             Email <span class="text-danger fw-bold" aria-hidden="true">*</span>
                             <span class="visually-hidden">champ obligatoire</span>
                         </label>
-                        {{ form_widget(registrationForm.email, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_widget(registrationForm.email, {attr: {class: 'form-control auth-input'}}) }}
                         {{ form_errors(registrationForm.email) }}
                     </div>
 
@@ -49,7 +49,7 @@
                             Mot de passe <span class="text-danger fw-bold" aria-hidden="true">*</span>
                             <span class="visually-hidden">champ obligatoire</span>
                         </label>
-                        {{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_widget(registrationForm.plainPassword, {attr: {class: 'form-control auth-input'}}) }}
                         {{ form_errors(registrationForm.plainPassword) }}
                     </div>
 
@@ -57,7 +57,7 @@
                         <label for="{{ registrationForm.phone.vars.id }}" class="form-label">
                             Téléphone
                         </label>
-                        {{ form_widget(registrationForm.phone, { attr: { class: 'form-control auth-input' } }) }}
+                        {{ form_widget(registrationForm.phone, {attr: {class: 'form-control auth-input'}}) }}
                         {{ form_errors(registrationForm.phone) }}
                     </div>
 
@@ -65,7 +65,7 @@
                         <label for="{{ registrationForm.postalAddress.vars.id }}" class="form-label">
                             Adresse
                         </label>
-                        {{ form_widget(registrationForm.postalAddress, { attr: { class: 'form-control auth-input', rows: 3 } }) }}
+                        {{ form_widget(registrationForm.postalAddress, {attr: {class: 'form-control auth-input', rows: 3}}) }}
                         {{ form_errors(registrationForm.postalAddress) }}
                     </div>
 

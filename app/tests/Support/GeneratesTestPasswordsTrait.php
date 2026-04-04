@@ -2,7 +2,7 @@
 
 namespace App\Tests\Support;
 
-trait GeneratesTestPasswords
+trait GeneratesTestPasswordsTrait
 {
     private static function generateTestPassword(): string
     {

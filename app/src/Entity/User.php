@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,13 +22,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string> Roles attribués à l'utilisateur
      */
     #[ORM\Column]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string Mot de passe hashé
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -43,17 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $postalAddress = null;
 
     #[ORM\Column]
-    private ?DateTime $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[ORM\Column]
-    private ?DateTime $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
-    #[ORM\Column(options: ["default" => true])]
+    #[ORM\Column(options: ['default' => true])]
     private ?bool $active = null;
 
     /**
@@ -105,13 +103,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * Identifiant lisible représentant cet utilisateur.
      *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -120,7 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Garantit la présence minimale du rôle ROLE_USER.
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -152,11 +150,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     * Évite d'exposer le hash réel du mot de passe en session en le remplaçant par un CRC32C.
      */
     public function __serialize(): array
     {
-        $data = (array)$this;
+        $data = (array) $this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
@@ -210,24 +208,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): static
+    public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -267,7 +265,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCustomerOrder(CustomerOrder $customerOrder): static
     {
         if ($this->customerOrders->removeElement($customerOrder)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($customerOrder->getUser() === $this) {
                 $customerOrder->setUser(null);
             }
@@ -297,7 +295,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCustomerOrderStatusHistory(CustomerOrderStatusHistory $customerOrderStatusHistory): static
     {
         if ($this->customerOrderStatusHistories->removeElement($customerOrderStatusHistory)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($customerOrderStatusHistory->getChangedByUser() === $this) {
                 $customerOrderStatusHistory->setChangedByUser(null);
             }
@@ -327,7 +325,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReview(Review $review): static
     {
         if ($this->reviews->removeElement($review)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($review->getUser() === $this) {
                 $review->setUser(null);
             }

@@ -16,7 +16,7 @@
                 <p class="account-profile__eyebrow">Espace profil</p>
                 <h3 class="account-profile__name">{{ app.user.firstName }} {{ app.user.lastName }}</h3>
                 <p class="account-profile__lead">
-                    Retrouvez ici vos informations personnelles et gardez-les a jour pour simplifier vos prochaines commandes.
+                    Retrouvez ici vos informations personnelles et gardez-les à jour pour simplifier vos prochaines commandes.
                 </p>
             </div>
         </div>
@@ -25,14 +25,14 @@
                 <i class="bi bi-envelope-paper"></i>
                 {{ app.user.email }}
             </div>
-            <div class="account-profile__hint">Les champs peuvent etre modifies a tout moment.</div>
+            <div class="account-profile__hint">Les champs peuvent être modifiés à tout moment.</div>
         </div>
     </div>
 
     <div class="account-card">
         <div class="account-profile__section-head">
             <div>
-                <h3 class="account-profile__section-title">Coordonnees</h3>
+                <h3 class="account-profile__section-title">Coordonnées</h3>
                 <p class="account-profile__section-text">Des informations claires pour la prise de contact et la livraison.</p>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <div class="account-profile__value">{{ app.user.lastName }}</div>
             </div>
             <div class="account-profile__item">
-                <span><i class="bi bi-person-badge"></i> Prenom</span>
+                <span><i class="bi bi-person-badge"></i> Prénom</span>
                 <div class="account-profile__value">{{ app.user.firstName }}</div>
             </div>
             <div class="account-profile__item">
@@ -51,8 +51,8 @@
                 <div class="account-profile__value">{{ app.user.email }}</div>
             </div>
             <div class="account-profile__item">
-                <span><i class="bi bi-telephone"></i> Telephone</span>
-                <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigne' }}</div>
+                <span><i class="bi bi-telephone"></i> Téléphone</span>
+                <div class="account-profile__value">{{ app.user.phone ?: 'Non renseigné' }}</div>
             </div>
         </div>
 
@@ -60,7 +60,7 @@
             <div class="account-profile__item account-profile__item--full">
                 <span><i class="bi bi-geo-alt"></i> Adresse</span>
                 <div class="account-profile__value">
-                    {{ app.user.postalAddress ?: 'Non renseignee' }}
+                    {{ app.user.postalAddress ?: 'Non renseignée' }}
                 </div>
             </div>
         </div>

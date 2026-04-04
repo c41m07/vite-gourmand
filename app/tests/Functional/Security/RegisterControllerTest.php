@@ -3,10 +3,8 @@
 namespace App\Tests\Functional\Security;
 
 use App\Entity\User;
-use App\Tests\Support\GeneratesTestPasswords;
-use DateTime;
+use App\Tests\Support\GeneratesTestPasswordsTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -15,8 +13,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterControllerTest extends WebTestCase
 {
+    use GeneratesTestPasswordsTrait;
     use MailerAssertionsTrait;
-    use GeneratesTestPasswords;
 
     private KernelBrowser $client;
 
@@ -68,8 +66,8 @@ class RegisterControllerTest extends WebTestCase
             ->setEmail('existing.user@example.com')
             ->setFirstName('Existing')
             ->setLastName('User')
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setActive(true)
             ->setRoles(['ROLE_USER']);
         $existingUser->setPassword($passwordHasher->hashPassword($existingUser, $existingUserPassword));
@@ -92,7 +90,7 @@ class RegisterControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertStringContainsString(
             'Un compte existe déjà avec cet email.',
-            (string)$this->client->getResponse()->getContent()
+            (string) $this->client->getResponse()->getContent()
         );
 
         $userRepository = $entityManager->getRepository(User::class);
@@ -104,7 +102,7 @@ class RegisterControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->disableReboot();
 
-        if (static::$kernel !== null) {
+        if (null !== static::$kernel) {
             $kernelContainer = static::$kernel->getContainer();
             $parameterBag = $kernelContainer->getParameterBag();
 
@@ -113,7 +111,7 @@ class RegisterControllerTest extends WebTestCase
                 $parameters['appName'] = $_ENV['APP_NAME'] ?? 'Vite Gourmand';
 
                 $newBag = new ParameterBag($parameters);
-                $reflection = new ReflectionProperty($kernelContainer, 'parameterBag');
+                $reflection = new \ReflectionProperty($kernelContainer, 'parameterBag');
                 $reflection->setAccessible(true);
                 $reflection->setValue($kernelContainer, $newBag);
             }
@@ -132,4 +130,3 @@ class RegisterControllerTest extends WebTestCase
         $entityManager->flush();
     }
 }
-

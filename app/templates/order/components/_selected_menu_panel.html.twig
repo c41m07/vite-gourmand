@@ -1,0 +1,29 @@
+<article class="order-entry__panel order-entry__panel--menu">
+    <div class="card-body">
+        <div class="order-entry__eyebrow">Menu s&eacute;lectionn&eacute;</div>
+
+        <div class="order-entry__menu">
+            <div class="order-entry__menu-media">
+                {% if menu.media %}
+                    <img src="{{ menu.media.imgUrl }}" alt="{{ menu.media.altText }}">
+                {% endif %}
+            </div>
+
+            <div class="order-entry__menu-content">
+                <h2 class="order-entry__menu-title">{{ menu.title }}</h2>
+                <p class="order-entry__menu-price">
+                    {{ menu.basePrice|price_cents }} par personne
+                </p>
+
+                <div class="order-entry__badges">
+                    <span class="order-entry__badge">
+                        <i class="bi bi-people me-2"></i>{{ menu.minPeople }} pers. minimum
+                    </span>
+                    <span class="order-entry__badge order-entry__badge--accent">
+                        <i class="bi bi-box-seam me-2"></i>{{ menu.stock }} en stock
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

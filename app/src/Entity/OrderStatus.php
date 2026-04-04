@@ -82,7 +82,7 @@ class OrderStatus
     public function removeCustomerOrderStatusHistory(CustomerOrderStatusHistory $customerOrderStatusHistory): static
     {
         if ($this->customerOrderStatusHistories->removeElement($customerOrderStatusHistory)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($customerOrderStatusHistory->getOrderStatus() === $this) {
                 $customerOrderStatusHistory->setOrderStatus(null);
             }

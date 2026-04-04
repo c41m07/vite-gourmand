@@ -67,7 +67,7 @@ class EquipmentLoanStatus
     public function removeEquipmentLoan(EquipmentLoan $equipmentLoan): static
     {
         if ($this->equipmentLoans->removeElement($equipmentLoan)) {
-            // set the owning side to null (unless already changed)
+            // Réinitialise le côté propriétaire si nécessaire.
             if ($equipmentLoan->getStatus() === $this) {
                 $equipmentLoan->setStatus(null);
             }
