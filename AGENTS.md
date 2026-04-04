@@ -54,7 +54,7 @@ Interdits :
 
 - `tests/` est la testsuite PHPUnit principale.
 - Les commandes utiles sont centralisees dans le `Makefile`.
-- `docs/technical/setup.md` complete le `Makefile`.
+- `docs/technical/_DEV_SETUP.md` complete le `Makefile`.
 
 ## Commandes projet
 
