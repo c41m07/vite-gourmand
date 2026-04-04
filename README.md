@@ -43,13 +43,17 @@ make fixtures-reset
 - [`docs/README.md`](docs/README.md)
 - [`docs/technical/_DEV_SETUP.md`](docs/technical/_DEV_SETUP.md)
 - [`docs/technical/_DEV_ARCHITECTURE.md`](docs/technical/_DEV_ARCHITECTURE.md)
+- [`docs/technical/TODO.md`](docs/technical/TODO.md)
 - [`docs/database/_DEV_DATA_MODEL.md`](docs/database/_DEV_DATA_MODEL.md)
 - [`docs/design/_DEV_UI_GUIDE.md`](docs/design/_DEV_UI_GUIDE.md)
 - [`docs/project/_DEV_ROADMAP.md`](docs/project/_DEV_ROADMAP.md)
+- [`docs/project/_DEV_SPRINT.md`](docs/project/_DEV_SPRINT.md)
+- [`docs/references/ecf-studi.md`](docs/references/ecf-studi.md)
+- [`docs/references/ecf-studi.pdf`](docs/references/ecf-studi.pdf)
 
 ## Structure utile
 
 - `app/`: application Symfony
 - `docker/`: image PHP/Apache de dev
-- `docs/`: documentation nettoyee et orientee dev
+- `docs/`: documentation de dev + references ECF
 - `sql/`: exports SQL attendus a terme

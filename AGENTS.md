@@ -116,6 +116,26 @@ Toujours identifier :
 3. la cause racine si c'est un bug ;
 4. la verification attendue.
 
+## Planification obligatoire
+
+Pour chaque demande utilisateur, sans exception :
+
+- commencer par un plan, meme bref, avant toute action significative ;
+- produire des etapes concretes, ordonnees et verifiables ;
+- mettre a jour le plan si le perimetre evolue ou si un blocage apparait ;
+- ne jamais laisser un plan incomplet sans le cloturer explicitement ;
+- dans un recapitulatif de plan :
+  - un `check` signifie qu'une etape est terminee ;
+  - une `croix` signifie qu'une etape n'est pas terminee ;
+  - toute `croix` doit obligatoirement etre accompagnee d'une justification explicite ;
+- avant toute reponse finale, verifier que chaque etape est soit :
+  - terminee ;
+  - bloquee avec raison explicite ;
+  - abandonnee avec justification explicite ;
+- ne pas presenter la demande comme terminee tant que cette validation finale du plan n'a pas ete faite ;
+- pour une demande simple, fournir au minimum un mini-plan ;
+- si la demande implique une modification, integrer au plan la verification attendue.
+
 ## Validation obligatoire avant ecriture
 
 Demander une validation explicite avant :
@@ -279,6 +299,8 @@ make check
 Une tache n'est pas terminee tant que :
 
 - le perimetre est respecte ;
+- le plan annonce est entierement cloture ;
+- le statut de chaque etape du plan est valide explicitement ;
 - les noms sont coherents ;
 - les imports et references sont coherents ;
 - les fichiers modifies sont propres ;
