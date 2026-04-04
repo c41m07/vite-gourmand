@@ -1,50 +1,53 @@
-<article class="order-entry__panel">
-    <div class="order-entry__section-head">
-        <div>
-            <div class="order-entry__eyebrow">Configuration</div>
-            <h2 class="order-entry__section-title">Votre commande</h2>
-        </div>
-        <i class="bi bi-basket2 order-entry__section-icon" aria-hidden="true"></i>
-    </div>
+{% set is_preview_mode = orderPreview is not null %}
+{% set editor_classes = is_preview_mode ? 'd-none' : '' %}
 
-    {{ form_start(orderForm, {attr: {
-        class: 'order-entry__form',
-        id: 'order-entry-form',
-        'data-order-preview-target': 'form',
-        'data-action': 'input->order-preview#sync change->order-preview#sync'
-    }}) }}
-
-    <div class="row g-4">
-        {% include 'order/components/_form_primary_fields.html.twig' with {
-            orderForm: orderForm,
-            menu: menu,
-            discount_active: discount_active
-        } only %}
-
-        {% include 'order/components/_delivery_fields.html.twig' with {
-            orderForm: orderForm
-        } only %}
-
-        {% include 'order/components/_equipment_loan_fields.html.twig' with {
-            orderForm: orderForm
-        } only %}
-
-        <div class="col-12">
-            <div class="order-entry__block">
-                {{ form_row(orderForm.note) }}
+<div
+    id="order-entry-editor"
+    class="{{ editor_classes }}"
+    data-order-preview-target="editor"
+>
+    <article class="order-entry__panel">
+        <div class="order-entry__section-head">
+            <div>
+                <div class="order-entry__eyebrow">Configuration</div>
+                <h2 class="order-entry__section-title">Votre commande</h2>
             </div>
+            <i class="bi bi-basket2 order-entry__section-icon" aria-hidden="true"></i>
         </div>
 
-        {% include 'order/components/_conditions.html.twig' with {
-            menu: menu
-        } only %}
-    </div>
+        {{ form_start(orderForm, {attr: {
+            class: 'order-entry__form',
+            id: 'order-entry-form',
+            'data-order-preview-target': 'form',
+            'data-action': 'input->order-preview#sync change->order-preview#sync'
+        }}) }}
 
-    <div class="order-entry__actions">
-        <button type="submit" class="btn btn-primary btn-lg visually-hidden">
-            Continuer la commande
-        </button>
-    </div>
+        <div class="row g-4">
+            {% include 'order/components/_form_primary_fields.html.twig' with {
+                orderForm: orderForm,
+                menu: menu,
+                discount_active: discount_active
+            } only %}
 
-    {{ form_end(orderForm) }}
-</article>
+            {% include 'order/components/_delivery_fields.html.twig' with {
+                orderForm: orderForm
+            } only %}
+
+            {% include 'order/components/_equipment_loan_fields.html.twig' with {
+                orderForm: orderForm
+            } only %}
+
+            <div class="col-12">
+                <div class="order-entry__block">
+                    {{ form_row(orderForm.note) }}
+                </div>
+            </div>
+
+            {% include 'order/components/_conditions.html.twig' with {
+                menu: menu
+            } only %}
+        </div>
+
+        {{ form_end(orderForm) }}
+    </article>
+</div>

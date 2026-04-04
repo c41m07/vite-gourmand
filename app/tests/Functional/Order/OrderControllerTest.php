@@ -230,7 +230,24 @@ final class OrderControllerTest extends WebTestCase
             'order_form[note]' => 'Acces par le portail arriere.',
         ]);
 
-        $this->client->submit($form);
+        $previewCrawler = $this->client->submit($form);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.order-entry__summary--preview .order-entry__summary-title', 'Récapitulatif avant confirmation');
+        self::assertSelectorTextContains('.order-entry__summary--preview', 'Merignac');
+
+        $orderBeforeConfirmation = $this->entityManager->getRepository(CustomerOrder::class)->findOneBy(
+            ['user' => $user],
+            ['id' => 'DESC']
+        );
+
+        self::assertNull($orderBeforeConfirmation);
+
+        $confirmationForm = $previewCrawler->filter('form#order-entry-form')->form();
+        $confirmationValues = $confirmationForm->getPhpValues();
+        $confirmationValues['confirm_order'] = '1';
+
+        $this->client->request('POST', '/order/new/' . $this->menuId, $confirmationValues);
 
         self::assertResponseRedirects('/user/profile?tab=orders');
 

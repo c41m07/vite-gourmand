@@ -1,20 +1,133 @@
-<article class="order-entry__panel order-entry__panel--preview">
-    <div class="order-entry__section-head">
+<article
+    class="order-entry__summary order-entry__summary--preview"
+    data-order-preview-target="previewPanel"
+>
+    <div class="order-entry__summary-top">
         <div>
             <div class="order-entry__eyebrow">Vérification</div>
-            <h2 class="order-entry__section-title">Récapitulatif temporaire</h2>
+            <h2 class="order-entry__summary-title">Récapitulatif avant confirmation</h2>
         </div>
-        <i class="bi bi-clipboard-check order-entry__section-icon" aria-hidden="true"></i>
+        <span class="order-entry__summary-state">Prête à confirmer</span>
     </div>
 
-    <div class="order-entry__preview-grid">
-        <p><strong>Téléphone :</strong> {{ orderPreview.phone }}</p>
-        <p><strong>Adresse :</strong> {{ orderPreview.deliveryAddress }}</p>
-        <p><strong>Ville :</strong> {{ orderPreview.deliveryCity }}</p>
-        <p><strong>Code postal :</strong> {{ orderPreview.deliveryPostalCode }}</p>
-        <p><strong>Date de prestation :</strong> {{ orderPreview.serviceDate|date('d/m/Y') }}</p>
-        <p><strong>Heure :</strong> {{ orderPreview.serviceTime }}</p>
-        <p><strong>Nombre de personnes :</strong> {{ orderPreview.peopleCount }}</p>
-        <p><strong>Notes :</strong> {{ orderPreview.note ?: '-' }}</p>
+    <div class="order-entry__summary-banner">
+        <div class="order-entry__summary-banner-icon">
+            <i class="bi bi-check2-circle" aria-hidden="true"></i>
+        </div>
+        <div class="order-entry__summary-banner-copy">
+            <strong>Dernière vérification avant envoi</strong>
+            <p>Relis les informations ci-dessous. Si un élément est incorrect, tu peux revenir à la configuration avant de confirmer.</p>
+        </div>
+    </div>
+
+    <div class="order-entry__summary-stack">
+        <section class="order-entry__summary-section">
+            <h3 class="order-entry__summary-section-title">Prestation</h3>
+
+            <div class="order-entry__summary-facts">
+                <div class="order-entry__summary-fact">
+                    <span class="order-entry__summary-fact-label">Date</span>
+                    <strong class="order-entry__summary-fact-value">{{ orderPreview.serviceDate|date('d/m/Y') }}</strong>
+                </div>
+                <div class="order-entry__summary-fact">
+                    <span class="order-entry__summary-fact-label">Heure</span>
+                    <strong class="order-entry__summary-fact-value">{{ orderPreview.serviceTime }}</strong>
+                </div>
+                <div class="order-entry__summary-fact">
+                    <span class="order-entry__summary-fact-label">Convives</span>
+                    <strong class="order-entry__summary-fact-value">{{ orderPreview.peopleCount }}</strong>
+                </div>
+                <div class="order-entry__summary-fact">
+                    <span class="order-entry__summary-fact-label">Téléphone</span>
+                    <strong class="order-entry__summary-fact-value">{{ orderPreview.phone ?: '-' }}</strong>
+                </div>
+            </div>
+
+            <div class="order-entry__summary-note order-entry__summary-note--address">
+                <span class="order-entry__summary-note-label">Adresse de livraison</span>
+                <p>{{ orderPreview.deliveryAddress }}</p>
+                <p>{{ orderPreview.deliveryPostalCode }} {{ orderPreview.deliveryCity }}</p>
+            </div>
+
+            <div class="order-entry__summary-note">
+                <span class="order-entry__summary-note-label">Notes client</span>
+                <p>{{ orderPreview.note ?: 'Aucune précision complémentaire.' }}</p>
+            </div>
+        </section>
+
+        <section class="order-entry__summary-section">
+            <h3 class="order-entry__summary-section-title">Tarification</h3>
+            <div class="order-entry__summary-row">
+                <span>Sous-total menu</span>
+                <strong>{{ orderPreview.menuSubtotal|price_cents }}</strong>
+            </div>
+            <div class="order-entry__summary-row {{ orderPreview.discountAmount > 0 ? 'order-entry__summary-row--discount' : '' }}">
+                <span>Remise</span>
+                <strong>{{ (orderPreview.discountAmount * -1)|price_cents }}</strong>
+            </div>
+            <div class="order-entry__summary-row">
+                <span>Livraison</span>
+                <strong>{{ orderPreview.deliveryPrice|price_cents }}</strong>
+            </div>
+            <div class="order-entry__summary-divider"></div>
+            <div class="order-entry__summary-total">
+                <span>Total</span>
+                <strong>{{ orderPreview.totalPrice|price_cents }}</strong>
+            </div>
+        </section>
+
+        <section class="order-entry__summary-section">
+            <h3 class="order-entry__summary-section-title">Prêt de matériel</h3>
+            <div class="order-entry__summary-row">
+                <span>Demande de prêt</span>
+                <strong>{{ orderPreview.needEquipmentLoan ? 'Oui' : 'Non' }}</strong>
+            </div>
+
+            {% if orderPreview.needEquipmentLoan %}
+                <div class="order-entry__summary-row">
+                    <span>Début du prêt</span>
+                    <strong>{{ orderPreview.equipmentLoanStartAt ? orderPreview.equipmentLoanStartAt|date('d/m/Y H:i') : '-' }}</strong>
+                </div>
+                <div class="order-entry__summary-row">
+                    <span>Fin du prêt</span>
+                    <strong>{{ orderPreview.equipmentLoanEndAt ? orderPreview.equipmentLoanEndAt|date('d/m/Y H:i') : '-' }}</strong>
+                </div>
+                <div class="order-entry__summary-note">
+                    <span class="order-entry__summary-note-label">Note matériel</span>
+                    <p>{{ orderPreview.equipmentLoanNote ?: 'Aucune précision sur le matériel.' }}</p>
+                </div>
+            {% else %}
+                <div class="order-entry__summary-note order-entry__summary-note--muted">
+                    <span class="order-entry__summary-note-label">Information</span>
+                    <p>Aucun prêt de matériel n’a été demandé pour cette commande.</p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <div class="order-entry__summary-footer">
+        <p class="order-entry__summary-help order-entry__summary-help--preview">
+            Tu peux encore modifier la commande avant validation finale.
+        </p>
+
+        <div class="order-entry__summary-actions order-entry__summary-actions--preview">
+            <button
+                type="button"
+                class="btn btn-outline-primary btn-lg"
+                data-action="order-preview#showEditor"
+                aria-controls="order-entry-editor"
+            >
+                Revenir à la configuration
+            </button>
+            <button
+                type="submit"
+                form="order-entry-form"
+                name="confirm_order"
+                value="1"
+                class="btn btn-primary btn-lg"
+            >
+                Confirmer la commande
+            </button>
+        </div>
     </div>
 </article>

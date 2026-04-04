@@ -38,10 +38,12 @@ Plan de sprint pour finaliser le projet, base sur l'etat du repo au 2026-04-04.
 - [x] Formulaire de commande pre-rempli avec les informations utilisateur
 - [x] Calcul du prix, de la remise et de la livraison
 - [x] Envoi du mail de confirmation apres creation
-- [ ] Recapitulatif de commande confirme cote serveur avant persistence
+- [x] Recapitulatif de commande confirme cote serveur avant persistence
+- [x] Flux de previsualisation / confirmation en deux etapes avec retour a l'edition
 - [ ] Ecran de modification de commande fonctionnel
 - [ ] Regles completes de modification / annulation alignees sur le cahier des charges
 - [ ] Couverture de tests complete sur les cas commande
+- [ ] Tests complementaires sur l'edition, les refus metier et les cas limites de confirmation
 
 ## Sprint 5 - Back-office employe
 
@@ -99,7 +101,7 @@ Plan de sprint pour finaliser le projet, base sur l'etat du repo au 2026-04-04.
 
 ## Ordre recommande pour terminer
 
-- [ ] Sprint 4 - Parcours commande metier
+- [ ] Sprint 4 - Finaliser edition, annulation et couverture complete du parcours commande
 - [ ] Sprint 5 - Back-office employe
 - [ ] Sprint 3 - Parcours avis utilisateur
 - [ ] Sprint 6 - Back-office administrateur
