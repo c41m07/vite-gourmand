@@ -44,12 +44,20 @@ final class OrderController extends AbstractController
         $orderPreview = null;
 
         if ($form->isSubmitted()) {
-            $order = $createOrderHandler->handle($form, $menu, $user);
+            $isConfirmation = '1' === $request->request->get('confirm_order');
 
-            if ($order instanceof CustomerOrder) {
-                $this->addFlash('success', 'Votre commande a bien été enregistrée. Nous vous remercions de votre confiance.');
+            if ($isConfirmation) {
+                $order = $createOrderHandler->handle($form, $menu, $user);
 
-                return $this->redirectToRoute('app_user_profile', ['tab' => 'orders']);
+                if ($order instanceof CustomerOrder) {
+                    $this->addFlash('success', 'Votre commande a été créée avec succès.');
+
+                    return $this->redirectToRoute('app_user_profile', [
+                        'tab' => 'orders',
+                    ]);
+                }
+            } else {
+                $orderPreview = $createOrderHandler->preview($form, $menu);
             }
         }
 

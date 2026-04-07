@@ -34,6 +34,10 @@
     }
 }
 
+.order-entry__layout--preview {
+    grid-template-columns: minmax(0, 1fr);
+}
+
 .order-entry__main {
     display: grid;
     gap: 1.5rem;
@@ -416,11 +420,192 @@
     text-decoration: none;
 }
 
-.order-entry__preview-grid {
-    display: grid;
-    gap: .75rem;
+.order-entry__preview-help,
+.order-entry__summary-help {
+    margin: 0;
+    color: $muted;
+    font-size: .94rem;
+    line-height: 1.55;
 }
 
-.order-entry__preview-grid p {
+.order-entry__summary--preview {
+    padding: 1.5rem;
+}
+
+.order-entry__summary-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.order-entry__summary-state {
+    display: inline-flex;
+    align-items: center;
+    padding: .55rem .85rem;
+    border-radius: 999px;
+    background: rgba($primary, .09);
+    color: $primary;
+    font-size: .82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.order-entry__summary-banner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba($primary, .08), rgba($secondary, .08));
+    border: 1px solid rgba($primary, .12);
+}
+
+.order-entry__summary-banner-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba($primary, .12);
+    color: $primary;
+    font-size: 1.25rem;
+}
+
+.order-entry__summary-banner-copy strong {
+    display: block;
+    margin-bottom: .2rem;
+    color: $dark;
+    font-size: 1rem;
+}
+
+.order-entry__summary-banner-copy p {
     margin: 0;
+    color: $muted;
+    line-height: 1.55;
+}
+
+.order-entry__summary-help--preview {
+    margin-bottom: 0;
+}
+
+.order-entry__summary-stack {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.order-entry__summary-section {
+    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    background: #fbf7f0;
+    border: 1px solid rgba($primary, .08);
+}
+
+.order-entry__summary-section-title {
+    margin: 0 0 .75rem;
+    color: $dark;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.order-entry__summary-facts {
+    display: grid;
+    gap: .85rem;
+    margin-bottom: .95rem;
+}
+
+@media (min-width: 768px) {
+    .order-entry__summary-facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.order-entry__summary-fact {
+    padding: .95rem 1rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid rgba($primary, .08);
+}
+
+.order-entry__summary-fact-label {
+    display: block;
+    margin-bottom: .35rem;
+    color: $muted;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.order-entry__summary-fact-value {
+    color: $dark;
+    font-size: 1.05rem;
+}
+
+.order-entry__summary-note {
+    margin-top: .9rem;
+    padding: .95rem 1rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid rgba($primary, .1);
+}
+
+.order-entry__summary-note-label {
+    display: block;
+    margin-bottom: .45rem;
+    color: $muted;
+    font-size: .82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.order-entry__summary-note p {
+    margin: 0;
+    color: $dark;
+}
+
+.order-entry__summary-note--address p + p {
+    margin-top: .25rem;
+}
+
+.order-entry__summary-note--muted {
+    background: rgba($primary, .05);
+}
+
+.order-entry__summary-actions--preview {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: 0;
+}
+
+.order-entry__summary-footer {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.order-entry__editor-content {
+    padding-top: 1.5rem;
+}
+
+.order-entry__editor-content .order-entry__panel {
+    margin: 0;
+}
+
+@media (max-width: 767.98px) {
+    .order-entry__summary-top {
+        flex-direction: column;
+    }
+
+    .order-entry__summary-state {
+        white-space: normal;
+    }
+
+    .order-entry__summary-banner {
+        grid-template-columns: 1fr;
+    }
 }

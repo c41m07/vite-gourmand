@@ -10,13 +10,15 @@ Roadmap fusionnee depuis l'ancien suivi, les TODOs techniques et la doc projet.
 - Entites Doctrine et migrations pour le coeur metier
 - Authentification utilisateur et base de reset password
 - Contact avec persistence + envoi de mail
-- Base du parcours commande cote utilisateur
+- Parcours commande cote utilisateur avec calcul du prix, de la remise et de la livraison
+- Previsualisation / confirmation de commande en deux etapes avant persistence
+- Retour a l'edition apres previsualisation avec recapitulatif dedie
 - Dashboards `worker` et `admin`
 
 ## Ce qui reste partiel
 
-- Recapitulatif / confirmation metier de commande
 - Edition et annulation de commande cote utilisateur
+- Couverture de tests commande encore partielle sur les cas metier et cas limites
 - Parcours avis apres commande terminee
 - Actions reelles worker/admin sur menus, plats, horaires et statuts
 - Gestion employee cote admin
@@ -28,13 +30,13 @@ Roadmap fusionnee depuis l'ancien suivi, les TODOs techniques et la doc projet.
 ### Haute
 
 - Journaliser les echecs d'envoi mail du formulaire de contact
-- Fiabiliser le parcours commande: recap, confirmation, edition/annulation, tests
+- Finaliser le parcours commande: edition, annulation, securisation complementaire et tests
 - Rendre effectives les actions worker/admin aujourd'hui surtout visibles dans l'UI
 - Limiter l'autofill de connexion de demo a un usage dev explicite
 
 ### Moyenne
 
-- Completer les tests sur les parcours commande, contact et back-office
+- Completer les tests sur l'edition de commande, les refus metier, le contact et le back-office
 - Clarifier le flux de mise a jour du profil utilisateur dans un service dedie
 - Corriger le nommage des accesseurs `DateTime` sur `ContactMessage`
 - Nettoyer le code commente genere dans certains repositories

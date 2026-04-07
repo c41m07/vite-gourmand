@@ -34,7 +34,10 @@
                 <div class="alert alert-danger order-entry__flash" role="alert">{{ message }}</div>
             {% endfor %}
 
-            <div class="order-entry__layout">
+            <div
+                class="order-entry__layout{{ orderPreview is not null ? ' order-entry__layout--preview' : '' }}"
+                data-order-preview-target="layout"
+            >
                 <div class="order-entry__main">
                     {% include 'order/components/_selected_menu_panel.html.twig' with {
                         menu: menu
@@ -44,20 +47,24 @@
                         customer: app.user
                     } only %}
 
-                    {% include 'order/components/_form_panel.html.twig' with {
-                        orderForm: orderForm,
-                        menu: menu,
-                        discount_active: discount_active
-                    } only %}
-
                     {% if orderPreview is not null %}
                         {% include 'order/components/_preview_panel.html.twig' with {
                             orderPreview: orderPreview
                         } only %}
                     {% endif %}
+
+                    {% include 'order/components/_form_panel.html.twig' with {
+                        orderForm: orderForm,
+                        menu: menu,
+                        discount_active: discount_active,
+                        orderPreview: orderPreview
+                    } only %}
                 </div>
 
-                <aside class="order-entry__sidebar">
+                <aside
+                    class="order-entry__sidebar{{ orderPreview is not null ? ' d-none' : '' }}"
+                    data-order-preview-target="sidebar"
+                >
                     {% include 'order/components/_summary_sidebar.html.twig' with {
                         menu: menu,
                         preview_people: preview_people,
@@ -65,7 +72,8 @@
                         preview_discount: preview_discount,
                         preview_delivery: preview_delivery,
                         preview_total: preview_total,
-                        discount_active: discount_active
+                        discount_active: discount_active,
+                        orderPreview: orderPreview
                     } only %}
                 </aside>
             </div>

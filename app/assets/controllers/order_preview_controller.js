@@ -8,6 +8,10 @@ import {
 export default class extends Controller {
     static targets = [
         'form',
+        'layout',
+        'editor',
+        'previewPanel',
+        'sidebar',
         'peopleCountField',
         'deliveryCityField',
         'distanceKmField',
@@ -29,6 +33,27 @@ export default class extends Controller {
 
     connect() {
         this.sync()
+    }
+
+    showEditor(event) {
+        event.preventDefault()
+
+        if (this.hasPreviewPanelTarget) {
+            this.previewPanelTarget.classList.add(this.hiddenClassValue)
+        }
+
+        if (this.hasEditorTarget) {
+            this.editorTarget.classList.remove(this.hiddenClassValue)
+            this.editorTarget.scrollIntoView({behavior: 'smooth', block: 'start'})
+        }
+
+        if (this.hasSidebarTarget) {
+            this.sidebarTarget.classList.remove(this.hiddenClassValue)
+        }
+
+        if (this.hasLayoutTarget) {
+            this.layoutTarget.classList.remove('order-entry__layout--preview')
+        }
     }
 
     sync() {
