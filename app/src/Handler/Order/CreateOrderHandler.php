@@ -14,7 +14,7 @@ use App\Entity\User;
 use App\Repository\EquipmentLoanStatusRepository;
 use App\Repository\OrderStatusRepository;
 use App\Service\Mail\EmailFactoryService;
-use App\Service\Order\OrderPricingCalculator;
+use App\Service\Order\OrderPricingService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +29,7 @@ final readonly class CreateOrderHandler
         private EntityManagerInterface        $entityManager,
         private OrderStatusRepository         $orderStatusRepository,
         private EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
-        private OrderPricingCalculator        $orderPricingCalculator,
+        private OrderPricingService           $orderPricingService,
         private MailerInterface               $mailer,
         private EmailFactoryService           $emailFactory,
     )
@@ -136,11 +136,12 @@ final readonly class CreateOrderHandler
 
         $deliveryCity = trim((string)($data['deliveryCity'] ?? ''));
 
-        $pricing = $this->orderPricingCalculator->calculate(
+        $pricing = $this->orderPricingService->calculate(
             $menu,
             $peopleCount,
             $deliveryCity,
             (int)($data['distancekm'] ?? 0),
+            $needEquipmentLoan,
         );
 
         return [

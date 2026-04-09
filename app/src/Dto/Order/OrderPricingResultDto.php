@@ -5,7 +5,7 @@ namespace App\Dto\Order;
 final readonly class OrderPricingResultDto
 {
     public function __construct(
-        public int    $basePrice,
+        public int    $unitPrice,
         public int    $peopleCount,
         public int    $menuSubtotal,
         public int    $discountAmount,

@@ -8,19 +8,26 @@ use App\Entity\Menu;
 final class OrderPricingService
 {
 
-    public function calculate(Menu $menu, int $peopleCount, string $deliveryCity, int $distanceKm, bool $needEquipmentLoan): OrderPricingResultDto
+    public function calculate(
+        Menu $menu,
+        int $peopleCount,
+        string $deliveryCity,
+        int $distanceKm,
+        bool $needEquipmentLoan = false,
+    ): OrderPricingResultDto
     {
-        $basePrice = (int)$menu->getBasePrice();
+        $unitPrice = (int)$menu->getBasePrice();
         $minPeople = (int)$menu->getMinPeople();
+        $normalizedPeopleCount = max(0, $peopleCount);
 
         $normalizedCity = trim($deliveryCity);
         $normalizedDistanceKm = max(0, $distanceKm);
 
         $isBordeaux = mb_strtolower($normalizedCity) === 'bordeaux';
 
-        $menuSubtotal = $basePrice * $peopleCount;
+        $menuSubtotal = $unitPrice * $normalizedPeopleCount;
 
-        $discountApplied = $peopleCount >= ($minPeople + 5);
+        $discountApplied = $normalizedPeopleCount >= ($minPeople + 5);
         $discountAmount = $discountApplied ? (int)round($menuSubtotal * 0.10) : 0;
 
         $deliveryPrice = $isBordeaux ? 0 : 500 + ($normalizedDistanceKm * 59);
@@ -29,8 +36,8 @@ final class OrderPricingService
 
 
         return new OrderPricingResultDto(
-            basePrice: $basePrice,
-            peopleCount: $peopleCount,
+            unitPrice: $unitPrice,
+            peopleCount: $normalizedPeopleCount,
             menuSubtotal: $menuSubtotal,
             discountAmount: $discountAmount,
             deliveryPrice: $deliveryPrice,

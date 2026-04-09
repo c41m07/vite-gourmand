@@ -7,7 +7,6 @@ import {
 
 export default class extends Controller {
     static targets = [
-        'form',
         'layout',
         'editor',
         'previewPanel',
