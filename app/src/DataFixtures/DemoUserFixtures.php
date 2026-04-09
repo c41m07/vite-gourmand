@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,13 +15,12 @@ final class DemoUserFixtures extends Fixture
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
-    )
-    {
+    ) {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $user = $this->createUser(
             email: 'test@test.fr',
@@ -73,17 +71,16 @@ final class DemoUserFixtures extends Fixture
      * @param list<string> $roles
      */
     private function createUser(
-        string   $email,
-        string   $firstName,
-        string   $lastName,
-        array    $roles,
-        string   $phone,
-        string   $postalAddress,
-        string   $city,
-        string   $postalCode,
-        DateTime $createdAt,
-    ): User
-    {
+        string $email,
+        string $firstName,
+        string $lastName,
+        array $roles,
+        string $phone,
+        string $postalAddress,
+        string $city,
+        string $postalCode,
+        \DateTime $createdAt,
+    ): User {
         $user = (new User())
             ->setEmail($email)
             ->setFirstName($firstName)

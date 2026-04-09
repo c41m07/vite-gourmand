@@ -1,4 +1,4 @@
-# _DEV_DATA_MODEL
+# Data Model
 
 Modele relationnel cible fusionne depuis l'ancien MCD et le document de relations.
 

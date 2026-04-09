@@ -183,4 +183,3 @@ class MenuApiControllerTest extends WebTestCase
         self::assertStringNotContainsString('Menu Inactive', $data['body']);
     }
 }
-

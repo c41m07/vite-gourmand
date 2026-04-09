@@ -22,7 +22,7 @@ class OpeningHour
     #[ORM\Column(length: 255)]
     private ?string $closesAt = null;
 
-    #[ORM\Column(options: ["default" => true])]
+    #[ORM\Column(options: ['default' => true])]
     private ?bool $isClosed = null;
 
     public function getId(): ?int

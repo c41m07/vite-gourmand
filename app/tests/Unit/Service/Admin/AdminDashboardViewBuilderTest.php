@@ -2,7 +2,6 @@
 
 namespace App\Tests\Unit\Service\Admin;
 
-use App\Service\Admin\AdminDashboardViewBuilder;
 use App\Entity\CustomerOrder;
 use App\Entity\CustomerOrderStatusHistory;
 use App\Entity\Menu;
@@ -13,7 +12,7 @@ use App\Repository\CustomerOrderRepository;
 use App\Repository\MenuRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
-use DateTime;
+use App\Service\Admin\AdminDashboardViewBuilder;
 use PHPUnit\Framework\TestCase;
 
 final class AdminDashboardViewBuilderTest extends TestCase
@@ -44,16 +43,16 @@ final class AdminDashboardViewBuilderTest extends TestCase
         $firstReview = (new Review())
             ->setRating(5)
             ->setTitle('Excellent')
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setValidated(true)
             ->setUser($client);
 
         $secondReview = (new Review())
             ->setRating(3)
             ->setTitle('Bien')
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setValidated(true)
             ->setUser($client);
 
@@ -141,8 +140,8 @@ final class AdminDashboardViewBuilderTest extends TestCase
             ->setPassword('password')
             ->setFirstName('Test')
             ->setLastName('User')
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setActive(true)
             ->setRoles($roles);
     }
@@ -152,21 +151,21 @@ final class AdminDashboardViewBuilderTest extends TestCase
         $order = (new CustomerOrder())
             ->setUser($user)
             ->setTotalPrice($totalPrice)
-            ->setServiceDate(new DateTime())
-            ->setOrderedAt(new DateTime())
+            ->setServiceDate(new \DateTime())
+            ->setOrderedAt(new \DateTime())
             ->setPeopleCount(4)
             ->setDeliveryAddress('10 rue des tests')
             ->setDeliveryCity('Bordeaux')
             ->setDeliveryPostalCode('33000')
             ->setDeliveryPrice(0)
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime())
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
             ->setserviceTime('12:30');
 
         $history = (new CustomerOrderStatusHistory())
             ->setCustomerOrder($order)
             ->setOrderStatus($status)
-            ->setChangedAt(new DateTime())
+            ->setChangedAt(new \DateTime())
             ->setComment('Statut de test');
 
         $order->addCustomerOrderStatusHistory($history);

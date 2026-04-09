@@ -11,6 +11,7 @@ Application Symfony 8 pour la gestion des menus, des commandes et des espaces ut
 - Docker + Docker Compose
 - Make
 - WSL si vous travaillez depuis Windows sur `\\wsl.localhost\\...`
+- Docker Desktop avec l'integration WSL active si vous lancez le projet depuis WSL
 
 ### Lancer le projet
 
@@ -19,6 +20,8 @@ make start
 ```
 
 Cette commande demarre les containers, installe les dependances, prepare la base et compile les assets en mode dev.
+
+Si `docker` n'est pas accessible depuis votre distribution WSL, activez l'integration WSL de Docker Desktop avant d'utiliser les commandes `make`.
 
 ### Commandes utiles
 
@@ -41,13 +44,11 @@ make fixtures-reset
 ## Documentation
 
 - [`docs/README.md`](docs/README.md)
-- [`docs/technical/_DEV_SETUP.md`](docs/technical/_DEV_SETUP.md)
-- [`docs/technical/_DEV_ARCHITECTURE.md`](docs/technical/_DEV_ARCHITECTURE.md)
-- [`docs/technical/TODO.md`](docs/technical/TODO.md)
-- [`docs/database/_DEV_DATA_MODEL.md`](docs/database/_DEV_DATA_MODEL.md)
-- [`docs/design/_DEV_UI_GUIDE.md`](docs/design/_DEV_UI_GUIDE.md)
-- [`docs/project/_DEV_ROADMAP.md`](docs/project/_DEV_ROADMAP.md)
-- [`docs/project/_DEV_SPRINT.md`](docs/project/_DEV_SPRINT.md)
+- [`docs/technical/setup.md`](docs/technical/setup.md)
+- [`docs/technical/architecture.md`](docs/technical/architecture.md)
+- [`docs/database/data-model.md`](docs/database/data-model.md)
+- [`docs/design/ui-guide.md`](docs/design/ui-guide.md)
+- [`docs/project/roadmap.md`](docs/project/roadmap.md)
 - [`docs/references/ecf-studi.md`](docs/references/ecf-studi.md)
 - [`docs/references/ecf-studi.pdf`](docs/references/ecf-studi.pdf)
 

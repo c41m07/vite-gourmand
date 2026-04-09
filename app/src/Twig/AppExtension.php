@@ -16,7 +16,7 @@ final class AppExtension extends AbstractExtension
 
     public function formatPriceFromCents(?int $amount, string $fallback = '-'): string
     {
-        if ($amount === null) {
+        if (null === $amount) {
             return $fallback;
         }
 

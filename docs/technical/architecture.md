@@ -1,4 +1,4 @@
-# _DEV_ARCHITECTURE
+# Architecture
 
 Photo utile du projet au 2026-04-04, centree sur ce qui est present dans le repo.
 
@@ -19,7 +19,7 @@ Photo utile du projet au 2026-04-04, centree sur ce qui est present dans le repo
 - Back-office: espaces `worker` et `admin` presents dans les controllers et templates
 - API front: recherche / filtres menus
 
-Plusieurs briques restent partielles ou cibles uniquement. Voir `docs/project/_DEV_ROADMAP.md`.
+Plusieurs briques restent partielles ou cibles uniquement. Voir `docs/project/roadmap.md`.
 
 ## Arborescence utile
 

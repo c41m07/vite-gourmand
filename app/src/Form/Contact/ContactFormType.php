@@ -11,14 +11,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 class ContactFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
 
-            ->add('firstName',TextType::class,[
+            ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
                     'placeholder' => 'Votre prénom',
@@ -28,7 +27,7 @@ class ContactFormType extends AbstractType
                     new Assert\Length(max: 255),
                 ],
             ])
-            ->add('lastName',TextType::class,[
+            ->add('lastName', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
                     'placeholder' => 'Votre nom',
@@ -36,10 +35,10 @@ class ContactFormType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length(max: 255),
-                ]
+                ],
             ])
 
-            ->add('email',EmailType::class,[
+            ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
                     'placeholder' => 'votre.email@example.com',
@@ -50,7 +49,7 @@ class ContactFormType extends AbstractType
                     new Assert\Length(max: 180),
                 ],
             ])
-            ->add('subject', TextType::class,[
+            ->add('subject', TextType::class, [
                 'label' => 'Objet',
                 'attr' => [
                     'placeholder' => 'Objet de votre message',
@@ -59,9 +58,9 @@ class ContactFormType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(max: 180),
                     new Assert\Length(min: 5),
-                ]
+                ],
             ])
-            ->add('message',TextareaType::class,[
+            ->add('message', TextareaType::class, [
                 'label' => 'Message',
                 'attr' => [
                     'placeholder' => 'Votre message',
@@ -70,7 +69,7 @@ class ContactFormType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(max: 255),
                     new Assert\Length(min: 10),
-                ]
+                ],
             ])
         ;
     }

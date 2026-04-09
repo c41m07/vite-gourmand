@@ -18,10 +18,10 @@ final class MenuApiController extends AbstractController
         #[MapQueryString(
             validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY,
             serializationContext: [AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true]
-        )] MenuApiFiltersDto $filters,
-        MenuRepository       $menuRepository,
-    ): JsonResponse
-    {
+        )]
+        MenuApiFiltersDto $filters,
+        MenuRepository $menuRepository,
+    ): JsonResponse {
         $menus = $menuRepository->searchPublic($filters);
 
         return $this->json([

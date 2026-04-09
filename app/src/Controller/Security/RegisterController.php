@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\Security\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Service\Mail\EmailFactoryService;
-use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,14 +20,13 @@ class RegisterController extends AbstractController
 {
     #[Route(path: '/register', name: 'app_register')]
     public function register(
-        Request                     $request,
+        Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface      $entityManager,
-        MailerInterface             $mailer,
-        UserRepository              $userRepository,
-        EmailFactoryService         $emailFactory,
-    ): Response
-    {
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        UserRepository $userRepository,
+        EmailFactoryService $emailFactory,
+    ): Response {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
@@ -38,7 +36,7 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($userRepository->findOneBy(['email' => $user->getEmail()]) !== null) {
+            if (null !== $userRepository->findOneBy(['email' => $user->getEmail()])) {
                 $form->get('email')->addError(new FormError('Un compte existe déjà avec cet email.'));
 
                 return $this->render('security/register.html.twig', [
@@ -48,13 +46,13 @@ class RegisterController extends AbstractController
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
-                (string)$form->get('plainPassword')->getData()
+                (string) $form->get('plainPassword')->getData()
             );
 
             $user->setPassword($hashedPassword);
             $user->setActive(true);
 
-            $now = new DateTime();
+            $now = new \DateTime();
             $user->setCreatedAt($now);
             $user->setUpdatedAt($now);
 

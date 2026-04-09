@@ -52,9 +52,10 @@ Interdits :
 
 ### Observations repo
 
-- `tests/` est la testsuite PHPUnit principale.
+- `app/tests` est la testsuite PHPUnit principale.
 - Les commandes utiles sont centralisees dans le `Makefile`.
-- `docs/technical/_DEV_SETUP.md` complete le `Makefile`.
+- `docs/technical/setup.md` complete le `Makefile`.
+- Les notes locales non versionnees sont stockees dans `.local/notes/` et ne font pas partie de la documentation stable du projet.
 
 ## Commandes projet
 
@@ -163,6 +164,7 @@ Sans validation explicite :
 Demandes qui autorisent une implementation complete :
 
 - "fais-le"
+- "go"
 - "code-le"
 - "vas-y implemente"
 - "genere le fichier"
@@ -414,3 +416,59 @@ Objectif :
 
 - rendre l'utilisateur plus autonome ;
 - ne pas court-circuiter l'apprentissage.
+
+## Skills et MCP locaux
+
+### Skills locaux disponibles
+
+Les skills locaux Codex suivants sont disponibles dans `~/.codex/skills` et peuvent etre utilises automatiquement si la demande correspond clairement :
+
+- `ecf-scope-guard`
+- `menu-catalog-review`
+- `order-flow-review`
+- `auth-account-review`
+- `security-roles-guard`
+- `admin-worker-review`
+- `review-publication-review`
+- `rgaa-ui-review`
+- `symfony-quality-gate`
+- `doctrine-safe-change`
+- `twig-stimulus-ui-review`
+- `deploy-and-deliverables`
+- `project-doc-sync`
+
+Regle d'usage :
+
+- ne pas recopier le contenu des skills dans les reponses ;
+- utiliser le skill pertinent automatiquement si le sujet correspond ;
+- si plusieurs skills se recouvrent, privilegier le plus specifique au sujet.
+
+### MCP locaux configures
+
+La configuration MCP locale Codex est portee par `~/.codex/config.toml`.
+
+MCP attendus :
+
+- `figma`
+- `github`
+- `trello`
+
+Preconditions :
+
+- redemarrer PhpStorm / Codex apres modification de la config MCP ;
+- `figma` demande une authentification interactive au premier usage ;
+- `github` requiert `GITHUB_PERSONAL_ACCESS_TOKEN` dans l'environnement hote ;
+- `trello` requiert `TRELLO_API_KEY` et `TRELLO_TOKEN` dans l'environnement hote ; l'execution passe par WSL avec `npx`.
+
+Regles :
+
+- ne pas utiliser un MCP si le travail peut etre fait proprement en local sans contexte externe ;
+- privilegier la lecture seule quand cela suffit ;
+- ne jamais exposer de secret dans le repo, dans les logs, ou dans les reponses.
+
+Consignes d'usage explicites :
+
+- utiliser `github` des qu'une demande depend d'une PR, d'une issue, d'un workflow CI, d'un commit distant, d'un repository externe ou d'un contexte GitHub non present localement ;
+- utiliser `figma` des qu'une demande depend d'une maquette, d'un composant design, d'un frame, d'une bibliotheque ou d'un contexte visuel Figma non present localement ;
+- utiliser `trello` des qu'une demande depend d'une carte, d'une liste, d'un board, d'un sprint ou d'un contexte projet present dans Trello ;
+- si un MCP utile est indisponible, le signaler explicitement et continuer avec le meilleur fallback local au lieu de supposer son contenu.

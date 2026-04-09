@@ -59,4 +59,3 @@ class ContactControllerTest extends WebTestCase
         self::assertSame('Bonjour, je souhaite un devis pour 20 personnes.', $contactMessage->getMessage());
     }
 }
-
