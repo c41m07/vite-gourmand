@@ -7,8 +7,6 @@ use App\Repository\AllergenRepository;
 use App\Repository\DietRepository;
 use App\Repository\DishTypeRepository;
 use App\Repository\MenuRepository;
-use App\Repository\OpeningHourRepository;
-use App\Repository\ReviewRepository;
 use App\Repository\ThemeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +21,7 @@ final class MenuController extends AbstractController
         $diets = $dietRepository->findBy([], ['name' => 'ASC']);
         $themes = $themeRepository->findBy([], ['name' => 'ASC']);
         $menus = $menuRepository->findActiveMenus();
+
         return $this->render('menu/index.html.twig', [
             'themes' => $themes,
             'diets' => $diets,
@@ -38,14 +37,12 @@ final class MenuController extends AbstractController
         }
 
         $dishesByType = $dishTypeRepository->findDishesByMenu($menu);
-        $allergens=$allergenRepository->findByMenu($menu);
+        $allergens = $allergenRepository->findByMenu($menu);
+
         return $this->render('menu/show.html.twig', [
             'allergens' => $allergens,
             'menu' => $menu,
             'dishesByType' => $dishesByType,
         ]);
     }
-
-
-
 }

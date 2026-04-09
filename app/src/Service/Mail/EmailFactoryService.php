@@ -9,7 +9,6 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 
-
 final readonly class EmailFactoryService
 {
     public function __construct(
@@ -19,48 +18,43 @@ final readonly class EmailFactoryService
         private string $ownerEmail,
         #[Autowire('%app_name%')]
         private string $appName,
-    )
-    {
-
+    ) {
     }
-
 
     public function createWelcomeEmail(User $user): TemplatedEmail
     {
         return new TemplatedEmail()
             ->from($this->noreplyEmail)
-            ->to((string)$user->getEmail())
+            ->to((string) $user->getEmail())
             ->subject('Bienvenue sur le site de ' . $this->appName)
             ->htmlTemplate('emails/welcome.html.twig')
             ->context([
                 'firstName' => $user->getFirstName(),
             ]);
-
     }
 
     public function createContactEmail(ContactMessage $contactMessage): TemplatedEmail
     {
         return new TemplatedEmail()
             ->from($this->noreplyEmail)
-            ->replyTo((string)$contactMessage->getEmail())
+            ->replyTo((string) $contactMessage->getEmail())
             ->to($this->ownerEmail)
             ->subject($contactMessage->getSubject())
             ->htmlTemplate('emails/contact.html.twig')
             ->context([
-                'message' => (string)$contactMessage->getMessage(),
-                'contactEmail' => (string)$contactMessage->getEmail(),
-                'subject' => (string)$contactMessage->getSubject(),
-                'firstName' => (string)$contactMessage->getFirstName(),
-                'lastName' => (string)$contactMessage->getLastName(),
+                'message' => (string) $contactMessage->getMessage(),
+                'contactEmail' => (string) $contactMessage->getEmail(),
+                'subject' => (string) $contactMessage->getSubject(),
+                'firstName' => (string) $contactMessage->getFirstName(),
+                'lastName' => (string) $contactMessage->getLastName(),
             ]);
-
     }
 
     public function createResetPasswordEmail(User $user, ResetPasswordToken $resetToken): TemplatedEmail
     {
         return new TemplatedEmail()
             ->from($this->noreplyEmail)
-            ->to((string)$user->getEmail())
+            ->to((string) $user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('security/reset_password/email.html.twig')
             ->context([
@@ -72,7 +66,7 @@ final readonly class EmailFactoryService
     {
         return new TemplatedEmail()
             ->from($this->noreplyEmail)
-            ->to((string)$customerOrder->getUser()?->getEmail())
+            ->to((string) $customerOrder->getUser()?->getEmail())
             ->subject('Confirmation de votre commande sur ' . $this->appName)
             ->htmlTemplate('emails/order_confirmation.html.twig')
             ->context([
@@ -82,5 +76,4 @@ final readonly class EmailFactoryService
                 'firstName' => $customerOrder->getUser()?->getFirstName(),
             ]);
     }
-
 }

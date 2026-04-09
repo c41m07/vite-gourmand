@@ -9,7 +9,9 @@ app/public/build/
 app/.env.local
 app/.env.*.local
 app/.env.local.php
-docs/technical/TODO.md
+.local/
+.local/notes/current-focus.md
+.local/notes/todo.md
 
 ### JetBrains ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider

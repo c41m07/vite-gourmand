@@ -7,13 +7,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
     public function home(ReviewRepository $reviewRepository): Response
     {
         $reviews = $reviewRepository->findRandomsReviews();
+
         return $this->render('pages/home.html.twig', [
             'reviews' => $reviews,
         ]);
@@ -42,5 +42,4 @@ final class HomeController extends AbstractController
     {
         return $this->render('shared/under_construction.html.twig');
     }
-
 }

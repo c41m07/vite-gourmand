@@ -78,7 +78,7 @@ class EquipmentLoan
 
     public function setCustomerOrder(?CustomerOrder $customerOrder): static
     {
-        if ($customerOrder === null && $this->customerOrder !== null) {
+        if (null === $customerOrder && null !== $this->customerOrder) {
             $previousCustomerOrder = $this->customerOrder;
             $this->customerOrder = null;
 
@@ -91,7 +91,7 @@ class EquipmentLoan
 
         $this->customerOrder = $customerOrder;
 
-        if ($customerOrder !== null && $customerOrder->getEquipmentLoan() !== $this) {
+        if (null !== $customerOrder && $customerOrder->getEquipmentLoan() !== $this) {
             $customerOrder->setEquipmentLoan($this);
         }
 

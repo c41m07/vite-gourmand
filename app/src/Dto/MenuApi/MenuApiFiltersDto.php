@@ -26,7 +26,7 @@ final readonly class MenuApiFiltersDto
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
-        if ($this->minPrice !== null && $this->maxPrice !== null && $this->minPrice > $this->maxPrice) {
+        if (null !== $this->minPrice && null !== $this->maxPrice && $this->minPrice > $this->maxPrice) {
             $context->buildViolation('Le prix minimum ne peut etre superieur au prix maximum.')
                 ->atPath('minPrice')
                 ->addViolation();

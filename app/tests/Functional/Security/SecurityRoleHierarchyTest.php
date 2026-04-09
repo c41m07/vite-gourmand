@@ -2,7 +2,6 @@
 
 namespace App\Tests\Functional\Security;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -24,5 +23,4 @@ final class SecurityRoleHierarchyTest extends KernelTestCase
         self::assertTrue($authorizationChecker->isGranted('ROLE_WORKER'));
         self::assertTrue($authorizationChecker->isGranted('ROLE_ADMIN'));
     }
-
 }

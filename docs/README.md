@@ -1,6 +1,8 @@
 # Documentation de developpement
 
-Cette arborescence priorise les documents utiles au dev. Les annexes ECF et la TODO technique ont ete reintegrees comme references de cadrage.
+Cette arborescence priorise les documents stables utiles au dev.
+
+Le pilotage versionne passe desormais par une seule feuille de route. Les notes locales a fort churn restent possibles, mais ne doivent plus etre le point d'entree principal.
 
 ## Point d'entree
 
@@ -9,15 +11,18 @@ Cette arborescence priorise les documents utiles au dev. Les annexes ECF et la T
 
 ## Documentation a lire
 
-- `docs/technical/_DEV_SETUP.md`: lancement local, commandes, variables, debug
-- `docs/technical/_DEV_ARCHITECTURE.md`: stack, couches, regles metier, limites visibles
-- `docs/database/_DEV_DATA_MODEL.md`: modele relationnel cible
-- `docs/design/_DEV_UI_GUIDE.md`: palette, typo, composants et references visuelles
-- `docs/project/_DEV_ROADMAP.md`: etat utile au dev et priorites
-- `docs/project/_DEV_SPRINT.md`: plan de sprint pour finir le projet
+- `docs/technical/setup.md`: lancement local, commandes, variables, debug
+- `docs/technical/architecture.md`: stack, couches, regles metier, limites visibles
+- `docs/database/data-model.md`: modele relationnel cible
+- `docs/design/ui-guide.md`: palette, typo, composants et references visuelles
+- `docs/project/roadmap.md`: etat confirme, restes a faire et ordre de finition
 
 ## References annexes
 
-- `docs/technical/TODO.md`: backlog technique priorise et prochaine etape recommandee
 - `docs/references/ecf-studi.md`: transcription texte du cahier des charges ECF
 - `docs/references/ecf-studi.pdf`: document PDF source de l'ECF
+
+## Notes locales hors parcours principal
+
+- `.local/notes/todo.md`: checklist locale ignoree par Git
+- `.local/notes/current-focus.md`: memo de reprise local ignore par Git

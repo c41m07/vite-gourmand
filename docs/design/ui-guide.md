@@ -1,4 +1,4 @@
-# _DEV_UI_GUIDE
+# UI Guide
 
 Guide UI compact pour conserver une direction visuelle coherente pendant le dev.
 

@@ -119,7 +119,7 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
         Generator $faker,
         \App\Entity\User $user,
         int $basePrice,
-        \DateTime $createdAt
+        \DateTime $createdAt,
     ): CustomerOrder {
         $serviceDate = (clone $createdAt);
         $serviceDate->modify('+7 days');

@@ -12,20 +12,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
 #[IsGranted('ROLE_WORKER')]
 #[Route('/worker', name: 'app_worker')]
 final class WorkerController extends AbstractController
 {
     #[Route('', name: '_dashboard', methods: ['GET'])]
     public function dashboard(
-        Request                 $request,
+        Request $request,
         CustomerOrderRepository $customerOrderRepository,
-        MenuRepository          $menuRepository,
-        ReviewRepository        $reviewRepository,
-        OrderStatusRepository   $orderStatusRepository
-    ): Response
-    {
+        MenuRepository $menuRepository,
+        ReviewRepository $reviewRepository,
+        OrderStatusRepository $orderStatusRepository,
+    ): Response {
         $activeTab = $request->query->get('tab', 'orders');
         if (!in_array($activeTab, ['orders', 'menus', 'reviews'], true)) {
             $activeTab = 'orders';

@@ -16,7 +16,7 @@ class AllergenRepository extends ServiceEntityRepository
         parent::__construct($registry, Allergen::class);
     }
 
-    public function findByMenu(\App\Entity\Menu $menu):array
+    public function findByMenu(\App\Entity\Menu $menu): array
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.dishAllergens', 'da')

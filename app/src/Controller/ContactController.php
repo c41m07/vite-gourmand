@@ -5,9 +5,7 @@ namespace App\Controller;
 use App\Entity\ContactMessage;
 use App\Form\Contact\ContactFormType;
 use App\Service\Mail\EmailFactoryService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,15 +24,16 @@ final class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contactMessage->setIp($request->getClientIp());
-            $contactMessage->setcreatedAt(new DateTime());
+            $contactMessage->setcreatedAt(new \DateTime());
             $entityManager->persist($contactMessage);
             $entityManager->flush();
             $email = $emailFactory->createContactEmail($contactMessage);
             try {
                 $mailer->send($email);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return $this->redirectToRoute('app_contact_failed');
             }
+
             return $this->redirectToRoute('app_contact_success');
         }
 
@@ -54,5 +53,4 @@ final class ContactController extends AbstractController
     {
         return $this->render('contact/failed.html.twig');
     }
-
 }

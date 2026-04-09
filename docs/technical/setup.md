@@ -1,4 +1,4 @@
-# _DEV_SETUP
+# Setup
 
 Guide unique pour lancer, verifier et depanner l'environnement local.
 
@@ -9,6 +9,7 @@ Guide unique pour lancer, verifier et depanner l'environnement local.
 - Docker + Docker Compose
 - Make
 - Le reseau Docker externe `traefik_network`
+- Sous WSL: Docker Desktop avec l'integration WSL active pour la distribution utilisee
 
 Si le reseau Traefik n'existe pas encore, le creer une seule fois:
 
@@ -85,3 +86,9 @@ Si le projet est ouvert via `\\wsl.localhost\\...`, executer les commandes depui
 ```bash
 wsl bash -lc "cd /home/caim/studi/ECF/vite-gourmand && make test"
 ```
+
+Si la commande `docker` est introuvable dans WSL, verifier d'abord l'integration Docker Desktop:
+
+1. Docker Desktop > Settings > Resources > WSL Integration
+2. Activer la distribution Debian utilisee pour ce projet
+3. Redemarrer le terminal WSL avant de relancer `make start`, `make test` ou `make check`
