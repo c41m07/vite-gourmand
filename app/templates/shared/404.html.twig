@@ -1,0 +1,27 @@
+{# templates/shared/404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Page introuvable - Vite & Gourmand{% endblock %}
+
+{% block body %}
+    <section class="status-page status-page--center" aria-labelledby="error-404-title">
+        <div class="container">
+            <article class="status-card status-card--compact status-card--danger">
+                <div class="status-icon status-icon--danger" aria-hidden="true">
+                    <i class="bi bi-signpost-split-fill"></i>
+                </div>
+
+                <h1 id="error-404-title" class="status-title">Page introuvable</h1>
+
+                <p class="status-text status-text--muted">
+                    Le lien que vous avez suivi est peut-être cassé, ou la page a été déplacée.
+                </p>
+
+                <div class="status-actions">
+                    <a class="auth-btn auth-btn--danger" href="{{ path('app_home') }}">Retour à l'accueil</a>
+                    <a class="status-link" href="{{ path('app_menu_index') }}">Voir les menus</a>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

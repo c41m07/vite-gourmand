@@ -1,0 +1,27 @@
+{# templates/shared/under_construction.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Page en construction - Vite & Gourmand{% endblock %}
+
+{% block body %}
+    <section class="status-page status-page--center" aria-labelledby="underconstruct-title">
+        <div class="container">
+            <article class="status-card status-card--compact status-card--warning">
+                <div class="status-icon status-icon--warning" aria-hidden="true">
+                    <i class="bi bi-tools"></i>
+                </div>
+
+                <h1 id="underconstruct-title" class="status-title">Page en construction</h1>
+
+                <p class="status-text status-text--muted">
+                    Cette page est en préparation. Nous finalisons les derniers détails.
+                </p>
+
+                <div class="status-actions">
+                    <a class="auth-btn auth-btn--warning" href="{{ path('app_home') }}">Retour à l'accueil</a>
+                    <a class="status-link" href="{{ path('app_contact_index') }}">Nous contacter</a>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

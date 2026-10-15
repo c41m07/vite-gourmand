@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+    <section class="account-page">
+        <div class="container">
+            <h1 class="account-title">Mon compte</h1>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %}
+
+            {% include 'user/components/_tabs.html.twig' with {activeTab: activeTab} %}
+
+            <div class="account-content">
+                {% if not app.user %}
+                    <div class="account-card account-empty">
+                        <p class="mb-3">Connecte-toi pour accéder à ton compte.</p>
+                        <a class="btn btn-primary px-4" href="{{ path('app_login') }}">Se connecter</a>
+                    </div>
+                {% elseif activeTab == 'orders' %}
+                    {% include 'user/components/_orders_panel.html.twig' with {
+                        orders: orders,
+                        orderStatusFilter: orderStatusFilter,
+                        orderStatusFilters: orderStatusFilters
+                    } %}
+                {% elseif activeTab == 'reviews' %}
+                    {% include 'user/components/_reviews_panel.html.twig' with {reviews: reviews} %}
+                {% else %}
+                    {% include 'user/components/_profile_panel.html.twig' %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

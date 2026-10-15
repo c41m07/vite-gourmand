@@ -1,0 +1,55 @@
+<div class="worker-section-header">
+    <h2 class="worker-section-title">Gestion des menus ({{ menus|length }})</h2>
+    <a class="btn btn-success worker-action" href="{{ path('app_under_construction') }}">
+        <i class="bi bi-plus-lg"></i>
+        Nouveau menu
+    </a>
+</div>
+
+{% if menus is empty %}
+    <div class="worker-card worker-empty">
+        <div class="worker-empty__icon"><i class="bi bi-check-circle"></i></div>
+        <p class="mb-0">Aucun menu disponible.</p>
+    </div>
+{% else %}
+    <div class="row g-4">
+        {% for menu in menus %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <article class="worker-card worker-menu">
+                    <div class="worker-menu__media">
+                        {% if menu.media and menu.media.imgUrl %}
+                            <img src="{{ menu.media.imgUrl }}" alt="{{ menu.media.altText ?: menu.title }}">
+                        {% else %}
+                            <img src="{{ asset('build/images/menus/menus-asia.jpg') }}" alt="{{ menu.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="worker-menu__body">
+                        <div class="worker-menu__header">
+                            <h3 class="worker-menu__title">{{ menu.title }}</h3>
+                            <span class="worker-badge {{ menu.active ? 'worker-badge--active' : 'worker-badge--inactive' }}">
+                                {{ menu.active ? 'Actif' : 'Inactif' }}
+                            </span>
+                        </div>
+                        <p class="worker-menu__text">{{ menu.description ?: 'Description à compléter.' }}</p>
+                        <div class="worker-menu__meta">
+                            <span>
+                                {% set priceDisplay = menu.basePrice / 100 %}
+                                {{ priceDisplay|number_format(2, ',', ' ') }} €/pers
+                            </span>
+                            <span>Min. {{ menu.minPeople }} pers.</span>
+                        </div>
+                    </div>
+                    <div class="worker-menu__actions">
+                        <a class="btn btn-outline-success w-100" href="{{ path('app_under_construction') }}">
+                            <i class="bi bi-pencil"></i>
+                            Modifier
+                        </a>
+                        <button class="btn btn-outline-danger worker-icon-btn" type="button" aria-label="Supprimer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

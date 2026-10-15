@@ -1,0 +1,37 @@
+{# templates/components/_hero.html.twig #}
+{% set hero_bg_class = 'pages-hero__bg--primary' %}
+{% if background is defined %}
+    {% if background == '#8a5a2b' %}
+        {% set hero_bg_class = 'pages-hero__bg--copper' %}
+    {% elseif background == '#5a2a2a' %}
+        {% set hero_bg_class = 'pages-hero__bg--brick' %}
+    {% endif %}
+{% endif %}
+
+<section class="pages-hero position-relative overflow-hidden">
+    {% if asset_url is defined %}
+        <img
+            src="{{ asset_url }}"
+            alt=""
+            class="pages-hero__media position-absolute top-0 start-0 w-100 h-100"
+            aria-hidden="true"
+        >
+    {% else %}
+        <div class="pages-hero__bg {{ hero_bg_class }} position-absolute top-0 start-0 w-100 h-100" aria-hidden="true"></div>
+    {% endif %}
+
+
+
+    <div class="position-relative">
+        <div class="container py-5 py-lg-6 pages-hero__content">
+            <div class="row">
+                <div class="col-12 col-lg-8 mx-auto text-center text-light">
+                    <h1 class="display-5 fw-bold mb-3">{{ title }}</h1>
+                </div>
+                {% if subtitle is defined %}
+                    <h2 class="page-hero__subtitle mb-3 fw-bold text-center"> {{ subtitle }}</h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
