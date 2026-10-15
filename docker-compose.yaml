@@ -44,8 +44,13 @@ services:
 
   mailhog:
     image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-      - "1025:1025"
     networks:
       - backend
+      - traefik_network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mailrp-mailhog.entrypoints: web
+      traefik.http.routers.mailrp-mailhog.rule: Host(`mailhog.localhost`)
+      traefik.http.routers.mailrp-mailhog.priority: 11
+      traefik.http.services.mailrp-mailhog.loadbalancer.server.port: 8025
+      traefik.docker.network: traefik_network

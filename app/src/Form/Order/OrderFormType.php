@@ -2,8 +2,8 @@
 
 namespace App\Form\Order;
 
+use App\Entity\CustomerOrder;
 use App\Entity\Menu;
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -20,15 +20,18 @@ class OrderFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var User $user */
-        $user = $builder->getOption('user');
-        /** @var Menu $menu */
-        $menu = $builder->getOption('menu');
+        /** @var Menu|null $menu */
+        $menu = $options['menu'];
+        $peopleCountAttributes = [];
+
+        if ($menu instanceof Menu) {
+            $peopleCountAttributes['min'] = $menu->getMinPeople();
+            $peopleCountAttributes['max'] = $menu->getStock();
+        }
 
         $builder
             ->add('phone', TelType::class, [
                 'label' => 'Téléphone',
-                'data' => $user->getPhone(),
                 'required' => false,
                 'attr' => [
                     'placeholder' => '06 00 00 00 00',
@@ -36,21 +39,18 @@ class OrderFormType extends AbstractType
             ])
             ->add('deliveryAddress', TextType::class, [
                 'label' => 'Adresse de livraison',
-                'data' => $user->getPostalAddress(),
                 'attr' => [
                     'placeholder' => 'Numéro et rue',
                 ],
             ])
             ->add('deliveryCity', TextType::class, [
                 'label' => 'Ville',
-                'data' => $user->getCity(),
                 'attr' => [
                     'placeholder' => 'Bordeaux',
                 ],
             ])
             ->add('deliveryPostalCode', TextType::class, [
                 'label' => 'Code postal',
-                'data' => $user->getPostalCode(),
                 'attr' => [
                     'placeholder' => '33000',
                 ],
@@ -66,15 +66,12 @@ class OrderFormType extends AbstractType
             ])
             ->add('peopleCount', IntegerType::class, [
                 'label' => 'Nombre de personnes',
-                'data' => $menu->getMinPeople(),
-                'attr' => [
-                    'min' => $menu->getMinPeople(),
-                    'max' => $menu->getStock(),
-                ],
+                'attr' => $peopleCountAttributes,
             ])
             ->add('distancekm', IntegerType::class, [
                 'label' => 'Distance de livraison en km',
                 'required' => false,
+                'mapped' => false,
                 'data' => 0,
                 'attr' => [
                     'min' => 0,
@@ -119,10 +116,9 @@ class OrderFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'user' => null,
+            'data_class' => CustomerOrder::class,
             'menu' => null,
         ]);
-        $resolver->setAllowedTypes('user', [User::class]);
-        $resolver->setAllowedTypes('menu', [Menu::class]);
+        $resolver->setAllowedTypes('menu', ['null', Menu::class]);
     }
 }

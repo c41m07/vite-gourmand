@@ -35,8 +35,15 @@ final class OrderController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $form = $this->createForm(OrderFormType::class, null, [
-            'user' => $user,
+        $customerOrder = new CustomerOrder()
+            ->setPhone($user->getPhone())
+            ->setDeliveryAddress((string) ($user->getPostalAddress() ?? ''))
+            ->setDeliveryCity((string) ($user->getCity() ?? ''))
+            ->setDeliveryPostalCode((string) ($user->getPostalCode() ?? ''))
+            ->setPeopleCount((int) ($menu->getMinPeople() ?? 0))
+            ->setUser($user);
+
+        $form = $this->createForm(OrderFormType::class, $customerOrder, [
             'menu' => $menu,
         ]);
 

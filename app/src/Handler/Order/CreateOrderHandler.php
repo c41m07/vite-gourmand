@@ -26,13 +26,14 @@ use Symfony\Component\Mailer\MailerInterface;
 final readonly class CreateOrderHandler
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private OrderStatusRepository $orderStatusRepository,
+        private EntityManagerInterface        $entityManager,
+        private OrderStatusRepository         $orderStatusRepository,
         private EquipmentLoanStatusRepository $equipmentLoanStatusRepository,
-        private OrderPricingService $orderPricingService,
-        private MailerInterface $mailer,
-        private EmailFactoryService $emailFactory,
-    ) {
+        private OrderPricingService           $orderPricingService,
+        private MailerInterface               $mailer,
+        private EmailFactoryService           $emailFactory,
+    )
+    {
     }
 
     public function handle(FormInterface $form, Menu $menu, User $user): ?CustomerOrder
@@ -43,13 +44,12 @@ final readonly class CreateOrderHandler
             return null;
         }
 
-        $data = $prepared['data'];
+        /** @var CustomerOrder $order */
+        $order = $prepared['order'];
         $pricing = $prepared['pricing'];
         $needEquipmentLoan = $prepared['needEquipmentLoan'];
         $loanStartAt = $prepared['loanStartAt'];
         $loanEndAt = $prepared['loanEndAt'];
-        $deliveryCity = $prepared['deliveryCity'];
-        $serviceDate = $prepared['serviceDate'];
 
         $equipmentLoan = $needEquipmentLoan
             ? $this->createEquipmentLoan(
@@ -60,32 +60,30 @@ final readonly class CreateOrderHandler
             : null;
 
         $now = new DateTime();
-        $order = (new CustomerOrder())
+        $order
             ->setUser($user)
             ->setOrderedAt(clone $now)
-            ->setServiceDate($serviceDate)
-            ->setserviceTime((string) ($data['serviceTime'] ?? ''))
             ->setPeopleCount($pricing->peopleCount)
-            ->setPhone($data['phone'] ?? null)
-            ->setDeliveryAddress((string) ($data['deliveryAddress'] ?? ''))
-            ->setDeliveryCity($deliveryCity)
-            ->setDeliveryPostalCode((string) ($data['deliveryPostalCode'] ?? ''))
+            ->setPhone($this->normalizeNullableString($order->getPhone()))
+            ->setDeliveryAddress(trim((string)$order->getDeliveryAddress()))
+            ->setDeliveryCity($prepared['deliveryCity'])
+            ->setDeliveryPostalCode(trim((string)$order->getDeliveryPostalCode()))
             ->setDeliveryPrice($pricing->deliveryPrice)
             ->setDiscountAmount($pricing->discountAmount)
             ->setTotalPrice($pricing->totalPrice)
-            ->setNote($data['note'] ?? null)
+            ->setNote($this->normalizeNullableString($order->getNote()))
             ->setCreatedAt(clone $now)
             ->setUpdatedAt(clone $now)
             ->setEquipmentLoan($equipmentLoan);
 
-        $orderMenu = (new CustomerOrderMenu())
+        $orderMenu = new CustomerOrderMenu()
             ->setCustomerOrder($order)
             ->setMenu($menu)
             ->setQuantity(1)
             ->setUnitPrice($pricing->unitPrice)
             ->setLineTotal($pricing->menuSubtotal);
 
-        $statusHistory = (new CustomerOrderStatusHistory())
+        $statusHistory = new CustomerOrderStatusHistory()
             ->setCustomerOrder($order)
             ->setOrderStatus($this->getPendingStatus())
             ->setChangedByUser($user)
@@ -102,7 +100,7 @@ final readonly class CreateOrderHandler
         $this->entityManager->flush();
 
         $this->mailer->send(
-            $this->emailFactory->createOrderConfirmationEmail($order, (string) $menu->getTitle())
+            $this->emailFactory->createOrderConfirmationEmail($order, (string)$menu->getTitle())
         );
 
         return $order;
@@ -110,14 +108,14 @@ final readonly class CreateOrderHandler
 
     private function prepareOrderData(FormInterface $form, Menu $menu): ?array
     {
-        $data = $form->getData();
+        $order = $form->getData();
 
-        if (!is_array($data)) {
+        if (!$order instanceof CustomerOrder) {
             throw new RuntimeException('Les données de commande sont invalides.');
         }
 
-        $peopleCount = (int) ($data['peopleCount'] ?? 0);
-        $needEquipmentLoan = (bool) $form->get('needEquipmentLoan')->getData();
+        $peopleCount = (int)($order->getPeopleCount() ?? 0);
+        $needEquipmentLoan = (bool)$form->get('needEquipmentLoan')->getData();
 
         $this->validatePeopleCount($form, $menu, $peopleCount);
         [$loanStartAt, $loanEndAt] = $this->validateEquipmentLoan($form, $needEquipmentLoan);
@@ -126,24 +124,23 @@ final readonly class CreateOrderHandler
             return null;
         }
 
-        $serviceDate = $data['serviceDate'] ?? null;
-
+        $serviceDate = $order->getServiceDate();
         if (!$serviceDate instanceof DateTimeInterface) {
             throw new RuntimeException('La date de service est invalide.');
         }
 
-        $deliveryCity = trim((string) ($data['deliveryCity'] ?? ''));
-
+        $deliveryCity = trim((string)($order->getDeliveryCity() ?? ''));
+        $distanceKm = (int)($form->get('distancekm')->getData() ?? 0);
         $pricing = $this->orderPricingService->calculate(
             $menu,
             $peopleCount,
             $deliveryCity,
-            (int) ($data['distancekm'] ?? 0),
+            $distanceKm,
             $needEquipmentLoan,
         );
 
         return [
-            'data' => $data,
+            'order' => $order,
             'pricing' => $pricing,
             'needEquipmentLoan' => $needEquipmentLoan,
             'loanStartAt' => $loanStartAt instanceof DateTimeInterface ? DateTime::createFromInterface($loanStartAt) : null,
@@ -155,8 +152,8 @@ final readonly class CreateOrderHandler
 
     private function validatePeopleCount(FormInterface $form, Menu $menu, int $peopleCount): void
     {
-        $minimumPeople = (int) ($menu->getMinPeople() ?? 0);
-        $stock = (int) ($menu->getStock() ?? 0);
+        $minimumPeople = (int)($menu->getMinPeople() ?? 0);
+        $stock = (int)($menu->getStock() ?? 0);
 
         if ($peopleCount < $minimumPeople || $peopleCount > $stock) {
             $form->get('peopleCount')->addError(new FormError(sprintf(
@@ -197,8 +194,9 @@ final readonly class CreateOrderHandler
     private function createEquipmentLoan(
         ?DateTimeInterface $loanStartAt,
         ?DateTimeInterface $loanEndAt,
-        mixed $loanNote,
-    ): EquipmentLoan {
+        mixed              $loanNote,
+    ): EquipmentLoan
+    {
         if (!$loanStartAt instanceof DateTimeInterface || !$loanEndAt instanceof DateTimeInterface) {
             throw new RuntimeException('Les dates du prêt de matériel sont invalides.');
         }
@@ -206,15 +204,26 @@ final readonly class CreateOrderHandler
         return (new EquipmentLoan())
             ->setLoanStartAt(DateTime::createFromInterface($loanStartAt))
             ->setLoanEndAt(DateTime::createFromInterface($loanEndAt))
-            ->setNote(is_string($loanNote) ? $loanNote : null)
+            ->setNote($this->normalizeNullableString($loanNote))
             ->setStatus($this->getBorrowedEquipmentLoanStatus());
+    }
+
+    private function normalizeNullableString(mixed $value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $normalizedValue = trim($value);
+
+        return '' === $normalizedValue ? null : $normalizedValue;
     }
 
     private function getBorrowedEquipmentLoanStatus(): EquipmentLoanStatus
     {
         $equipmentLoanStatus = $this->equipmentLoanStatusRepository->findOneBy(['status' => 'Emprunte']);
         if (null === $equipmentLoanStatus) {
-            throw new RuntimeException('Equipment loan status not found');
+            throw new RuntimeException('Le statut de prêt de matériel est introuvable.');
         }
 
         return $equipmentLoanStatus;
@@ -224,7 +233,7 @@ final readonly class CreateOrderHandler
     {
         $pendingStatus = $this->orderStatusRepository->findOneBy(['code' => 'pending']);
         if (null === $pendingStatus) {
-            throw new RuntimeException('Pending order status not found');
+            throw new RuntimeException('Le statut initial de commande est introuvable.');
         }
 
         return $pendingStatus;
@@ -238,18 +247,19 @@ final readonly class CreateOrderHandler
             return null;
         }
 
-        $data = $prepared['data'];
+        /** @var CustomerOrder $order */
+        $order = $prepared['order'];
         $pricing = $prepared['pricing'];
 
         return new OrderPreviewViewDto(
-            phone: isset($data['phone']) ? (string) $data['phone'] : null,
-            deliveryAddress: (string) ($data['deliveryAddress'] ?? ''),
-            deliveryCity: (string) ($prepared['deliveryCity'] ?? ''),
-            deliveryPostalCode: (string) ($data['deliveryPostalCode'] ?? ''),
+            phone: $this->normalizeNullableString($order->getPhone()),
+            deliveryAddress: trim((string)$order->getDeliveryAddress()),
+            deliveryPostalCode: trim((string)$order->getDeliveryPostalCode()),
+            deliveryCity: $prepared['deliveryCity'],
             serviceDate: $prepared['serviceDate'],
-            serviceTime: (string) ($data['serviceTime'] ?? ''),
+            serviceTime: (string)($order->getserviceTime() ?? ''),
             peopleCount: $pricing->peopleCount,
-            note: isset($data['note']) ? (string) $data['note'] : null,
+            note: $this->normalizeNullableString($order->getNote()),
             menuSubtotal: $pricing->menuSubtotal,
             discountAmount: $pricing->discountAmount,
             deliveryPrice: $pricing->deliveryPrice,
@@ -257,7 +267,7 @@ final readonly class CreateOrderHandler
             needEquipmentLoan: $prepared['needEquipmentLoan'],
             equipmentLoanStartAt: $prepared['loanStartAt'],
             equipmentLoanEndAt: $prepared['loanEndAt'],
-            equipmentLoanNote: is_string($form->get('equipmentLoanNote')->getData()) ? $form->get('equipmentLoanNote')->getData() : null,
+            equipmentLoanNote: $this->normalizeNullableString($form->get('equipmentLoanNote')->getData()),
         );
     }
 }
