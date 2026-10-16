@@ -23,27 +23,34 @@ docker network create traefik_network
 make start
 ```
 
-Cette commande:
+Cette commande démarre les conteneurs sans migration, installation ni création de base. Pour la préparation explicite (modificatrice), utiliser `make setup`.
 
-- demarre les containers
-- installe les dependances PHP et Node
-- cree la base si besoin
-- applique les migrations
-- compile les assets en mode dev
+Démarrer d’abord `make -C /home/caim/traefik start` et `make -C /home/caim/mailhog start`. `make external-check` vérifie les services et réseaux partagés ; `make stop` ne les arrête pas.
 
 ## Commandes utiles
 
-- `make boot`: demarre uniquement les containers
-- `make connect`: ouvre un shell dans le container `app`
-- `make log`: suit les logs Docker
-- `make watch`: lance le watch des assets
-- `make test`: lance PHPUnit
-- `make check`: lance `php-cs-fixer`, `twig-cs-fixer` puis `phpstan`
-- `make migration`: genere une migration Doctrine
-- `make migrate`: applique les migrations
-- `make fixtures-reset`: recree la base et recharge les fixtures
-- `make cache-clear`: supprime le cache Symfony
-- `make restart`: redemarre la stack puis relance le watch
+| Commande | Même usage dans les projets |
+|---|---|
+| `make` / `make help` | Afficher les commandes réellement disponibles |
+| `make doctor` | Vérifier Docker, Compose et les dépendances partagées |
+| `make validate` | Valider Compose sans afficher les secrets |
+| `make start` / `make boot` / `make up` | Démarrer et attendre les services, sans migration ni import |
+| `make build` | Construire les images sans démarrer les applications |
+| `make rebuild` | Reconstruire puis démarrer les applications |
+| `make restart` | Redémarrer les conteneurs, sans watch ni compilation |
+| `make stop` | Arrêter seulement ce projet, conserver conteneurs et données |
+| `make down` | Retirer conteneurs et réseaux internes, conserver les volumes |
+| `make status` / `make ps` | Afficher état, services et ports |
+| `make logs` / `make log` | Suivre les logs ; `TAIL=50` limite l’historique |
+| `make logs-tail` | Afficher les derniers logs sans les suivre |
+| `make connect` / `make shell` | Ouvrir un shell ; `SERVICE=database` change la cible |
+| `make exec CMD="id"` | Exécuter une commande sans terminal interactif |
+
+Les commandes `install`, `assets`, `assets-dev`, `watch`, `test`, `lint`, `fixer` et `check` sont exposées selon les outils existants. `lint` et `check` ne corrigent pas les sources ; `fixer` le fait explicitement. `setup`, `bootstrap`, `migrate`, les imports, fixtures et comptes restent des préparations séparées qui peuvent modifier les données. `upgrade` est un alias de `rebuild`, sans mise à niveau des dépendances. Pour les sources copiées dans une image (CV et Mémo Game), utiliser `make rebuild` après modification.
+
+Sur les projets Symfony : `console CMD="about"`, `about`, `routes`, `lint-config`, `lint-twig`, `cache-clear`, `cache-warmup`, `db-check`, `db-status` et `db-shell`. `composer CMD="validate"` suit l’environnement du projet (hôte pour le portfolio, conteneur pour Diablo/Genesis/Vite & Gourmand). `migration` n’est proposé que si Maker est disponible. Le CV conserve Composer sur l’hôte et fournit `db-check`/`db-shell`, sans commandes Symfony.
+
+Pour Vite & Gourmand : `make check` valide Composer puis lance les contrôles Symfony/style et PHPStan, sans correction. `make fixer` corrige PHP/Twig. `make install` installe Composer/npm sans migration ; `make assets` compile la production et `make assets-dev` le développement. `make restart` redémarre seulement les conteneurs : lancer `make watch` séparément si nécessaire. Les anciens raccourcis restent disponibles dans `make help`, avec leurs effets décrits.
 
 ## Configuration locale
 
@@ -92,3 +99,7 @@ Si la commande `docker` est introuvable dans WSL, verifier d'abord l'integration
 1. Docker Desktop > Settings > Resources > WSL Integration
 2. Activer la distribution Debian utilisee pour ce projet
 3. Redemarrer le terminal WSL avant de relancer `make start`, `make test` ou `make check`
+
+### Ressources Docker conservées
+
+Le projet Compose reste `vite-gourmand`. Les services sont `app` (Apache/PHP) et `database`, sans `container_name`. La base utilise les données applicatives existantes dans `/home/caim/Projets/studi/ECF/vite-gourmand/mariadb`, après bascule validée le 16 octobre 2026. Ne pas remplacer ce dossier par un dossier vide. L’ancien dossier `/home/caim/studi/ECF/vite-gourmand/mariadb`, sans base applicative, est conservé pour retour arrière. Les anciens noms DNS `ecf_vite_gourmand_app` et `ecf_vite_gourmand_database` restent des alias. MailHog est indépendant dans `/home/caim/mailhog` (projet `mailhog`), partagé avec le portfolio sur `mail_network`. Ports 1025/8025 et `http://mailhog.localhost` sont conservés. Docker : `smtp://mailhog:1025` ; exécution sur l’hôte : `smtp://127.0.0.1:1025`. Tous les e-mails arrivent dans la même boîte de développement, conservée en mémoire seulement. Aucun relais portfolio n’est nécessaire. Traefik reste dans `/home/caim/traefik`.

@@ -1,4 +1,9 @@
+name: vite-gourmand
+
 networks:
+  mail_network:
+    name: mail_network
+    external: true
   backend:
   traefik_network:
     name: traefik_network
@@ -6,14 +11,16 @@ networks:
 
 services:
   app:
-    container_name: ${PROJECT_IDENTIFIER}_app
     build:
       context: docker/php/dev
     volumes:
       - ./app:/var/www/html
     networks:
-      - backend
-      - traefik_network
+      mail_network: {}
+      backend:
+        aliases: [ecf_vite_gourmand_app]
+      traefik_network:
+        aliases: [ecf_vite_gourmand_app]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app.entrypoints=web"
@@ -26,14 +33,14 @@ services:
 
   database:
     image: mariadb
-    container_name: ${PROJECT_IDENTIFIER}_database
     environment:
       MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - ./mariadb:/var/lib/mysql
+      # Données applicatives existantes vérifiées et sauvegardées avant bascule.
+      - /home/caim/Projets/studi/ECF/vite-gourmand/mariadb:/var/lib/mysql
     networks:
-      #            - traefik_network
-      - backend
+      backend:
+        aliases: [ecf_vite_gourmand_database]
     ports:
       - "${DATABASE_PORT}:3306"
     healthcheck:
@@ -41,16 +48,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  mailhog:
-    image: mailhog/mailhog
-    networks:
-      - backend
-      - traefik_network
-    labels:
-      traefik.enable: true
-      traefik.http.routers.mailrp-mailhog.entrypoints: web
-      traefik.http.routers.mailrp-mailhog.rule: Host(`mailhog.localhost`)
-      traefik.http.routers.mailrp-mailhog.priority: 11
-      traefik.http.services.mailrp-mailhog.loadbalancer.server.port: 8025
-      traefik.docker.network: traefik_network
