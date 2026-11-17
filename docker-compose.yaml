@@ -11,6 +11,8 @@ networks:
 
 services:
   app:
+    container_name: vite-gourmand-web
+    image: local/vite-gourmand-web:dev
     build:
       context: docker/php/dev
     volumes:
@@ -32,6 +34,7 @@ services:
         condition: service_healthy
 
   database:
+    container_name: vite-gourmand-database
     image: mariadb
     environment:
       MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}

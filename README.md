@@ -58,3 +58,7 @@ make fixtures-reset
 - `docker/`: image PHP/Apache de dev
 - `docs/`: documentation de dev + references ECF
 - `sql/`: exports SQL attendus a terme
+
+## Noms Docker locaux
+
+Conteneurs : `vite-gourmand-web`, `vite-gourmand-database`. Image applicative : `local/vite-gourmand-web:dev`. Les identifiants des projets Compose et les volumes existants sont conservés.
